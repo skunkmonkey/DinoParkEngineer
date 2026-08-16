@@ -1,0 +1,150 @@
+.park-operations-grid {
+  display: grid;
+  grid-template-columns: minmax(17rem, 0.9fr) minmax(24rem, 1.6fr) minmax(17rem, 0.9fr);
+  gap: 1rem;
+  align-items: start;
+}
+
+.park-operations-grid > aside,
+.park-operations-grid > section {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.park-operations-mobile-tabs {
+  display: none;
+  margin-bottom: 1rem;
+}
+
+.park-job-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.park-preflight {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0.85rem 0;
+  padding: 0.75rem;
+  border: 1px solid var(--foundation-border, #cad5e2);
+  border-radius: 0.65rem;
+}
+
+.park-schematic {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+  min-height: 11rem;
+  padding: 1rem;
+  border: 1px solid var(--foundation-border, #cad5e2);
+  border-radius: 0.85rem;
+  background: linear-gradient(135deg, rgba(44, 157, 120, 0.14), rgba(245, 181, 67, 0.1));
+}
+
+.park-schematic__enclosure {
+  display: grid;
+  gap: 0.3rem;
+  align-content: center;
+  min-height: 8rem;
+  padding: 0.75rem;
+  border: 1px solid var(--foundation-border, #cad5e2);
+  border-radius: 0.65rem;
+  text-align: left;
+  background: rgba(255, 255, 255, 0.86);
+  cursor: pointer;
+}
+
+.park-schematic__enclosure:focus-visible,
+.park-schematic__enclosure:hover {
+  outline: 3px solid rgba(42, 126, 180, 0.45);
+  outline-offset: 2px;
+}
+
+.park-operations label,
+.agent-operations label {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0.65rem 0;
+}
+
+.park-operations dl,
+.agent-operations dl {
+  display: grid;
+  gap: 0.55rem;
+}
+
+.park-operations dl div,
+.agent-operations dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  border-bottom: 1px solid rgba(130, 145, 161, 0.2);
+  padding-bottom: 0.4rem;
+}
+
+.park-operations dt,
+.agent-operations dt {
+  color: var(--foundation-muted, #5d6a78);
+}
+
+.park-operations dd,
+.agent-operations dd {
+  margin: 0;
+  text-align: right;
+  font-weight: 600;
+}
+
+.agent-operations-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.agent-operations__switcher {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.agent-operations__switcher button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@media (max-width: 1100px) {
+  .park-operations-grid,
+  .agent-operations-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .park-operations-mobile-tabs {
+    display: block;
+  }
+
+  .park-operations-panel-region {
+    display: none !important;
+  }
+
+  .park-operations-panel-region.is-mobile-active {
+    display: grid !important;
+  }
+}
+
+@media (max-width: 760px) {
+  .park-schematic {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .park-operations *,
+  .agent-operations * {
+    scroll-behavior: auto !important;
+    transition: none !important;
+    animation: none !important;
+  }
+}
