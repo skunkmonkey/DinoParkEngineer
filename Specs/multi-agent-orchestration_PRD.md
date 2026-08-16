@@ -17,7 +17,7 @@ when using this template -->
 
 ## Executive Summary
 
-This feature scales the park from one worker to at least three concurrent workers, deliberately exposing queue conflicts and player context switching before unlocking a Manager Agent. A Manager is a versioned Agent configuration with explicit mission, worker pool/capacity, delegation, priority, authority, context routing, escalation, and reporting contracts. It improves coordination only when well configured; it never bypasses worker tools, safety policy, context limits, or deterministic ordering.
+This feature scales the park from one named worker to at least three concurrent workers, deliberately exposing visible park activity, queue conflicts, and player context switching before unlocking a Manager Agent. The initial orchestration surface communicates mission, worker assignments, pressure, exceptions, and escalations before exact routing/configuration evidence. A Manager is a versioned Agent configuration with explicit mission, worker pool/capacity, delegation, priority, authority, Context routing, escalation, and reporting contracts. It improves coordination only when well configured; it never bypasses worker Tools, safety policy, Context limits, or deterministic ordering.
 
 ## User Stories
 
@@ -55,6 +55,8 @@ This feature scales the park from one worker to at least three concurrent worker
 ### FR-05: Orchestration UI and Trace
 - FR-05.1: Show mission, worker pool/capacity, live assignment graph, queues, priorities, context load/routing, escalation/report state, and recent manager trace.
 - FR-05.2: Delegations/conflicts/escalations/reports SHALL emit structured provenance linked to child jobs/traces.
+- FR-05.3: Live UI SHALL lead with human-readable Agent/job/entity names and operational outcome; exact ids, rule matches, routing refs, tie-break evidence, and traces remain inspectable.
+- FR-05.4: Before Manager Agent unlock, manual coordination pressure SHALL remain visible rather than being automatically summarized away; after successful orchestration, routine work MAY collapse into summaries while exceptions remain prominent.
 
 ## Non-Functional Requirements
 
@@ -80,6 +82,7 @@ Manager hierarchies, negotiation/chat, dynamic natural-language planning, arbitr
 - **PD-01:** Manager becomes purchasable at four workers or authored intervention threshold.
 - **PD-02:** Player feels multi-agent pressure before the solution unlocks.
 - **PD-03:** Manager is explicit architecture, not a magic automation button.
+- **PD-04:** Orchestration reduces routine attention but never hides exceptions, rejected delegation, Context blocks, or safety conflicts.
 
 ## Implementation Decisions
 

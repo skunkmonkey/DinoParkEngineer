@@ -17,7 +17,7 @@ when using this template -->
 
 ## Executive Summary
 
-Evals are permanent engineering assets, not opaque scores. Players see available deterministic cases, pay a high one-time authoring cost, assemble named suites, pay a small repeat run cost, test an exact artifact/configuration in an isolated world, inspect every assertion, and replay failures. An uncovered production incident can become a regression eval from its exact fixture when content permits.
+Evals are permanent engineering assets, not opaque scores. Players first see named deterministic scenario cards with expected behavior, risk, build/run economics, and last result; they can then inspect exact refs, fixtures, seeds, assertions, and evidence. Players pay a high one-time authoring cost, assemble named suites, pay a small repeat run cost, test an exact artifact/configuration in an isolated world, inspect every assertion, and replay failures on a park-like surface. An uncovered production incident can become a regression eval from its exact fixture when content permits.
 
 ## User Stories
 
@@ -39,6 +39,7 @@ Evals are permanent engineering assets, not opaque scores. Players see available
 - FR-02.2: Suite selection SHALL allow per-run individual additions/removals.
 - FR-02.3: Show total run cost and behavior list before confirmation.
 - FR-02.4: Preserve deterministic case order by explicit suite order, then exact ref.
+- FR-02.5: Case selection SHALL lead with human-readable scenario title and expected behavior; exact eval ref and fixture metadata SHALL remain available in Technical Details.
 
 ### FR-03: Isolated Runs
 - FR-03.1: Clone fixture and inject the exact subject Prompt, Skill, System Prompt, or Agent configuration.
@@ -51,6 +52,8 @@ Evals are permanent engineering assets, not opaque scores. Players see available
 - FR-04.2: Each assertion SHALL record expected, observed, pass/fail, evidence refs, and stable message.
 - FR-04.3: Overall pass requires every required assertion to pass; no percentage substitutes for case details.
 - FR-04.4: Results SHALL include subject ref, case ref, costs, trace/replay ref, start/completion logical metadata, and canonical hash.
+- FR-04.5: Result UI SHALL present observed outcome and failed expectation before the complete assertion/evidence record; no aggregate percentage may obscure a failed named case.
+- FR-04.6: Replay visualization SHALL consume the same isolated authoritative events as Trace Replay and SHALL not alter Eval output.
 
 ### FR-05: Incident Conversion
 - FR-05.1: Eligible incidents SHALL expose “Create regression eval from incident.”
@@ -81,6 +84,7 @@ Probabilistic/model-graded evals, live LLM calls, load testing, automatic purcha
 - **PD-01:** Build costs are high and run costs low to teach compounding evaluation infrastructure.
 - **PD-02:** Warnings may recommend risk coverage, but the player selects cases.
 - **PD-03:** MVP includes at least 12 cases, including the application PRD feeding examples.
+- **PD-04:** Evals are presented as real park scenarios first and exact engineering evidence second.
 
 ## Implementation Decisions
 

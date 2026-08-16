@@ -17,7 +17,7 @@ when using this template -->
 
 ## Executive Summary
 
-Review is the game's central engineering workflow: inspect a proposed artifact/configuration change, compare source and semantic clauses, understand context and dependency deltas, choose/build/run evals, diagnose failures, request revision, and intentionally deploy or revert. Risk warnings inform rather than universally block; impossible configurations and authored hard gates cannot deploy.
+Review is the game's central engineering workflow and the convergence point of the AI Workshop: understand the operational goal and expected park impact, inspect a clearly named proposed artifact/configuration change, compare source/Context/dependencies, choose/build/run named Evals, diagnose failures, request revision, and intentionally deploy or revert. Exact refs and semantic evidence remain available without becoming the primary labels. Risk warnings inform rather than universally block; impossible configurations and authored hard gates cannot deploy.
 
 ## User Stories
 
@@ -38,12 +38,14 @@ Review is the game's central engineering workflow: inspect a proposed artifact/c
 - FR-02.2: Show added/removed/changed dependencies, tools, tags, and direct/transitive used-by.
 - FR-02.3: Context delta SHALL be computed by Context Service for representative authored job profiles and reconcile its totals.
 - FR-02.4: No-change and missing-base cases SHALL be explicit.
+- FR-02.5: Review header SHALL lead with canonical artifact/configuration type, human-readable title, base/proposed versions, goal, and operational impact before exact refs.
 
 ### FR-03: Eval Workflow
 - FR-03.1: Show individual available eval behavior/build/run cost/risk/last result.
 - FR-03.2: Allow suite and individual selection, building through Eval Service, run cost confirmation, and run initiation.
 - FR-03.3: Associate results with exact proposed ref/review revision; stale results SHALL not count after proposal revision.
 - FR-03.4: Failed results link to assertions, trace, replay, and relevant diff/context.
+- FR-03.5: Eval selection/results SHALL use human-readable scenario titles and expected/observed behavior before exact case refs and evidence.
 
 ### FR-04: Deploy and Revert
 - FR-04.1: Validate exact dependencies, required tools, registry validity, context overflow for required profiles, and authored hard gates.
@@ -62,6 +64,7 @@ Review is the game's central engineering workflow: inspect a proposed artifact/c
 - **NFR-02: Atomicity** - Active deployment and audit/lifecycle updates commit together.
 - **NFR-03: Accessibility** - Diff, eval selection, warnings, and actions are keyboard/screen-reader usable.
 - **NFR-04: Integrity** - No route or consumer can bypass deployment commands to set active refs.
+- **NFR-05: Comprehension** - A player can identify what is changing, why, and which named risks were tested without interpreting machine ids.
 
 ## Invariants
 

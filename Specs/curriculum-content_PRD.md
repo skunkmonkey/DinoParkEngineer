@@ -17,7 +17,7 @@ This is the integrated MVP content pack consumed by the entire product; `telemet
 
 ## Executive Summary
 
-Curriculum Content supplies the authored park, artifacts, clauses, tools, scenarios, evals, commission/revision recipes, balance data, progression rules, objectives, and contextual teaching copy that turn the engines into a complete game. It follows the learning arc Prompt → Skill → System Prompt → Context → Evals → Review → Memory → multiple Agents → Orchestration. Each solution unlocks after felt need, every failure is deterministic/replayable, and the first vertical slice matches the end-to-end contract in application PRD section 26.2.
+Curriculum Content supplies the authored named park, artifacts, clauses, tools, scenarios, evals, commission/revision recipes, balance data, progression rules, objectives, disclosure milestones, and contextual teaching copy that turn the engines into a complete game. It follows the learning arc Prompt → Skill → System Prompt → Context → Evals → Review → Memory → multiple Agents → Orchestration. Each solution and corresponding interface surface becomes prominent only after felt need, every failure is deterministic/replayable, and the first vertical slice matches the end-to-end contract in application PRD section 26.2 and `player-experience_PRD.md`.
 
 ## User Stories
 
@@ -32,12 +32,14 @@ Curriculum Content supplies the authored park, artifacts, clauses, tools, scenar
 - FR-01.1: One park zone SHALL contain at least three distinct enclosures and docile herbivore, large herbivore, and carnivore archetypes.
 - FR-01.2: Provide valid gates, zones, routes, feeders, sensors, visitor buffers, tools/devices, worker starts, jobs, schedules, incidents, and recovery requirements.
 - FR-01.3: Provide one initial generalist worker and unlock/purchase path to at least three concurrent workers and Manager eligibility at four/threshold.
+- FR-01.4: Every authored world entity SHALL include a stable player-facing name and optional short description/search aliases separate from its machine id.
 
 ### FR-02: Engineering Assets
 - FR-02.1: Provide authored novice and improved Prompts plus at least eight total Skills/System Prompts with source text, semantic clauses, exact dependencies, tools, applicability, costs, and versions.
 - FR-02.2: Include Carnivore Feeding evolution from unsafe direct Prompt through reusable Skill to centralized Containment Safety System Prompt with lower context cost and maintained safety.
 - FR-02.3: Include memory/knowledge/tool descriptions and Manager configurations needed by phases.
 - FR-02.4: Every source claim SHALL correspond to its clauses; source is instructional, clauses are executable.
+- FR-02.5: Every player-visible artifact/eval/scenario SHALL have a human-readable title that appears with its canonical AI-engineering type and version.
 
 ### FR-03: Evals and Reviews
 - FR-03.1: Provide at least 12 deterministic eval cases with fixtures, seeds, typed assertions, tags, severity, build/run costs, and expected behavior.
@@ -50,6 +52,8 @@ Curriculum Content supplies the authored park, artifacts, clauses, tools, scenar
 - FR-04.2: Each phase SHALL define entry conditions, starting state/fixture delta, player-facing objective, available assets/offers/evals, deterministic teaching incident, success criteria, unlock outputs, and fallback/recovery.
 - FR-04.3: Teaching copy SHALL explain after consequence through trace/workflow context; it SHALL not spoil every failure beforehand.
 - FR-04.4: No phase SHALL require freeform source authoring, twitch input, runtime LLM, or buying every eval.
+- FR-04.5: Each phase SHALL define navigation/surface disclosure: what is primary, available contextually, directly reachable but locked, and newly introduced after consequence.
+- FR-04.6: Phase 0 SHALL begin with a focused low-risk herbivore assignment and graphical observation before the first consequential specification/context gap; no more than three new choices receive equal prominence.
 
 ### FR-05: Economy and Balance Content
 - FR-05.1: Supply validated integer costs/rewards/severity impacts/context fixed costs/durations/thresholds.
@@ -57,7 +61,7 @@ Curriculum Content supplies the authored park, artifacts, clauses, tools, scenar
 - FR-05.3: Include recovery assistance preventing dead-end saves and enough scarcity for meaningful risk-based eval investment.
 
 ### FR-06: Integrated First Vertical Slice
-- FR-06.1: Player accepts first carnivore job, runs unsafe Prompt, observes deterministic containment failure, diagnoses absent postcondition, commissions/reviews safer Skill, builds/selects three evals, sees one fail, revises, passes/deploys, reruns safely, and observes context cost difference.
+- FR-06.1: Player completes a focused herbivore orientation, then accepts the first carnivore job, runs an unsafe Prompt, observes a deterministic graphical containment consequence, diagnoses the absent postcondition through an outcome-first Trace, commissions/reviews a clearly labeled safer Skill, builds/selects three named Evals, sees one fail, revises, passes/deploys, reruns safely, and observes Context cost difference.
 - FR-06.2: All exact ids/versions/fixtures/expected events for this slice SHALL be documented in content fixtures and integration tests.
 
 ## Non-Functional Requirements
@@ -75,6 +79,8 @@ Curriculum Content supplies the authored park, artifacts, clauses, tools, scenar
 - **INV-03:** Every required failure is recoverable and diagnosable.
 - **INV-04:** Advanced modular context is not simply longer than novice context.
 - **INV-05:** The Park Developer remains one workbench/capability mechanism.
+- **INV-06:** Canonical AI-engineering types remain visible; approachable titles do not become fantasy-only replacements.
+- **INV-07:** Curriculum disclosure does not hide active serious incidents, blocking Context overflow, failed selected Evals, or deployment safety gates.
 
 ## Out of Scope
 
@@ -105,6 +111,7 @@ Post-MVP scenarios, freeform Prompt Lab, community content, real-model sandbox, 
 - **MOD-03: MVPEvalPack** - Twelve-plus cases/suites/assertions/fixtures.
 - **MOD-04: ScenarioDirector** - Minimal public-port coordinator for objectives, entry/success/recovery, and unlock signals.
 - **MOD-05: ContentAcceptanceHarness** - Validates/golden-runs packs and integrated learning paths.
+- **MOD-06: PlayerExperiencePack** - Names, descriptions, objective copy, search aliases, surface disclosure milestones, and visual scene metadata.
 
 ## Workflows
 

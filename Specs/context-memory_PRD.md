@@ -20,7 +20,7 @@ when using this template -->
 
 ## Executive Summary
 
-This feature makes context a visible, constrained engineering resource. It deterministically assembles job context, calculates Context Units (CU), enforces budgets without silent truncation, retrieves scoped memories, labels freshness/provenance, and identifies duplicates, conflicts, irrelevant modules, and over-broad dependencies. The profiler unlocks after players feel context pressure; it explains findings but never auto-solves architecture.
+This feature makes Context a visible, constrained engineering resource. It is introduced as an understandable load/budget and named composition before expanding into exact Context Units (CU), provenance, freshness, duplicates, conflicts, irrelevant modules, and over-broad dependencies. It deterministically assembles job Context, enforces budgets without silent truncation, and retrieves scoped Memory. The profiler unlocks after players feel Context pressure; it explains findings but never auto-solves architecture.
 
 ## User Stories
 
@@ -42,6 +42,7 @@ This feature makes context a visible, constrained engineering resource. It deter
 - FR-02.2: Each item SHALL expose ref, kind, exact version if applicable, cost, provenance, freshness when applicable, and applicability match.
 - FR-02.3: Dependency traversal and item order SHALL be stable and cycle-safe.
 - FR-02.4: Total greater than budget SHALL return `BLOCKED_CONTEXT_OVERFLOW`; MVP SHALL not truncate or rank a subset.
+- FR-02.5: Player-facing composition SHALL use canonical item kind and human-readable title before raw ref; totals and exact refs remain available and reconcile identically.
 
 ### FR-03: Memory
 - FR-03.1: Memory records SHALL include id, scope, observedAt, optional validUntil/TTL, provenance, subject refs, content/facts, context cost, and retention status.
@@ -54,6 +55,7 @@ This feature makes context a visible, constrained engineering resource. It deter
 - FR-04.2: Findings SHALL include stable code, involved refs, CU impact, severity, evidence, and suggested question/remediation category.
 - FR-04.3: The basic meter/composition is always available; advanced profiler findings are gated by progression.
 - FR-04.4: Analysis SHALL not mutate artifact selection or memory.
+- FR-04.5: Before profiler unlock, the UI MAY summarize composition but SHALL still expose overflow, budget, item categories, and exact detail on demand; after unlock, findings become prominently actionable.
 
 ## Non-Functional Requirements
 
@@ -79,6 +81,7 @@ Advanced automatic retrieval under overflow, vector search, LLM summarization, a
 - **PD-01:** Display 1,000 CU as 1.0k context; retain exact values in details.
 - **PD-02:** Missing and excess context are both meaningful failure/cost sources.
 - **PD-03:** Profiler appears only after context pressure/duplication has been experienced.
+- **PD-04:** Context visualization progresses from load -> named composition -> provenance/findings; numerical and technical evidence is never discarded.
 
 ## Implementation Decisions
 

@@ -19,7 +19,7 @@ when using this template -->
 
 ## Executive Summary
 
-The Content Registry is the single source of truth for data-driven Prompts, Skills, System Prompts, Knowledge, Tool Descriptions, eval definitions, scenarios, dinosaur profiles, and progression content. It validates dependencies and compatibility, preserves immutable historical versions, separates stable identity from versions, and lets designers add content without changing simulation or UI code.
+The Content Registry is the single source of truth for data-driven Prompts, Skills, System Prompts, Knowledge, Tool Descriptions, eval definitions, scenarios, named world profiles, and progression content. It validates dependencies and compatibility, preserves immutable historical versions, separates stable identity from player-facing presentation and versions, and lets designers add content without changing simulation or UI code.
 
 ## User Stories
 
@@ -35,12 +35,15 @@ The Content Registry is the single source of truth for data-driven Prompts, Skil
 - FR-01.3: Support `DRAFT`, `REVIEW`, `DEPLOYED`, and `RETIRED` lifecycle states while preserving all pinned versions.
 - FR-01.4: The registry SHALL expose exact lookup and explicitly selected-current lookup; it SHALL never silently substitute a newer version.
 - FR-01.5: Authored eval definitions SHALL contain immutable case fields and a default unbuilt catalog state; player-owned built status, suites, and run history belong exclusively to `eval-runner` state and SHALL not be mutated in content records.
+- FR-01.6: Player-visible authored records SHALL include stable human-readable `title`; world profiles SHALL support `displayName`, optional `shortDescription`, and optional search aliases independent of the immutable id.
+- FR-01.7: Artifact presentation SHALL expose canonical type and version separately from title so a Skill cannot be mistaken for a domain-only item.
 
 ### FR-02: Validation
 - FR-02.1: Validate schemas, unique ids, positive versions/costs, references, allowed clause categories, tags, and tool ids.
 - FR-02.2: Artifact dependency graphs SHALL reject cycles and report the full cycle.
 - FR-02.3: Missing required dependencies/tools SHALL be errors; applicability mismatch SHALL be queryable metadata rather than a load error.
 - FR-02.4: Human-readable source text and semantic clauses SHALL both be required for actionable artifacts.
+- FR-02.5: Presentation metadata SHALL be validated for non-empty localized/message identity, alias collisions within its declared scope, and separation from behavior-driving fields.
 
 ### FR-03: Query and Relationship Index
 - FR-03.1: Query by exact ref, type, tag, lifecycle status, title, required tool, and dependency.
@@ -67,6 +70,7 @@ The Content Registry is the single source of truth for data-driven Prompts, Skil
 - **INV-03:** No circular artifact dependency can enter the registry.
 - **INV-04:** Failed pack loading has no observable partial result.
 - **INV-05:** Display text never drives behavior; clauses do.
+- **INV-06:** Changing a display name or alias cannot change exact refs, dependency resolution, query ordering, manifests, or replay outcomes.
 
 ## Out of Scope
 
@@ -77,6 +81,7 @@ Editing UI, diff/review/deploy decisions, job execution, context calculation, ev
 - **PD-01:** All MVP content is authored and local.
 - **PD-02:** Version history and used-by data are visible product concepts.
 - **PD-03:** Generic AI terminology is used; vendor-specific skill formats are not required.
+- **PD-04:** Canonical artifact type and approachable instance title are separate first-class presentation fields.
 
 ## Implementation Decisions
 
@@ -89,6 +94,7 @@ Editing UI, diff/review/deploy decisions, job execution, context calculation, ev
 - **TST-01:** Contract fixtures cover every record and clause category.
 - **TST-02:** Negative fixtures cover cycles, missing refs/tools, duplicate refs, malformed source/clauses, and atomic rollback.
 - **TST-03:** Snapshot tests cover canonical indexes and manifests, not UI rendering.
+- **TST-04:** Presentation metadata tests cover required titles, scoped alias collisions, raw-id lookup, friendly-name search, and canonical manifest parity after display-only changes.
 
 ## Proposed Modules
 

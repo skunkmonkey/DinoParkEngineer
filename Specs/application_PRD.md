@@ -73,6 +73,9 @@ Create a game that professional developers voluntarily play for enjoyment, but t
 | Trustworthy simulation | LLM randomness MUST NOT determine whether a safety-critical sequence succeeds. World state and rule execution must be inspectable. |
 | Progressive abstraction | Progression moves from direct Prompt -> reusable Skill -> Context architecture -> multiple Agents -> Manager Agent orchestration. |
 | Failure is educational, not punitive | Production failures should matter enough to motivate evals but not be so punishing that experimentation becomes irrational. |
+| Park fantasy first | The default experience is operating a graphical dinosaur park. AI-engineering configuration and evidence appear in context when they help the player act, diagnose, or improve the system. |
+| Canonical type, approachable instance | Preserve Prompt, Skill, System Prompt, Context, Memory, Tool, Eval, Agent, and orchestration terminology while giving artifacts and world entities memorable player-facing names. |
+| Outcome before evidence | Major surfaces present observable outcome, then explanation, then exact technical evidence. Raw ids and manifests never compete with the current gameplay objective by default. |
 
 ## 3. Goals, Non-Goals, and Success Criteria
 
@@ -86,6 +89,8 @@ Create a game that professional developers voluntarily play for enjoyment, but t
 - Provide deterministic, replayable incidents and eval failures that can be debugged from traces.
 - Create enough park/economy pressure that engineering investments have understandable return on investment.
 - Make prompt/skill source text available as worked examples without turning gameplay into a reading course.
+- Make a first meaningful park action understandable without requiring the player to parse raw identifiers, provider diagnostics, or every advanced system.
+- Preserve intentional late-game coordination pressure while removing accidental complexity caused by implementation-oriented presentation.
 
 ### 3.2 Non-Goals
 
@@ -131,6 +136,8 @@ Professional software developers who understand basic programming and software d
 ## 5. Canonical Terminology
 
 The following terms are normative for UI copy, code-domain models, content authoring, and documentation unless a section explicitly states otherwise.
+
+Canonical terms describe the real AI-engineering category; they are not required to be the entire customer-facing name. Present an artifact as, for example, `SKILL · Carnivore Feeding · v3`, while retaining `skill.feed@3` as exact technical identity in advanced details, URLs, traces, and manifests. Park-world entities use approachable domain names such as `Rex Ridge Service Gate`; their stable ids remain inspectable but do not serve as ordinary labels. Display names and aliases MUST NOT drive runtime behavior.
 
 | Term | Definition | Gameplay example |
 | --- | --- | --- |
@@ -562,20 +569,25 @@ Whenever possible, the game should create felt need before exposing the solution
 
 ## 17. UX / Information Architecture
 
-### 17.1 Primary Navigation
+The detailed cross-feature requirements for playability, graphical presentation, naming, progressive disclosure, and debug separation are owned by `player-experience_PRD.md`.
 
-| Area | Purpose |
-| --- | --- |
-| Park | Map/overview, live jobs, dinosaurs, visitors, alerts, operating metrics. |
-| Agents | Worker and Manager Agent status, current task, queue, context, tools, memory, traces. |
-| Engineering | Prompts, Skills, System Prompts, Tools, Memory configuration, Park Developer workbench. |
-| Evals | Available eval cases, authored eval assets, suites, run history, failed replays. |
-| Reviews | Pending changes, diffs, context delta, eval selection/results, deploy/revert. |
-| Finance / Progress | Credits, engineering investments, unlocks, park metrics. Keep this secondary to engineering. |
+### 17.1 Player-Level Navigation
+
+Normal play groups the product into three understandable areas while preserving direct, refresh-safe specialist routes:
+
+| Area | Purpose | Specialist routes/surfaces |
+| --- | --- | --- |
+| Park | Graphical world overview, current objective, dinosaurs, visitors, live outcomes, urgent alerts, selected-entity actions. | Park entity and incident deep links. |
+| Operations | Jobs, worker/Manager Agent status, queues, schedules, tools, operational Context, and coordination pressure. | Agents and Manager Agent routes. |
+| AI Workshop | Prompts, Skills, System Prompts, Context, Memory, Tools, Evals, Reviews, deployment, and Park Developer progression. | Engineering, Evals, Reviews, and Progress routes. |
+
+Capabilities that have not been motivated or unlocked must not compete as equally prominent primary choices. Direct routes remain honest and can explain their locked/unavailable state. Finance remains secondary to engineering and park operation.
 
 ### 17.2 Park View
 
-Desktop-first split view recommended: center park map/schematic; left job/agent queue; right selected entity inspector. Alerts appear by severity. The player should be able to jump from an incident directly to the responsible job Trace and artifact versions.
+The Park is the primary gameplay surface. It prioritizes a large two-dimensional illustrated/schematic-diorama map, the current objective, visible authoritative world state, and urgent incidents. Jobs, filters, metrics, and technical detail are contextual panels/drawers rather than equally weighted permanent columns during early play. The player can select an entity to see its relevant state/actions and jump from an incident to the responsible job Trace and artifact versions. A keyboard-accessible nonvisual equivalent exposes the same critical state and commands.
+
+Animation is derived from authoritative snapshots/events and never simulates independent world behavior. Reduced-motion presentation replaces movement with explicit state changes.
 
 ### 17.3 Agent View
 
@@ -603,6 +615,8 @@ Available tools
 
 Trace is structured provenance, not hidden chain-of-thought. Show observable inputs, loaded context, selected deterministic clauses/reasons, tool calls, assertions, and world-state changes. Do not present simulated private internal reasoning as if it were an LLM chain-of-thought.
 
+Trace defaults to an outcome story: player/task intent, observed result, and the smallest relevant evidence set. The complete chronological, filterable event stream remains available as advanced Evidence. Friendly names lead; exact ids, refs, hashes, and manifests remain selectable in Technical Details.
+
 ```text
 09:41:12 JOB RECEIVED   Feed Rex
 09:41:12 CONTEXT LOADED  5.2k / 8.0k
@@ -620,9 +634,17 @@ Trace is structured provenance, not hidden chain-of-thought. Show observable inp
 
 Every Prompt/Skill/System Prompt detail screen should show: current version, source text, Context Cost, dependencies, applicable job/species tags, Tools required, semantic clause summary, authored eval coverage, deployment status, change history, and "used by" references.
 
+The canonical artifact type, human-readable title, and version lead every asset presentation. Exact refs and semantic clauses are technical evidence, not the primary label.
+
 ### 17.6 Eval Selection UI
 
 Eval selection MUST show individual eval names and behavior, not just a score. Include build status, one-time authoring cost for unbuilt evals, repeat run cost for built evals, severity/risk tag, and last result against the current artifact version. Allow suite selection with individual overrides.
+
+Named cases should be visually represented as scenarios and expected behaviors before exact fixture/seed/assertion details. Failed cases can replay on an isolated park-like surface before the player inspects complete evidence.
+
+### 17.7 Information Hierarchy and Development Diagnostics
+
+Major screens order content as Outcome -> Explanation -> Evidence. Raw JSON, complete manifests, hashes, provider readiness, route registration, telemetry queues, fixtures, and build metadata belong in explicit Technical Details or a development-only diagnostics surface. Player-facing recovery actions remain available in normal play.
 
 ## 18. Content Model and Data Schemas
 
@@ -849,6 +871,10 @@ Collect privacy-conscious gameplay analytics for balancing and learning validati
 - All critical state must be available without relying on color alone; use icons/text labels for pass/fail, severity, stale/conflict warnings.
 - Keyboard navigation is required for review, eval selection, agent switching, and trace inspection.
 - Simulation may be paused at any time outside explicitly authored cinematic moments. No mechanic should require twitch input.
+- The graphical Park must have a complete keyboard/screen-reader-accessible nonvisual equivalent sourced from the same authoritative projection.
+- Reduced-motion mode must communicate the same entity movement, state transition, job progress, and incident information without required animation.
+- During onboarding, no more than three new choices should receive equal visual prominence at once.
+- Raw identifiers must not be required to complete ordinary gameplay; exact identity remains inspectable and searchable.
 - Provide reduced-motion mode for park animations and incident effects.
 - Use scalable text and avoid dense fixed-width panels below minimum desktop width; allow drawers/tabs on narrower screens.
 - Traces and source text must support copy/select for learning, but no external code execution is needed.
@@ -937,6 +963,10 @@ Online leaderboards, community prompt sharing, or user-generated content are out
 - First phase demonstrates intent/specification mismatch through consequence and Trace inspection.
 - Player must encounter repeated instruction/context cost before modular Skills/System Prompts become clearly advantageous.
 - Player must encounter context pressure before context-capacity/profiler solutions dominate.
+- Fresh play opens on a focused Park objective and reaches a meaningful action without requiring advanced navigation or implementation diagnostics.
+- Canonical AI-engineering types remain visible while artifact and world-instance names are approachable and stable.
+- Outcome-first summaries link to complete evidence without concealing failed Evals, Context overflow, stale/conflicting data, deployment risk, or serious incidents.
+- Late-game park scale produces more simultaneous operations with fewer routine interventions after successful orchestration.
 - Player must encounter multiple-agent coordination pressure before Manager Agent unlock.
 - Late-game park can perform more simultaneous jobs with fewer direct interventions than early game.
 

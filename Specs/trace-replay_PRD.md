@@ -17,7 +17,7 @@ when using this template -->
 
 ## Executive Summary
 
-Trace and Replay lets the player understand exactly what an agent received, which deterministic clauses applied, which tools ran, what state changed, what assertions passed, and why a job ended. It provides structured provenance—not fabricated private reasoning—and can reconstruct or validate an exact run from a fixture, seed, artifact manifest, context snapshot, and command/provenance stream.
+Trace and Replay lets the player understand a surprising outcome without first parsing a raw event stream. It opens with an observable outcome story—intent/task, available Context, consequential actions, resulting world state, and the smallest relevant evidence set—then provides the complete chronological trace. It exposes exactly what an Agent received, which deterministic clauses applied, which Tools ran, what state changed, and what assertions passed without fabricating private reasoning. Replay can reconstruct or validate an exact run from a fixture, seed, artifact manifest, Context snapshot, and command/provenance stream.
 
 ## User Stories
 
@@ -38,6 +38,9 @@ Trace and Replay lets the player understand exactly what an agent received, whic
 - FR-02.2: Selecting an event SHALL show structured inputs/results and links to context/artifact/entity versions.
 - FR-02.3: Missing, stale, conflict, and applicability findings SHALL have distinct text labels/icons.
 - FR-02.4: The player SHALL be able to copy/select source and structured data.
+- FR-02.5: Default inspection SHALL show player-facing job/entity/artifact names and an outcome-first summary; exact ids/refs/hashes remain linked Technical Details and search aliases.
+- FR-02.6: A short relevant-evidence view SHALL never delete or mutate events; the complete filterable timeline remains available.
+- FR-02.7: When replay visualization is available, it SHALL project isolated authoritative events onto the same park visual language as normal operations, with a nonvisual equivalent.
 
 ### FR-03: Replay
 - FR-03.1: A replay manifest SHALL pin fixture, seed, artifact versions, agent definition, context policy inputs, and engine/content schema versions.
@@ -66,7 +69,7 @@ Generating source events, running eval assertions, artifact editing, production 
 
 ## Product Decisions
 
-- **PD-01:** Source/context summary is default; raw semantic details are advanced/debug views.
+- **PD-01:** Outcome story and relevant source/Context evidence are default; complete event and semantic details are advanced evidence views.
 - **PD-02:** Incidents and failed evals deep-link to the relevant event.
 - **PD-03:** Replay state is an isolated simulation environment.
 
@@ -81,6 +84,7 @@ Generating source events, running eval assertions, artifact editing, production 
 - **TST-01:** Golden trace covers first carnivore feeding and missing postcondition.
 - **TST-02:** Tamper/divergence tests identify the first mismatch.
 - **TST-03:** UI tests cover filtering, focus, links, and 10k-event virtualization.
+- **TST-04:** Tests prove summary evidence is a lossless projection over the complete trace and friendly-name search resolves the same exact records as raw-id search.
 
 ## Proposed Modules
 

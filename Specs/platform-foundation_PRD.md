@@ -21,7 +21,7 @@ when using this template -->
 
 ## Executive Summary
 
-Platform Foundation turns the runnable `application-shell` scaffold into the recognizable, desktop-first Dino Park Engineer product frame. The player receives coherent navigation, responsive layout, global feedback, pause/speed controls, terminology help, and accessible interaction conventions even before every gameplay destination is implemented.
+Platform Foundation turns the runnable `application-shell` scaffold into the recognizable, desktop-first Dino Park Engineer product frame. The player receives coherent staged navigation, responsive layout, global feedback, pause/speed controls, terminology help, and accessible interaction conventions. The normal frame prioritizes the park fantasy and current objective; provider, fixture, telemetry-queue, route, and build diagnostics live in an explicit development surface.
 
 This feature is deliberately thin in domain behavior. It provides product presentation and global UI ports on top of shell extension points, but does not own application bootstrap, route mechanics, simulation, economy, engineering, eval, save, or orchestration rules.
 
@@ -31,7 +31,7 @@ This feature is deliberately thin in domain behavior. It provides product presen
 
 - **GIVEN** a supported browser, **WHEN** the player opens the game, **THEN** the application loads into a usable Park destination without a network model dependency.
   - **Acceptance Criteria:** A fresh load renders a header, primary navigation, main content region, and non-blocking placeholder for destinations not yet integrated.
-- **GIVEN** any primary destination, **WHEN** the player chooses Park, Agents, Engineering, Evals, Reviews, or Finance/Progress, **THEN** the selected destination and browser history update predictably.
+- **GIVEN** any player-level area or specialist route, **WHEN** the player chooses Park, Operations, AI Workshop, Agents, Engineering, Evals, Reviews, or Progress, **THEN** the selected destination and browser history update predictably.
   - **Acceptance Criteria:** Refresh and back/forward navigation preserve the selected destination.
 
 ### Global Controls and Feedback
@@ -48,11 +48,12 @@ This feature is deliberately thin in domain behavior. It provides product presen
 
 ### FR-01: Product Frame and Navigation
 
-- FR-01.1: The application SHALL provide persistent primary navigation for Park, Agents, Engineering, Evals, Reviews, and Finance/Progress.
+- FR-01.1: The application SHALL provide persistent player-level navigation for Park, Operations, and AI Workshop; direct specialist routes for Agents, Engineering, Evals, Reviews, and Progress SHALL remain refresh safe and reachable from their owning area.
 - FR-01.2: The product frame SHALL provide a single main landmark and global status/notification region inside the boundaries supplied by `application-shell`.
 - FR-01.3: Each primary destination SHALL be registered through the `application-shell` route contract with direct URL metadata and active navigation state.
 - FR-01.4: The initial route SHALL resolve to Park.
 - FR-01.5: Unavailable feature destinations SHALL render an honest unavailable/coming-soon state, never fabricated data.
+- FR-01.6: Visibility and prominence of specialist destinations SHALL consume campaign unlock/disclosure state; browser-local preferences SHALL not unlock gameplay capability.
 
 ### FR-02: Global Simulation Controls
 
@@ -66,6 +67,8 @@ This feature is deliberately thin in domain behavior. It provides product presen
 - FR-03.2: Pass/fail, warning, severity, stale, conflict, and blocked states SHALL always include text or iconography in addition to color.
 - FR-03.3: AI-engineering terminology SHALL use the canonical terms in `application_PRD.md`.
 - FR-03.4: The shell SHALL expose contextual glossary help without forcing modal tutorials.
+- FR-03.5: Shared artifact presentation SHALL lead with canonical AI type, human-readable title, and version; raw refs SHALL be available as technical evidence.
+- FR-03.6: Shared layouts SHALL support summary, detail, and Technical Details disclosure levels consistent with Outcome -> Explanation -> Evidence.
 
 ### FR-04: Global Preferences
 
@@ -78,6 +81,7 @@ This feature is deliberately thin in domain behavior. It provides product presen
 - FR-05.1: The foundation SHALL register the canonical product frame and home behavior through the public `application-shell` feature-module contract.
 - FR-05.2: Global commands, notifications, and destination badges SHALL use foundation-owned public interfaces rather than direct imports into foundation internals.
 - FR-05.3: Missing optional providers SHALL degrade to explicit unavailable states without crashing the shell.
+- FR-05.4: Provider readiness, raw registrations, fixture metadata, telemetry queue inspection, and build diagnostics SHALL not appear in the normal player frame; development builds MAY expose them through a separate diagnostics surface.
 
 ## Non-Functional Requirements
 
@@ -94,6 +98,8 @@ This feature is deliberately thin in domain behavior. It provides product presen
 - **INV-03:** A global status cannot be communicated by color alone.
 - **INV-04:** Feature absence cannot prevent unrelated destinations from loading.
 - **INV-05:** Canonical AI terms are not replaced with fantasy-only synonyms.
+- **INV-06:** Presentation and navigation visibility never confer domain capability or alter authoritative state.
+- **INV-07:** Development diagnostics do not compete with normal gameplay actions.
 
 ## Out of Scope
 
@@ -105,9 +111,10 @@ This feature is deliberately thin in domain behavior. It provides product presen
 
 ## Product Decisions
 
-- **PD-01: Developer-operations presentation** - Use a clean operations-console aesthetic over a readable park schematic, not photorealism.
-- **PD-02: Six primary destinations** - Finance and Progress share one secondary destination to keep engineering work central.
+- **PD-01: Park-first presentation** - Use a clean illustrated operations aesthetic around a readable two-dimensional park diorama, not photorealism or an implementation console.
+- **PD-02: Three player-level areas** - Park, Operations, and AI Workshop reduce top-level load; specialist routes remain stable inside them.
 - **PD-03: Pause-friendly UX** - No global interaction requires twitch timing.
+- **PD-04: Explicit diagnostics surface** - Technical shell/runtime inspection is available to developers without leaking into normal play.
 
 ## Implementation Decisions
 
@@ -128,6 +135,8 @@ This feature is deliberately thin in domain behavior. It provides product presen
 - **MOD-03: UIPrimitives** - Provides accessible, visually consistent primitives and domain-neutral status treatments.
 - **MOD-04: DisplayPreferences** - Owns reduced-motion and shell-only preferences.
 - **MOD-05: GameFormatters** - Formats logical time, CU, credits, and severity consistently from supplied values.
+- **MOD-06: DisclosureNavigation** - Projects campaign visibility into player-level navigation without owning unlock rules.
+- **MOD-07: DevelopmentDiagnostics** - Hosts runtime/build/provider inspection outside the player frame.
 
 ## Workflows
 

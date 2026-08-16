@@ -17,7 +17,7 @@ when using this template -->
 
 ## Executive Summary
 
-The Engineering Workbench is the player's library and commissioning surface for Prompts, Skills, System Prompts, Knowledge, Tool Descriptions, and memory configuration. Players inspect worked source text and semantic behavior, dependencies, context cost, tools, applicability, eval coverage, deployment status, history, and used-by relationships. The single Park Developer progression mechanism creates authored changes from content-defined recipes; MVP does not offer arbitrary text/code execution or a developer hiring game.
+The Engineering Workbench is the AI Workshop library and commissioning surface for Prompts, Skills, System Prompts, Knowledge, Tool Descriptions, and Memory configuration. Libraries lead with canonical artifact type, approachable title, version, deployment state, Context cost, and Eval coverage. Players progressively inspect worked source text, dependencies, semantic behavior, Tools, applicability, history, and used-by relationships as evidence. The single Park Developer progression mechanism creates authored changes from content-defined recipes; MVP does not offer arbitrary text/code execution or a developer hiring game.
 
 ## User Stories
 
@@ -33,6 +33,8 @@ The Engineering Workbench is the player's library and commissioning surface for 
 - FR-01.2: Detail SHALL show exact version, source text, Context Cost, dependencies, applicability tags, tools, clause summary, eval coverage, status, history, and used-by.
 - FR-01.3: Source is default; semantic clauses are an advanced/debug view.
 - FR-01.4: Historical immutable versions SHALL remain inspectable.
+- FR-01.5: Library/detail SHALL present canonical type + human-readable title + version before exact ref; exact ref, raw clauses, and machine metadata belong in Technical Details.
+- FR-01.6: Locked artifact categories/capabilities SHALL not compete with current curriculum work, but direct links SHALL explain their prerequisite honestly.
 
 ### FR-02: Commission Catalog
 - FR-02.1: Content-defined recipes SHALL state output artifact type/title/version intent, goal, capability requirement, credit cost, prerequisites, expected source/clause/dependency changes, and unlock conditions.
@@ -53,6 +55,7 @@ The Engineering Workbench is the player's library and commissioning surface for 
 ## Non-Functional Requirements
 
 - **NFR-01: Learnability** - Source and architecture impact are readable without requiring raw JSON.
+- **NFR-05: Information Hierarchy** - Commission goal and expected operational impact precede registry metadata; no ordinary choice requires interpreting a raw id.
 - **NFR-02: Accessibility** - Library/detail/commission flows are fully keyboard navigable; source is selectable.
 - **NFR-03: Transaction Safety** - Charge and proposal creation are atomic/idempotent.
 - **NFR-04: Isolation** - Workbench never mutates deployed artifact content.
@@ -73,6 +76,7 @@ Freeform prompt parsing/editing, developer staffing, diff/eval/deploy workflow, 
 - **PD-01:** The player practices recognition, architecture, and engineering decisions rather than typing 4,000-token artifacts.
 - **PD-02:** Workbench capabilities unlock only after felt need.
 - **PD-03:** Context cost and dependency impact are first-class on every detail/proposal.
+- **PD-04:** `SKILL · Carnivore Feeding · v3` is the model for artifact presentation: canonical type and approachable instance are both explicit.
 
 ## Implementation Decisions
 
