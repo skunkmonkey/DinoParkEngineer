@@ -23,20 +23,67 @@ Read the relevant specification before changing behavior:
 - `Specs/application_PRD.md` is the product baseline: intent, learning outcomes,
   canonical terminology, game loop, invariants, and MVP acceptance criteria.
 - The owning feature spec is `Specs/<featureSlug>_<specType>.md`.
+- `coding_standards.md` defines the mandatory implementation, determinism,
+  accessibility, testing, portability, and completion standards for all code.
 - `Docs/` contains implementation notes and operational checklists that explain
   the current behavior of completed features.
-- `Docs/brainstorming_session.md` is background only. Consult it when the PRDs
-  do not answer an unresolved product question; do not use it to override an
-  explicit requirement.
+- `Docs/brainstorming_session.md` and `Docs/game_planning_session.md` are
+  background only. Consult them when the PRDs do not answer an unresolved
+  product question; do not use it to override an explicit requirement.
 - `Specs/Templates/template_PRD.md` is the template for new features.
   `Specs/Templates/template_PLAN.md` is the template for multi-step
   implementation plans and vertical slices. PLAN files are ephemeral and only
   exist during implementation. They allow AI to receive rapid end-to-end testing
   results rather than having to wait until the entire feature is implemented.
 
-When a feature PRD refines the application PRD, follow the more specific
-requirement while preserving the application-level invariants. Do not silently
-resolve a contradiction in code; record the decision in the appropriate spec.
+Do not silently resolve a contradiction in code; record the decision in the appropriate spec.
+
+## Checklist-driven execution
+
+`checklist.md` is the implementation control document. When the user says
+"Read checklist.md and implement the next item" (or equivalent), treat it as a
+request to execute the **AI Execution Protocol** at the top of that file. A
+fresh context must not depend on prior chat history.
+
+Before editing, the orchestrating agent must:
+
+1. Read this file and the complete AI Execution Protocol in `checklist.md`.
+2. Read `Specs/application_PRD.md` and `coding_standards.md`.
+3. Select the next actionable item using the checklist's gates, dependency
+   order, status rules, and parallel groups. Do not merely choose the first
+   unchecked line when its prerequisites are incomplete.
+4. Read the selected feature's complete PRD and PLAN, then inspect the directly
+   relevant upstream public contracts, downstream acceptance criteria, current
+   code, tests, and implementation docs.
+5. Mark the selected item `[-]` before implementation. Implement a coherent,
+   testable vertical slice; update every checklist line included in that slice.
+6. Run focused automated tests, required computer-use verification, relevant
+   validation, and final diff review before marking any item `[x]`.
+
+If an item cannot be completed, follow the checklist's blocker rules. Never
+claim completion based only on code generation or unit tests when browser
+computer-use verification is possible.
+
+### Orchestration roles
+
+The intended workflow is a Sol orchestrator at medium reasoning effort using
+Luna subagents at max reasoning effort for bounded parallel work. Model and
+reasoning selection are configured by the user or orchestration environment;
+these repository instructions define the responsibilities, not the runtime
+model configuration.
+
+- The Sol orchestrator owns context loading, item selection, dependency gates,
+  task decomposition, integration, review, checklist state, and the final
+  verification/handoff.
+- Luna subagents receive bounded, independent assignments with the owning PRD
+  and PLAN, exact acceptance criteria, allowed file scope, dependencies, and
+  required test evidence. They do not edit `checklist.md` and must not be given
+  overlapping authoritative state or file ownership.
+- The orchestrator reviews every returned diff and test result, resolves
+  integration issues, runs the integrated validation, and personally completes
+  or directly supervises computer-use verification.
+- Parallelize only items in an explicit checklist parallel group after its
+  shared gate is complete. Integrate and verify that group before dependent work.
 
 ## Spec-driven development
 
@@ -54,10 +101,12 @@ For every change:
 4. For work spanning multiple concerns, make a plan with vertical slices using
    `Specs/Templates/template_PLAN.md`. Each slice should produce a visible,
    testable result and identify dependencies and tests.
-5. Implement against the spec, add or update focused tests, and update relevant
-   `Docs/` implementation notes when user-visible or operational behavior
-   changes.
-6. Run the validation commands below and inspect the final diff for accidental
+5. Implement against the specs, and add or update focused tests. Tests should
+   meaningfully verify ALL testable user observable behavior. More fine-grained
+   tests are unnecessary.
+6. Follow `coding_standards.md`, including its deterministic, accessibility,
+   cross-platform, generated-asset, and public-boundary rules.
+7. Run the validation commands below and inspect the final diff for accidental
    scope or undocumented product decisions.
 
 ## Product invariants
@@ -134,4 +183,7 @@ Use the narrowest relevant checks while iterating, then run `npm run validate`
 for a complete change. A change is not complete until its behavior, tests,
 specification impact, and documentation impact have all been considered. All
 behavioral changes must be tested successfully using the computer use skill to
-verify they work before completing.
+verify they work before completing whenever the affected or integrated behavior
+is reachable in the running browser. If that verification is possible but
+blocked, record the exact blocker in `checklist.md` and do not mark the slice
+complete. Follow the full definition of done in `coding_standards.md`.

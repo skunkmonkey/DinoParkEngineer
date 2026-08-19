@@ -1,10 +1,5 @@
 # Dino Park Engineer - Product Requirements Document
 
-<!-- This file answers the what and why of the product/feature. It is from the
-customer's PoV and should not contain architecture or technical information
-beyond user-level things like OS / memory requirements / etc. Keep this comment
-when using this template -->
-
 ## Feature Dependencies
 
 This document is the application baseline. Every feature PRD SHALL trace its
@@ -38,6 +33,7 @@ any refinement or conflict rather than resolving it silently in code.
 | 14 | Persistence | Owns local saves and exact restoration of world, content, history, progression, incidents, evals, and deployments. |
 | 15 | Curriculum Content | Owns the ordered scenario catalog and transfer cases that teach the application curriculum through play. |
 | 16 | Telemetry and Playtesting | Owns local or explicitly consented behavioral instrumentation and playtest reporting without capturing authored text. |
+| 17 | Rendering Asset Pipeline | Owns pre-runtime generation, provenance, review, validation, normalization, compilation, and versioned delivery of visual and rendering assets, including assets produced with OpenAI models. |
 
 ## Executive Summary
 
@@ -851,6 +847,32 @@ preserving the lesson and deterministic causality.
 - FR-17.9: Playtest instrumentation, if enabled, SHALL be explicit, minimal,
   consented, and SHALL NOT capture authored text or invasive raw input streams.
 
+### FR-18: Rendering Asset Production
+
+- FR-18.1: The development workflow SHALL support producing source rendering
+  assets with OpenAI image-generation or image-editing models before the
+  features that consume those assets are implemented.
+- FR-18.2: Generated output SHALL be treated as untrusted source material and
+  SHALL require explicit review, validation, and approval before it enters a
+  runtime asset bundle.
+- FR-18.3: Each generated source asset SHALL record stable identity, intended
+  use, prompt or brief revision, model and model snapshot when available,
+  reference inputs, generation parameters, creation time, reviewer decision,
+  and transformation provenance without storing API secrets.
+- FR-18.4: The asset pipeline SHALL normalize approved sources into
+  deterministic, versioned runtime artifacts with declared dimensions,
+  anchors, bounds, animation frames, semantic role, variants, and source
+  linkage as applicable.
+- FR-18.5: Runtime gameplay SHALL load only compiled local assets and SHALL NOT
+  require an OpenAI request, model account, API key, network connection, or
+  model availability.
+- FR-18.6: Missing, invalid, or unapproved assets SHALL fail the build or use an
+  explicit development placeholder; production SHALL NOT silently substitute
+  an unrelated asset.
+- FR-18.7: Visual assets SHALL support the stable semantic grammar and
+  accessibility equivalents owned by Player Experience and SHALL NOT be the
+  sole carrier of essential state.
+
 ## Non-Functional Requirements
 
 - **NFR-01: Determinism** - Authoritative behavior, evals, retention,
@@ -892,6 +914,12 @@ preserving the lesson and deterministic causality.
   authoritative rules of unrelated existing content.
 - **NFR-14: Privacy** - No account or remote telemetry is required. Optional
   research instrumentation SHALL follow explicit consent and data minimization.
+- **NFR-15: Cross-platform development** - Repository setup, validation, asset
+  compilation, and content authoring SHALL be supported on current Windows and
+  macOS development environments without OS-specific product behavior.
+- **NFR-16: Asset reproducibility** - Compiled runtime assets SHALL be
+  reproducible from committed approved sources and manifests without making a
+  new model request. Regeneration MAY produce a new reviewed source version.
 
 ## Invariants
 
@@ -966,6 +994,12 @@ preserving the lesson and deterministic causality.
   one sensory channel, hover, precise pointer movement, or rapid reaction.
 - **INV-26: Domain ownership** - UI code renders projections and issues allowed
   commands; authoritative transitions remain in owning domain services.
+- **INV-27: Generated media is not authority** - AI-generated or manually
+  authored media may represent world state, but it never determines simulation
+  truth or replaces semantic and accessible state projections.
+- **INV-28: No runtime model dependency** - OpenAI models may assist the
+  development-time asset workflow, but the shipped game never calls them and
+  never requires their credentials or availability.
 
 ## MVP Definition and Acceptance Criteria
 
@@ -1002,6 +1036,9 @@ later features do not require replacing fake systems.
 - Local persistence of exact world, versions, trace, eval, deployment, and
   progression state.
 - The accessibility baseline in FR-17 for every included path.
+- A reviewed and versioned rendering-asset pipeline that can compile the MVP
+  park, dinosaur, robot, gate, visitor, cue, and effects assets from approved
+  sources with recorded provenance.
 
 ### MVP Acceptance Criteria
 
@@ -1199,6 +1236,15 @@ later features do not require replacing fake systems.
 - **IMP-14: No premature numeric tuning** - Feature PRDs may establish measured
   budgets and balance only when a prototype or explicit product decision
   supports them.
+- **IMP-15: Hybrid DOM and canvas presentation** - Semantic application and
+  engineering surfaces SHALL use React-rendered DOM; the Park View SHALL use a
+  PixiJS WebGL canvas as a read-only projection of authoritative state.
+- **IMP-16: Static cross-platform toolchain** - The application SHALL use
+  strict TypeScript, React, PixiJS, and Vite and SHALL produce static browser
+  assets from the same repository commands on Windows and macOS.
+- **IMP-17: Pre-runtime model use** - OpenAI image generation and editing MAY
+  produce source assets during development, but model integration SHALL remain
+  outside runtime gameplay and compiled bundles SHALL be independently usable.
 
 ## Testing Decisions
 
@@ -1305,6 +1351,9 @@ complexity, stable deterministic contracts, and focused tests.
 - **MOD-19: Player Experience** - Park and focused-mode adapters, semantic
   visual grammar, camera and zoom, accessible interactions, state projection,
   and route integration.
+- **MOD-20: Rendering Asset Pipeline** - Asset briefs, OpenAI-generation
+  provenance, source review, deterministic transformations, atlases, manifests,
+  validation, development placeholders, and versioned runtime bundles.
 
 ## Required Feature PRD Decomposition
 
@@ -1328,22 +1377,23 @@ Recommended owning PRDs and dependency order:
 |---|---|---|---|
 | 1 | application-shell_PRD.md | Browser bootstrap, routes, fallback, feature contracts | None |
 | 2 | content-registry_PRD.md | Artifact identity, validation, exact versions, dependencies | Application Shell |
-| 3 | simulation_PRD.md | World state, time, entities, deterministic commands and fixtures | Content Registry |
-| 4 | instruction_PRD.md | Machine-readable clauses and deterministic Agent execution | Simulation, Content Registry |
-| 5 | context_PRD.md | Context items, capacity, assembly, runtime growth, retention | Instruction, Content Registry |
-| 6 | memory_PRD.md | External state, retrieval, compaction, provenance | Context, Content Registry |
-| 7 | trace-replay_PRD.md | Trace schema, world timeline, replay, historical projection | Simulation, Instruction, Context |
-| 8 | park-operations_PRD.md | Jobs, day loop, alerts, incidents, visitors, operational commands | Simulation, Trace Replay |
-| 9 | player-experience_PRD.md | Park View, inspector, focused modes, visual grammar, onboarding | Park Operations and relevant projections |
-| 10 | engineering-workbench_PRD.md | Park Developer, artifacts, comparison, composition, Handbook | Content Registry, Context |
-| 11 | eval-runner_PRD.md | Cases, suites, expected behavior, cost, deterministic rerun | Simulation, Instruction, Context, Trace Replay |
-| 12 | review-deployment_PRD.md | Review records, eval selection, pinned deployment, revert | Workbench, Eval Runner, Content Registry |
-| 13 | economy-progression_PRD.md | Rating, money, costs, unlocks, expansion, expression | Park Operations, Review Deployment |
-| 14 | incident-response_PRD.md | Fault monitoring, response, stabilization, suspension support | Park Operations, Economy, Trace Replay |
-| 15 | orchestration_PRD.md | Multiple Workers, Manager Agent, authority and routing | Instruction, Context, Park Operations |
-| 16 | persistence_PRD.md | Exact local save, restore, migration, failure handling | Stable schemas from owning domains |
-| 17 | curriculum-content_PRD.md | Scenario progression, authored artifacts, evals, transfer cases | All curriculum-owning domains |
-| 18 | telemetry-playtesting_PRD.md | Consented event instrumentation and research outputs | Player Experience, Privacy requirements |
+| 3 | rendering-assets_PRD.md | OpenAI-assisted source generation, provenance, review, compilation, and runtime asset bundles | Application Shell, Content Registry |
+| 4 | simulation_PRD.md | World state, time, entities, deterministic commands and fixtures | Content Registry |
+| 5 | instruction_PRD.md | Machine-readable clauses and deterministic Agent execution | Simulation, Content Registry |
+| 6 | context_PRD.md | Context items, capacity, assembly, runtime growth, retention | Instruction, Content Registry |
+| 7 | memory_PRD.md | External state, retrieval, compaction, provenance | Context, Content Registry |
+| 8 | trace-replay_PRD.md | Trace schema, world timeline, replay, historical projection | Simulation, Instruction, Context |
+| 9 | park-operations_PRD.md | Jobs, day loop, alerts, incidents, visitors, operational commands | Simulation, Trace Replay |
+| 10 | player-experience_PRD.md | Park View, inspector, focused modes, visual grammar, onboarding | Park Operations, Rendering Asset Pipeline, and relevant projections |
+| 11 | engineering-workbench_PRD.md | Park Developer, artifacts, comparison, composition, Handbook | Content Registry, Context |
+| 12 | eval-runner_PRD.md | Cases, suites, expected behavior, cost, deterministic rerun | Simulation, Instruction, Context, Trace Replay |
+| 13 | review-deployment_PRD.md | Review records, eval selection, pinned deployment, revert | Workbench, Eval Runner, Content Registry |
+| 14 | economy-progression_PRD.md | Rating, money, costs, unlocks, expansion, expression | Park Operations, Review Deployment |
+| 15 | incident-response_PRD.md | Fault monitoring, response, stabilization, suspension support | Park Operations, Economy, Trace Replay |
+| 16 | orchestration_PRD.md | Multiple Workers, Manager Agent, authority and routing | Instruction, Context, Park Operations |
+| 17 | persistence_PRD.md | Exact local save, restore, migration, failure handling | Stable schemas from owning domains |
+| 18 | curriculum-content_PRD.md | Scenario progression, authored artifacts, evals, transfer cases | All curriculum-owning domains |
+| 19 | telemetry-playtesting_PRD.md | Consented event instrumentation and research outputs | Player Experience, Privacy requirements |
 
 Feature boundaries may be combined only when a PRD explains why the combined
 module remains deep and dependency ownership stays clear. They SHALL NOT be
