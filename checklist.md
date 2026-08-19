@@ -507,26 +507,26 @@ Owning documents: `Specs/context_PRD.md` and `Specs/context_PLAN.md`.
 
 Owning documents: `Specs/memory_PRD.md` and `Specs/memory_PLAN.md`.
 
-- [ ] Define exact versioned memory entries, stores, scopes, facts, tags,
+- [x] Define exact versioned memory entries, stores, scopes, facts, tags,
   source lineage, creation/observation ticks, supersession, and provenance.
-- [ ] Keep memory unavailable until explicitly retrieved into Context.
-- [ ] Implement atomic externalization with Context retention events.
-- [ ] Prevent failed storage from creating phantom externalization.
-- [ ] Implement explicit deterministic retrieval predicates, ranking, limits,
+- [x] Keep memory unavailable until explicitly retrieved into Context.
+- [x] Implement atomic externalization with Context retention events.
+- [x] Prevent failed storage from creating phantom externalization.
+- [x] Implement explicit deterministic retrieval predicates, ranking, limits,
   authority, and stable tie-breaking.
-- [ ] Return selected, considered, rejected, unavailable, and conflicting entries
+- [x] Return selected, considered, rejected, unavailable, and conflicting entries
   with reasons and context costs.
-- [ ] Implement Agent, team/Manager, enclosure, park, and scenario scopes as
+- [x] Implement Agent, team/Manager, enclosure, park, and scenario scopes as
   content enables them.
-- [ ] Implement read/write authority for shared memory.
-- [ ] Implement staleness, supersession, conflict, broadness, duplication, and
+- [x] Implement read/write authority for shared memory.
+- [x] Implement staleness, supersession, conflict, broadness, duplication, and
   routing diagnostics.
-- [ ] Implement deterministic Compact History reducers.
-- [ ] Record preserved facts, exact sources, known lost detail, summary version,
+- [x] Implement deterministic Compact History reducers.
+- [x] Record preserved facts, exact sources, known lost detail, summary version,
   cost, and summary-of-summary lineage.
-- [ ] Implement Externalize and Retrieve ports used by Context.
-- [ ] Create retrieval-miss, stale-shared-memory, and compaction-loss fixtures.
-- [ ] Add retrieval, authority, failure, lineage, repeatability, and behavior
+- [x] Implement Externalize and Retrieve ports used by Context.
+- [x] Create retrieval-miss, stale-shared-memory, and compaction-loss fixtures.
+- [x] Add retrieval, authority, failure, lineage, repeatability, and behavior
   tests.
 
 #### C2 - Trace and Replay
@@ -534,49 +534,55 @@ Owning documents: `Specs/memory_PRD.md` and `Specs/memory_PLAN.md`.
 Owning documents: `Specs/trace-replay_PRD.md` and
 `Specs/trace-replay_PLAN.md`.
 
-- [ ] Define versioned trace identity and event schemas.
-- [ ] Record exact Task/job/eval, resolved content manifest, seed/state,
+- [x] Define versioned trace identity and event schemas.
+- [x] Record exact Task/job/eval, resolved content manifest, seed/state,
   decision cycles, context manifests, retention, clauses, conflicts, tool
   requests/results, evidence, world deltas, messages, delegation, outcomes, and
   incident links.
-- [ ] Add stable logical tick, sequence, entity links, and causal parent links.
-- [ ] Prohibit hidden-reasoning/chain-of-thought fields by schema and tests.
-- [ ] Capture authoritative subsystem records rather than reconstructing causes
+- [x] Add stable logical tick, sequence, entity links, and causal parent links.
+- [x] Prohibit hidden-reasoning/chain-of-thought fields by schema and tests.
+- [x] Capture authoritative subsystem records rather than reconstructing causes
   from UI state.
-- [ ] Finalize traces as complete, interrupted, invalid, or incomplete.
-- [ ] Surface trace-capture failure without changing simulation behavior.
-- [ ] Implement concise outcome and detailed decision-cycle projections.
-- [ ] Distinguish available, unavailable, excluded, stale, and never-routed data.
-- [ ] Preserve causal navigation identity across park, job, Agent, evidence,
+- [x] Finalize traces as complete, interrupted, invalid, or incomplete.
+- [x] Surface trace-capture failure without changing simulation behavior.
+- [x] Implement concise outcome and detailed decision-cycle projections.
+- [x] Distinguish available, unavailable, excluded, stale, and never-routed data.
+- [x] Preserve causal navigation identity across park, job, Agent, evidence,
   artifact, eval, review, and deployment links.
-- [ ] Implement isolated historical replay with play, pause, step, seek, speed,
+- [x] Implement isolated historical replay with play, pause, step, seek, speed,
   and entity/event focus.
-- [ ] Keep replay and production state strictly isolated.
-- [ ] Implement exact authoritative rerun verification and first-mismatch report.
-- [ ] Implement trace comparison by aligned cycles, context, clauses, actions,
+- [x] Keep replay and production state strictly isolated.
+- [x] Implement exact authoritative rerun verification and first-mismatch report.
+- [x] Implement trace comparison by aligned cycles, context, clauses, actions,
   evidence, cost, and world outcome.
-- [ ] Add golden traces, prohibited-field tests, causal-link tests, replay
+- [x] Add golden traces, prohibited-field tests, causal-link tests, replay
   equivalence, mismatch, and long-trace seek tests.
 
 ### Context advanced-retention integration
 
-- [ ] Implement Priority Retention using pins, explicit priorities, and stable
+- [x] Implement Priority Retention using pins, explicit priorities, and stable
   ties.
-- [ ] Integrate deterministic Compact History through the Memory public API.
-- [ ] Integrate Externalize and Retrieve through the Memory public API.
-- [ ] Prove every retention strategy records exact before/after manifests and
+- [x] Integrate deterministic Compact History through the Memory public API.
+- [x] Integrate Externalize and Retrieve through the Memory public API.
+- [x] Prove every retention strategy records exact before/after manifests and
   downstream behavior.
-- [ ] Expose full retention comparisons without implying a universal best policy.
+- [x] Expose full retention comparisons without implying a universal best policy.
 
 ### Integration Gate B
 
-- [ ] Run a complete Agent decision cycle from exact job versions through
+- [x] Run a complete Agent decision cycle from exact job versions through
   Context, Instruction, Simulation, and Trace.
-- [ ] Replay the exact result with the same state and versions.
-- [ ] Demonstrate missing maintenance context without implying the Agent saw it.
-- [ ] Demonstrate Strict stop, Keep Newest loss, compaction loss, and retrieval
+- [x] Replay the exact result with the same state and versions.
+- [x] Demonstrate missing maintenance context without implying the Agent saw it.
+- [x] Demonstrate Strict stop, Keep Newest loss, compaction loss, and retrieval
   failure.
-- [ ] Prove prose changes alone do not change any result or trace.
+- [x] Prove prose changes alone do not change any result or trace.
+  - In-app browser computer-use verification on 2026-08-19 exercised exact
+    Trace inspection, isolated historical replay, Priority Retention,
+    Externalize and Retrieve, a retrieval miss, Enter-key activation,
+    persistent evidence, 150% text, high contrast, and reduced motion. The
+    browser reported no runtime warnings or errors; `npm run validate` passed
+    all 95 tests and the production build.
 
 ---
 

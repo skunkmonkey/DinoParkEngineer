@@ -22,9 +22,19 @@ and retained item, and halts if pinned or ineligible Context still cannot fit.
 No continuation helper accepts an over-capacity manifest, and conflicting fact
 values fail explicitly instead of being silently selected.
 
+Priority Retention evicts lower-priority eligible unpinned items first, then
+uses creation tick and stable ID for ties. Compact History accepts only exact
+Memory sources that correspond to eligible Task History items, replaces those
+items with the returned versioned summary, and records known lost detail.
+Externalize and Retrieve removes an item only after Memory returns a successful
+storage event; failed storage leaves the item visible and halts if Context
+still cannot fit. Explicit retrieval results enter as costed Memory items at a
+decision boundary. `compareRetentionResults` projects exact outcomes for every
+policy without a best-policy score.
+
 Capacity states and quality diagnostics are separate. Staleness, duplication,
 conflict, irrelevance, and missing requirements identify supporting items and
-never produce a fabricated quality score. Priority Retention, compaction, and
-externalization are Phase 4 integrations through the Memory public contract.
+never produce a fabricated quality score. Advanced retention is integrated
+through the Memory public contract.
 Focused verification is `npm test -- context` plus the Foundation Lab rendered
 and browser scenarios.

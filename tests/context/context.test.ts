@@ -1,8 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { assembleContext, contextFacts, contextItemSchema, createContextFoundationFixture, type ContextFault, type ContextItem } from "../../src/context/public.js";
+import { assembleContext, compareRetentionResults, contextFacts, contextItemSchema, createContextFoundationFixture, type ContextAssemblyInput, type ContextFault, type ContextItem, type RetentionPolicy } from "../../src/context/public.js";
 import { createInstructionFoundationFixture, executeInstruction, type ResolvedInstructionArtifact } from "../../src/instruction/public.js";
+import { createMemoryFoundationFixture, createMemoryPorts, type MemoryEntry } from "../../src/memory/public.js";
 
 const ready = (input: Parameters<typeof assembleContext>[0]) => {
   const result = assembleContext(input); assert.equal(result.ok, true); if (!result.ok) throw new Error("Expected a valid Context result."); return result;
@@ -66,4 +67,90 @@ test("capacity and quality diagnostics remain separate and never produce a quali
 test("conflicting facts fail explicitly instead of being silently selected", () => {
   const fixture = createContextFoundationFixture(); const conflict: ContextItem = { ...fixture.items[0]!, id: "context:conflicting-task", category: "Message", payload: { reference: "conflict", facts: { "task.kind": "inspect" } }, quality: { relevance: "relevant", conflictKey: "task-kind" } };
   const result = ready({ ...fixture.base, capacity: 30, additions: [conflict] }); assert.throws(() => contextFacts(result.afterRetention), /Conflicting Context fact task.kind/u);
+});
+
+const historyItem = (entry: MemoryEntry): ContextItem => ({
+  id: entry.id,
+  category: "TaskHistory",
+  provenance: { source: `memory:${entry.storeId}`, routeId: `route:${entry.id.split(":")[1] ?? "history"}` },
+  sourceVersion: { id: entry.id, version: entry.version },
+  cost: entry.contextCost,
+  createdTick: entry.createdTick,
+  priority: entry.priority,
+  retentionEligible: true,
+  pinned: false,
+  payload: { reference: `${entry.id}@${entry.version}`, facts: entry.facts },
+  quality: { relevance: "relevant" },
+});
+
+test("Priority Retention protects pins and higher priorities with stable ties", () => {
+  const fixture = createContextFoundationFixture();
+  const result = ready({ ...fixture.strictOverflow, capacity: 20, retentionPolicy: "PriorityRetention" });
+  assert.equal(result.status, "ready");
+  assert.equal(result.retention?.policy, "PriorityRetention");
+  assert.deepEqual(result.retention?.excludedItemIds, ["context:gate-observation", "context:incident-evidence", "context:manager-message", "context:tool-result"]);
+  assert.equal(result.afterRetention.entries.find((entry) => entry.itemId === "context:maintenance-policy")?.lifecycle, "included");
+});
+
+test("Compact History uses exact Memory sources and records known loss", () => {
+  const memory = createMemoryFoundationFixture();
+  const histories = memory.entries.filter((entry) => entry.id.startsWith("memory:history-")).map(historyItem);
+  const input: ContextAssemblyInput = {
+    agentId: "agent:worker-alpha", jobId: "job:history", decisionTick: 8, capacity: 3,
+    routes: [], availableSources: [], priorRetained: [], additions: histories,
+    retentionPolicy: "CompactHistory",
+    memory: { ports: createMemoryPorts(memory.repository), principal: { id: "agent:worker-alpha" }, compactionRequest: memory.compaction },
+  };
+  const result = ready(input);
+  assert.equal(result.status, "ready");
+  assert.deepEqual(result.retention?.compactedItemIds, ["memory:history-observation", "memory:history-tool-result"]);
+  assert.deepEqual(result.retention?.knownLostDetail, ["dinosaur-mood", "tool-results"]);
+  assert.equal(result.afterRetention.entries.filter((entry) => entry.lifecycle === "compacted").length, 2);
+  assert.deepEqual(contextFacts(result.afterRetention), { "gate.position": "closed" });
+});
+
+test("Externalize and Retrieve removes only successfully stored Context and later retrieves it explicitly", () => {
+  const memory = createMemoryFoundationFixture();
+  const ports = createMemoryPorts(memory.repository);
+  const externalized = ready({
+    agentId: "agent:worker-alpha", jobId: "job:externalize", decisionTick: 3, capacity: 0,
+    routes: [], availableSources: [], priorRetained: [], additions: [memory.contextItem], retentionPolicy: "ExternalizeRetrieve",
+    memory: { ports, principal: { id: "agent:worker-alpha" }, externalizationRule: memory.externalization },
+  });
+  assert.equal(externalized.status, "ready");
+  assert.deepEqual(externalized.retention?.externalizedItemIds, [memory.contextItem.id]);
+  assert.equal(externalized.afterRetention.used, 0);
+  assert.equal(memory.repository.snapshot().entries.some((entry) => entry.sourceItems.some((source) => source.itemId === memory.contextItem.id)), true);
+
+  const retrieved = ready({
+    agentId: "agent:worker-alpha", jobId: "job:retrieve", decisionTick: 4, capacity: 20,
+    routes: [], availableSources: [], priorRetained: [], additions: [], retentionPolicy: "Strict",
+    memory: { ports, principal: { id: "agent:worker-alpha" }, retrievalQuery: { principal: { id: "agent:worker-alpha" }, storeIds: [memory.externalization.targetStoreId], tags: ["gate", "maintenance"], limit: 10 } },
+  });
+  assert.equal(retrieved.afterRetention.entries.some((entry) => entry.item?.category === "Memory" && entry.lifecycle === "included"), true);
+  assert.equal(contextFacts(retrieved.afterRetention)["gate.maintenance"], "closer-disabled");
+});
+
+test("failed externalization keeps Context visible and halts without phantom removal", () => {
+  const memory = createMemoryFoundationFixture();
+  const before = memory.repository.snapshot().entries.length;
+  const result = ready({
+    agentId: "agent:unauthorized", jobId: "job:externalize", decisionTick: 3, capacity: 0,
+    routes: [], availableSources: [], priorRetained: [], additions: [memory.contextItem], retentionPolicy: "ExternalizeRetrieve",
+    memory: { ports: createMemoryPorts(memory.repository), principal: { id: "agent:unauthorized" }, externalizationRule: memory.externalization },
+  });
+  assert.equal(result.status, "halted");
+  assert.equal(result.afterRetention.entries[0]?.lifecycle, "included");
+  assert.equal(memory.repository.snapshot().entries.length, before);
+  assert.deepEqual(result.retention?.externalizedItemIds ?? [], []);
+});
+
+test("retention comparison exposes exact outcomes without a universal best policy", () => {
+  const fixture = createContextFoundationFixture();
+  const policies: readonly RetentionPolicy[] = ["Strict", "KeepNewest", "PriorityRetention", "CompactHistory", "ExternalizeRetrieve"];
+  const results = Object.fromEntries(policies.map((policy) => [policy, assembleContext({ ...fixture.strictOverflow, retentionPolicy: policy })])) as Record<RetentionPolicy, ReturnType<typeof assembleContext>>;
+  const comparison = compareRetentionResults(results);
+  assert.deepEqual(comparison.map((entry) => entry.policy), ["CompactHistory", "ExternalizeRetrieve", "KeepNewest", "PriorityRetention", "Strict"]);
+  assert.equal(comparison.every((entry) => !("best" in entry) && !("score" in entry)), true);
+  assert.equal(comparison.find((entry) => entry.policy === "Strict")?.status, "halted");
 });

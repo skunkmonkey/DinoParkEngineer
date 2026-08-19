@@ -25,6 +25,16 @@ test("foundation lab renders persistent semantic equivalents and keyboard-native
   assert.match(html, /Trigger Strict overflow/u);
   assert.match(html, /Apply Keep Newest/u);
   assert.match(html, /utilization is not a quality score/u);
+  assert.match(html, /Memory, Trace, and historical replay/u);
+  assert.match(html, /Phase 4 decision-cycle evidence/u);
+  assert.match(html, /Unavailable to Agent/u);
+  assert.match(html, /Inspect complete decision Trace/u);
+  assert.match(html, /Step isolated historical replay/u);
+  assert.match(html, /Apply Priority Retention/u);
+  assert.match(html, /Externalize and retrieve Memory/u);
+  assert.match(html, /Inspect retrieval miss/u);
+  assert.match(html, /Inspect exact Trace events/u);
+  assert.match(html, /Persistent Memory and Trace evidence/u);
   assert.match(html, /Gate physical state/u);
   assert.match(html, /Gate sensor/u);
   assert.match(html, /Invalid optional package diagnostics/u);

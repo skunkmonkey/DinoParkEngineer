@@ -20,6 +20,16 @@ export const contextItemSchema = z.strictObject({
   quality: z.strictObject({ staleAtTick: z.number().int().nonnegative().optional(), relevance: z.enum(["relevant", "irrelevant"]), duplicateKey: z.string().min(1).optional(), conflictKey: z.string().min(1).optional() }),
 });
 export const contextRouteSchema = z.strictObject({ id, itemId: id, required: z.boolean(), applicable: z.boolean() });
+const memoryIntegrationSchema = z.custom<import("./types.js").ContextMemoryIntegration>((value) => {
+  if (value === undefined) return true;
+  if (value === null || typeof value !== "object") return false;
+  const candidate = value as Partial<import("./types.js").ContextMemoryIntegration>;
+  return candidate.ports !== undefined
+    && typeof candidate.ports.externalize === "function"
+    && typeof candidate.ports.retrieve === "function"
+    && typeof candidate.ports.compactHistory === "function"
+    && candidate.principal !== undefined;
+});
 export const contextAssemblyInputSchema = z.strictObject({
   agentId: id,
   jobId: id,
@@ -29,6 +39,7 @@ export const contextAssemblyInputSchema = z.strictObject({
   availableSources: z.array(contextItemSchema),
   priorRetained: z.array(contextItemSchema),
   additions: z.array(contextItemSchema),
-  retentionPolicy: z.enum(["Strict", "KeepNewest"]),
+  retentionPolicy: z.enum(["Strict", "KeepNewest", "PriorityRetention", "CompactHistory", "ExternalizeRetrieve"]),
+  memory: memoryIntegrationSchema.optional(),
   faultPort: z.custom<import("./types.js").ContextFaultPort>((value) => value === undefined || (value !== null && typeof value === "object" && "reportContextFault" in value && typeof value.reportContextFault === "function")).optional(),
 });

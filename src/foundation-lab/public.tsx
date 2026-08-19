@@ -8,6 +8,7 @@ import {
   type InstructionDecision,
   type ResolvedInstructionArtifact,
 } from "../instruction/public.js";
+import { createMemoryFoundationFixture, createMemoryPorts } from "../memory/public.js";
 import {
   createSimulation,
   type CommandResult,
@@ -15,7 +16,9 @@ import {
   type StableId,
   type WorldState,
 } from "../simulation/public.js";
+import { createReplaySession } from "../trace-replay/public.js";
 import {
+  createPhase4IntegrationProof,
   createRegistryLabProjection,
   createSimulationRegistryProof,
   runFoundationReplay,
@@ -50,6 +53,9 @@ export function FoundationLab(): React.JSX.Element {
   const contextFixture = useMemo(createContextFoundationFixture, []);
   const contextBase = useMemo(() => assembleContext(contextFixture.base), [contextFixture]);
   const [contextEvidence, setContextEvidence] = useState("No Context lifecycle scenario has run yet.");
+  const phase4 = useMemo(createPhase4IntegrationProof, []);
+  const [phase4Evidence, setPhase4Evidence] = useState("No Memory or Trace scenario has run yet.");
+  const [phase4History, setPhase4History] = useState<readonly string[]>(["Phase 4 exact decision-cycle fixture is ready for inspection."]);
   const sequence = useRef(0);
 
   const refresh = (message: string): void => {
@@ -133,6 +139,46 @@ export function FoundationLab(): React.JSX.Element {
     if (!result.ok) { setContextEvidence("Keep Newest fixture was invalid."); return; }
     const decision = executeInstruction({ artifacts: [maintenanceStopPolicy(), instructionFixture.selfContained], facts: contextFacts(result.afterRetention), evidence: [], currentTick: 4 });
     setContextEvidence(`Keep Newest retained ${result.afterRetention.used}/${result.afterRetention.capacity} units and explicitly excluded ${result.retention?.excludedItemIds.join(", ")}. Downstream decision: ${describeInstructionOutcome(decision)}`);
+  };
+
+  const recordPhase4 = (message: string): void => {
+    setPhase4Evidence(message);
+    setPhase4History((entries) => [...entries, message]);
+  };
+
+  const inspectCompleteTrace = (): void => {
+    recordPhase4(`Complete Trace ${phase4.trace.id}: ${phase4.eventCount} structured events across ${phase4.cycleCount} cycles; Context ${phase4.contextUsed} units; exact rerun ${phase4.replayEquivalent ? "equivalent" : "mismatch"}; prose-only change ${phase4.proseIndependent ? "unchanged" : "changed"}.`);
+  };
+
+  const stepHistoricalReplay = (): void => {
+    const replay = createReplaySession(phase4.trace);
+    replay.play();
+    const stepped = replay.step();
+    const contextEvent = phase4.trace.events.find((event) => event.kind === "context-assembly");
+    const focused = contextEvent === undefined ? stepped : replay.seek({ eventId: contextEvent.id });
+    replay.pause();
+    recordPhase4(`Historical replay stepped to tick ${focused.cursor.tick}, event ${focused.selectedEventId ?? "none"}; mode ${focused.mode}; production state remained ${phase4.productionIsolated ? "isolated" : "changed"}.`);
+  };
+
+  const runPriorityRetention = (): void => {
+    const result = assembleContext({ ...contextFixture.strictOverflow, capacity: 20, retentionPolicy: "PriorityRetention" });
+    if (!result.ok) { recordPhase4("Priority Retention input was invalid."); return; }
+    recordPhase4(`Priority Retention ${result.status}: retained ${result.afterRetention.used}/${result.afterRetention.capacity} units; excluded ${result.retention?.excludedItemIds.join(", ") ?? "none"}. Pins and higher priorities stayed protected.`);
+  };
+
+  const runMemoryLifecycle = (): void => {
+    const memory = createMemoryFoundationFixture();
+    const ports = createMemoryPorts(memory.repository);
+    const externalized = assembleContext({ agentId: "agent:worker-alpha", jobId: "job:memory", decisionTick: 3, capacity: 0, routes: [], availableSources: [], priorRetained: [], additions: [memory.contextItem], retentionPolicy: "ExternalizeRetrieve", memory: { ports, principal: { id: "agent:worker-alpha" }, externalizationRule: memory.externalization } });
+    if (!externalized.ok || externalized.status !== "ready") { recordPhase4("Externalize and Retrieve failed; Context kept the observation visible."); return; }
+    const retrieved = assembleContext({ agentId: "agent:worker-alpha", jobId: "job:memory", decisionTick: 4, capacity: 20, routes: [], availableSources: [], priorRetained: [], additions: [], retentionPolicy: "Strict", memory: { ports, principal: { id: "agent:worker-alpha" }, retrievalQuery: { principal: { id: "agent:worker-alpha" }, storeIds: [memory.externalization.targetStoreId], tags: ["gate", "maintenance"], limit: 10 } } });
+    recordPhase4(`Externalize and Retrieve: stored ${externalized.retention?.memoryReferences?.map((entry) => `${entry.id}@${entry.version}`).join(", ")}; later retrieval ${retrieved.ok ? `assembled ${retrieved.afterRetention.used} Memory units with exact provenance` : "failed explicitly"}.`);
+  };
+
+  const inspectRetrievalMiss = (): void => {
+    const memory = createMemoryFoundationFixture();
+    const result = memory.repository.retrieve(memory.retrievalMiss);
+    recordPhase4(`Retrieval miss: ${result.selected.length} selected, ${result.rejected.length} rejected, ${result.considered.length} considered. Relevant stored Memory stayed unavailable because the explicit route did not match.`);
   };
 
   const runSafeFeed = (): void => {
@@ -253,6 +299,35 @@ export function FoundationLab(): React.JSX.Element {
         </div>
         <p role="status" aria-live="polite">{contextEvidence}</p>
         <p>Capacity state is reported separately from missing, stale, duplicate, conflicting, and irrelevant diagnostics; utilization is not a quality score.</p>
+      </section>
+
+      <section aria-labelledby="memory-trace-heading">
+        <h3 id="memory-trace-heading">Memory, Trace, and historical replay</h3>
+        <p><strong>Mode:</strong> production evidence with an isolated, persistently labeled historical replay.</p>
+        <dl className="status-grid" aria-label="Phase 4 decision-cycle evidence">
+          <div><dt>Trace</dt><dd><code>{phase4.trace.id}</code></dd></div>
+          <div><dt>Status</dt><dd>{phase4.trace.status}</dd></div>
+          <div><dt>Structured events</dt><dd>{phase4.eventCount}</dd></div>
+          <div><dt>Context</dt><dd>{phase4.contextUsed} units</dd></div>
+          <div><dt>Exact rerun</dt><dd>{phase4.replayEquivalent ? "Equivalent" : "Mismatch"}</dd></div>
+          <div><dt>Missing maintenance</dt><dd>{phase4.missingMaintenanceUnavailable ? "Unavailable to Agent" : "Unexpectedly available"}</dd></div>
+        </dl>
+        <div className="button-row" aria-label="Memory and Trace scenarios">
+          <button type="button" onClick={inspectCompleteTrace}>Inspect complete decision Trace</button>
+          <button type="button" onClick={stepHistoricalReplay}>Step isolated historical replay</button>
+          <button type="button" onClick={runPriorityRetention}>Apply Priority Retention</button>
+          <button type="button" onClick={runMemoryLifecycle}>Externalize and retrieve Memory</button>
+          <button type="button" onClick={inspectRetrievalMiss}>Inspect retrieval miss</button>
+        </div>
+        <p role="status" aria-live="polite">{phase4Evidence}</p>
+        <details>
+          <summary>Inspect exact Trace events</summary>
+          <ol>{phase4.trace.events.map((event) => <li key={event.id}><code>{event.id}</code>: tick {event.tick}, sequence {event.sequence}, {event.kind}</li>)}</ol>
+        </details>
+        <section className="event-history" aria-labelledby="phase4-history-heading">
+          <h4 id="phase4-history-heading">Persistent Memory and Trace evidence</h4>
+          <ol>{phase4History.map((entry, index) => <li key={`${index}-${entry}`}>{entry}</li>)}</ol>
+        </section>
       </section>
 
       <section aria-labelledby="world-heading">

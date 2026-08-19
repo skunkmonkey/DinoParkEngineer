@@ -1,5 +1,6 @@
 import type { ContentReference } from "../content-registry/public.js";
 import type { FactValue } from "../instruction/public.js";
+import type { CompactHistoryRequest, MemoryExternalizationRule, MemoryLifecyclePorts, MemoryPrincipal, MemoryReference, MemoryRetrievalQuery } from "../memory/public.js";
 
 export type ContextCategory = "Task" | "SystemPrompt" | "Skill" | "Policy" | "Knowledge" | "Memory" | "Tool" | "Message" | "Observation" | "ToolResult" | "TaskHistory" | "IncidentEvidence";
 export type ContextLifecycle = "included" | "unavailable-required" | "inapplicable" | "excluded" | "compacted" | "externalized";
@@ -70,14 +71,39 @@ export interface ContextDiagnostic {
 
 export interface RetentionAudit {
   readonly id: string;
-  readonly policy: "Strict" | "KeepNewest";
+  readonly policy: RetentionPolicy;
   readonly beforeManifestId: string;
   readonly afterManifestId: string;
   readonly excess: number;
   readonly retainedItemIds: readonly string[];
   readonly excludedItemIds: readonly string[];
+  readonly compactedItemIds?: readonly string[];
+  readonly externalizedItemIds?: readonly string[];
+  readonly memoryReferences?: readonly MemoryReference[];
+  readonly knownLostDetail?: readonly string[];
   readonly halted: boolean;
   readonly reasonCode: string;
+}
+
+export type RetentionPolicy = "Strict" | "KeepNewest" | "PriorityRetention" | "CompactHistory" | "ExternalizeRetrieve";
+
+export interface ContextMemoryIntegration {
+  readonly ports: MemoryLifecyclePorts;
+  readonly principal: MemoryPrincipal;
+  readonly retrievalQuery?: MemoryRetrievalQuery;
+  readonly externalizationRule?: MemoryExternalizationRule;
+  readonly compactionRequest?: CompactHistoryRequest;
+}
+
+export interface RetentionComparisonEntry {
+  readonly policy: RetentionPolicy;
+  readonly status: "ready" | "halted" | "invalid";
+  readonly used: number;
+  readonly capacity: number;
+  readonly retainedItemIds: readonly string[];
+  readonly excludedItemIds: readonly string[];
+  readonly transformedItemIds: readonly string[];
+  readonly diagnostics: readonly ContextDiagnostic[];
 }
 
 export interface ContextFault {
@@ -100,7 +126,8 @@ export interface ContextAssemblyInput {
   readonly availableSources: readonly ContextItem[];
   readonly priorRetained: readonly ContextItem[];
   readonly additions: readonly ContextItem[];
-  readonly retentionPolicy: "Strict" | "KeepNewest";
+  readonly retentionPolicy: RetentionPolicy;
+  readonly memory?: ContextMemoryIntegration;
   readonly faultPort?: ContextFaultPort;
 }
 
