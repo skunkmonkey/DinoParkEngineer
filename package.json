@@ -1,0 +1,29 @@
+{
+  "name": "dino-park-engineer",
+  "version": "0.0.0",
+  "private": true,
+  "description": "A deterministic browser game for learning AI engineering through dinosaur park automation.",
+  "type": "module",
+  "scripts": {
+    "validate": "node scripts/validate-environment.mjs"
+  },
+  "engines": {
+    "node": ">=22.13.0",
+    "npm": ">=10"
+  },
+  "dependencies": {
+    "pixi.js": "8.19.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "react-router-dom": "7.18.2",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@types/node": "22.20.1",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.4",
+    "@vitejs/plugin-react": "6.0.5",
+    "typescript": "7.0.2",
+    "vite": "8.2.1"
+  }
+}

@@ -236,11 +236,15 @@ the same authoritative state owner independently.
 - [x] Install Node.js 24 LTS and its bundled npm on the current Windows machine.
   - Verify `node --version` satisfies `>=22.13.0`.
   - Verify `npm --version` satisfies `>=10`.
-- [ ] Verify Node.js and npm on the macOS development machine.
-- [ ] Verify Git and at least one supported browser on macOS.
-- [ ] Open a new terminal and confirm the repository sees Node.js and npm.
-- [ ] Install dependencies from the committed lockfile with `npm install`.
-- [ ] Record exact tool versions used for the first implementation baseline.
+- [x] Verify Node.js and npm on the macOS development machine.
+- [x] Verify Git and at least one supported browser on macOS.
+- [x] Open a new terminal and confirm the repository sees Node.js and npm.
+- [x] Create the initial npm package manifest and committed `package-lock.json`
+  required by dependency installation. This prerequisite was moved from Phase
+  1 because the environment gate cannot install from a lockfile that does not
+  yet exist.
+- [x] Install dependencies from the committed lockfile with `npm install`.
+- [x] Record exact tool versions used for the first implementation baseline.
 
 ---
 
@@ -253,7 +257,10 @@ Owning documents:
 
 ### Project and build foundation
 
-- [ ] Create the npm package manifest and committed `package-lock.json`.
+The initial npm package manifest and committed lockfile are established by the
+Phase 0 environment gate so dependency installation has a valid source of
+truth.
+
 - [ ] Configure strict TypeScript project references and browser/Node targets.
 - [ ] Configure React 19 and client-only React DOM startup.
 - [ ] Configure Vite development and static production builds.

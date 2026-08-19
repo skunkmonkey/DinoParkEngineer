@@ -1,5 +1,13 @@
 # Plan: Application Shell
 
+## Environment Bootstrap Prerequisite
+
+Before the Phase 0 environment gate installs dependencies, create the initial
+npm package manifest and committed lockfile with the confirmed React, PixiJS,
+Vite, TypeScript, routing, and validation dependencies. Phase 1 slice 1 owns
+their configuration and application use; the environment prerequisite only
+establishes the portable install boundary and pinned dependency source.
+
 ## Proposed Vertical Slices
 
 1. **Cross-platform static shell renders a useful boot surface**
