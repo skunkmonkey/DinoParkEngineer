@@ -66,7 +66,8 @@ For every change:
   is never parsed to decide runtime behavior. Machine-readable authored clauses
   drive execution.
 - Context is visible, finite, provenance-labeled, and economically meaningful.
-  Overflow blocks explicitly; context must not be silently truncated. Larger
+  Overflow is never silent: an explicit deterministic Retention Policy either
+  blocks or records every eviction, compaction, or externalization. Larger
   context capacity is not automatically better.
 - Jobs and deployments resolve exact, pinned artifact versions. Historical
   versions, traces, eval fixtures, and review records remain replayable.
