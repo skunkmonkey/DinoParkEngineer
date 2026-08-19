@@ -8,9 +8,9 @@ software.
 
 ### Node.js 24 LTS
 
-Node.js and npm are not currently available on the inspected Windows machine's
-`PATH`. Install the current Node.js 24 LTS release from the
-[official Node.js download page](https://nodejs.org/en/download):
+The inspected Windows machine has Node.js 24 LTS and its bundled npm available
+on `PATH`. On another development machine, install the current Node.js 24 LTS
+release from the [official Node.js download page](https://nodejs.org/en/download):
 
 - Windows: use the official x64 or ARM64 installer appropriate to the machine.
 - macOS: use the official universal installer appropriate to the Mac, or an
@@ -34,6 +34,9 @@ npm install
 
 ## Already present on the inspected Windows machine
 
+- Node.js 24.19.0
+- npm 11.17.0
+- npx 11.17.0
 - Git 2.55
 - Google Chrome
 - Microsoft Edge

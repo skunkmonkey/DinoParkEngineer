@@ -233,9 +233,7 @@ the same authoritative state owner independently.
 
 ### Sequential environment gate
 
-- [!] Install Node.js 24 LTS and its bundled npm on the current Windows machine.
-  - Blocked because `node`, `npm`, and `npx` are not currently available on
-    `PATH`.
+- [x] Install Node.js 24 LTS and its bundled npm on the current Windows machine.
   - Verify `node --version` satisfies `>=22.13.0`.
   - Verify `npm --version` satisfies `>=10`.
 - [ ] Verify Node.js and npm on the macOS development machine.
