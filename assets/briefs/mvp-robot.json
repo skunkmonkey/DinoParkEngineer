@@ -1,0 +1,84 @@
+{
+  "id": "assets:brief-mvp-park-robot",
+  "version": "1.0.0",
+  "class": "AssetBrief",
+  "schemaVersion": "1",
+  "displayName": "MVP Park Worker Robot",
+  "author": "Dino Park Engineer",
+  "provenance": {
+    "source": "built-in",
+    "path": "assets/briefs/mvp-robot.json",
+    "author": "Dino Park Engineer"
+  },
+  "contextCost": 0,
+  "dependencies": [
+    {
+      "id": "assets:three-quarter-art-direction",
+      "version": "1.0.0",
+      "expectedClass": "AssetArtDirection",
+      "expectedSchemaVersion": "1"
+    }
+  ],
+  "tags": ["mvp", "rendering", "robot"],
+  "availability": "available",
+  "data": {
+    "assetFamilyId": "assets:family-robot",
+    "runtimeAssetId": "assets:robot-park-worker",
+    "bundleId": "assets:bundle-mvp-park",
+    "owningFeature": "Player Experience",
+    "semanticRole": "A general-purpose Worker Agent whose pose reads as calm, capable, and available for selected park work.",
+    "requiredViews": ["south-east-three-quarter"],
+    "targetDisplayScale": {
+      "widthPx": 64,
+      "heightPx": 80,
+      "semanticZooms": ["far", "near"]
+    },
+    "sourceCanvas": {
+      "widthPx": 512,
+      "heightPx": 512,
+      "background": "transparent"
+    },
+    "safeBounds": {
+      "x": 48,
+      "y": 24,
+      "width": 416,
+      "height": 456
+    },
+    "pivot": {
+      "x": 0.5,
+      "y": 0.92,
+      "rule": "Pivot at the center of the wheel or foot contact patch; all robot variants retain the same ground contact."
+    },
+    "animation": {
+      "mode": "none",
+      "requiredSequences": [],
+      "reducedMotionEquivalent": "The static base pose conveys availability; DOM status text conveys all work and movement state."
+    },
+    "variants": [
+      {
+        "id": "assets:robot-park-worker-idle",
+        "semanticTags": ["available", "idle"]
+      }
+    ],
+    "accessibilityEquivalent": {
+      "domLabel": "Park Worker Robot",
+      "textDescription": "A selected general-purpose Worker Agent available for park tasks.",
+      "soundSubstitution": "Persistent Agent status history names task and outcome; no meaning depends on sound.",
+      "shapeCue": "A compact upright body, single clear head unit, and stable ground contact distinguish the robot without color."
+    },
+    "artDirection": {
+      "id": "assets:three-quarter-art-direction",
+      "version": "1.0.0"
+    },
+    "acceptanceChecklist": [
+      "Matches the shared south-east three-quarter orientation and lighting.",
+      "Reads as one calm, competent Worker Agent at 64 by 80 pixels.",
+      "Contains no letters, numbers, logos, labels, or other embedded text.",
+      "Keeps the complete silhouette and contact shadow inside safe bounds.",
+      "Uses a transparent background with clean, fringe-free edges.",
+      "Keeps the declared pivot and ground contact stable across future variants.",
+      "Preserves tool attachment space without obscuring the head or status silhouette.",
+      "Relies on the declared DOM label and text status for essential meaning."
+    ]
+  }
+}

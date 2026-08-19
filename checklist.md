@@ -338,49 +338,49 @@ as stable registry IDs and versions exist.
 Owning documents:
 `Specs/content-registry_PRD.md` and `Specs/content-registry_PLAN.md`.
 
-- [ ] Define namespaced content IDs, immutable versions, schema versions, and
+- [x] Define namespaced content IDs, immutable versions, schema versions, and
   provenance.
-- [ ] Create the extensible content-class schema catalog with Zod.
-- [ ] Implement atomic catalog-package loading.
-- [ ] Reject malformed records, duplicate IDs/versions, case collisions,
+- [x] Create the extensible content-class schema catalog with Zod.
+- [x] Implement atomic catalog-package loading.
+- [x] Reject malformed records, duplicate IDs/versions, case collisions,
   impossible constraints, and non-portable paths.
-- [ ] Implement exact dependency resolution with deterministic topological order.
-- [ ] Detect missing, cyclic, conflicting, and incompatible dependencies.
-- [ ] Create canonical serialization and deterministic manifest fingerprints.
-- [ ] Implement read-only queries by exact ID/version, class, tag, dependency,
+- [x] Implement exact dependency resolution with deterministic topological order.
+- [x] Detect missing, cyclic, conflicting, and incompatible dependencies.
+- [x] Create canonical serialization and deterministic manifest fingerprints.
+- [x] Implement read-only queries by exact ID/version, class, tag, dependency,
   availability, and history.
-- [ ] Ensure production resolution exposes no floating newest-version shortcut.
-- [ ] Keep hidden historical versions exactly resolvable.
-- [ ] Support required and optional local content packages.
-- [ ] Isolate optional package failure and block required package failure.
-- [ ] Create one validated Prompt fixture and registry inspection projection.
-- [ ] Prove adding a newer version cannot change historical resolution.
-- [ ] Add golden validation, resolution, mutation, and cross-platform path tests.
-- [ ] Verify invalid and historical catalog states in the browser.
+- [x] Ensure production resolution exposes no floating newest-version shortcut.
+- [x] Keep hidden historical versions exactly resolvable.
+- [x] Support required and optional local content packages.
+- [x] Isolate optional package failure and block required package failure.
+- [x] Create one validated Prompt fixture and registry inspection projection.
+- [x] Prove adding a newer version cannot change historical resolution.
+- [x] Add golden validation, resolution, mutation, and cross-platform path tests.
+- [x] Verify invalid and historical catalog states in the browser.
 
 #### A2 - Rendering Asset Pipeline: briefs and provenance
 
 Owning documents:
 `Specs/rendering-assets_PRD.md` and `Specs/rendering-assets_PLAN.md`.
 
-- [ ] Create `assets/briefs`, `assets/source`, `assets/manifests`, and generated
+- [x] Create `assets/briefs`, `assets/source`, `assets/manifests`, and generated
   runtime-output boundaries.
-- [ ] Define stable asset-family, brief, source, candidate, runtime-asset,
+- [x] Define stable asset-family, brief, source, candidate, runtime-asset,
   bundle, and version IDs.
-- [ ] Define shared three-quarter art-direction constraints.
-- [ ] Define brief fields for semantic role, owning feature, required views,
+- [x] Define shared three-quarter art-direction constraints.
+- [x] Define brief fields for semantic role, owning feature, required views,
   display scale, source canvas, safe bounds, pivot, animation, variants, and
   accessibility equivalents.
-- [ ] Validate brief revisions through the Content Registry.
-- [ ] Author and validate the first MVP robot asset brief.
-- [ ] Define candidate provenance for model alias/snapshot, prompt/brief revision,
+- [x] Validate brief revisions through the Content Registry.
+- [x] Author and validate the first MVP robot asset brief.
+- [x] Define candidate provenance for model alias/snapshot, prompt/brief revision,
   reference inputs, generation parameters, creation time, hashes, lineage, and
   reviewer state.
-- [ ] Ensure manifests can never store API secrets.
-- [ ] Implement candidate quarantine; every generated output begins unapproved.
-- [ ] Implement explicit approve, reject, supersede, and request-revision records.
-- [ ] Generate a human-reviewable HTML contact sheet and checklist.
-- [ ] Add tests proving unapproved candidates cannot enter runtime bundles.
+- [x] Ensure manifests can never store API secrets.
+- [x] Implement candidate quarantine; every generated output begins unapproved.
+- [x] Implement explicit approve, reject, supersede, and request-revision records.
+- [x] Generate a human-reviewable HTML contact sheet and checklist.
+- [x] Add tests proving unapproved candidates cannot enter runtime bundles.
 
 ### Parallel Group B - Simulation foundation
 
@@ -389,43 +389,51 @@ stable and can proceed while the Rendering Asset Pipeline is being developed.
 
 Owning documents: `Specs/simulation_PRD.md` and `Specs/simulation_PLAN.md`.
 
-- [ ] Define serializable authoritative world state with stable IDs/order.
-- [ ] Implement integer logical ticks and deterministic scheduling.
-- [ ] Implement pause and speed as tick-request controls rather than changed
+- [x] Define serializable authoritative world state with stable IDs/order.
+- [x] Implement integer logical ticks and deterministic scheduling.
+- [x] Implement pause and speed as tick-request controls rather than changed
   semantics.
-- [ ] Implement named seeded random streams and ban ambient `Math.random`.
-- [ ] Define validated world commands and atomic command results.
-- [ ] Reject invalid, stale, unauthorized, and physically impossible commands
+- [x] Implement named seeded random streams and ban ambient `Math.random`.
+- [x] Define validated world commands and atomic command results.
+- [x] Reject invalid, stale, unauthorized, and physically impossible commands
   without partial mutation.
-- [ ] Implement locations, enclosure boundaries, navigation graph/grid, and
+- [x] Implement locations, enclosure boundaries, navigation graph/grid, and
   deterministic movement.
-- [ ] Implement robot location, tools, carried state, battery/health, assignment,
+- [x] Implement robot location, tools, carried state, battery/health, assignment,
   and physical action state.
-- [ ] Implement gate open/closed/locked/jammed state, closer, sensor reading,
+- [x] Implement gate open/closed/locked/jammed state, closer, sensor reading,
   sensor health, and transition zones.
-- [ ] Keep reported sensor state distinct from physical gate state.
-- [ ] Implement dinosaur location, containment, hunger/need, agitation, target,
+- [x] Keep reported sensor state distinct from physical gate state.
+- [x] Implement dinosaur location, containment, hunger/need, agitation, target,
   species constraints, baiting, feeding, and escape behavior.
-- [ ] Implement visitor groups, movement, exposure, panic, evacuation, injury,
+- [x] Implement visitor groups, movement, exposure, panic, evacuation, injury,
   and casualty outcomes.
-- [ ] Implement deterministic shared-resource contention and reservations.
-- [ ] Implement tool requirements, effects, failures, and source-labeled evidence.
-- [ ] Implement validated exact scenario fixtures.
-- [ ] Implement snapshot plus ordered-command replay inputs.
-- [ ] Create read-only world projections.
-- [ ] Keep all simulation data structured-clone compatible and worker-ready.
-- [ ] Add golden fixtures for movement, gates, feeding, escape, visitors, and
+- [x] Implement deterministic shared-resource contention and reservations.
+- [x] Implement tool requirements, effects, failures, and source-labeled evidence.
+- [x] Implement validated exact scenario fixtures.
+- [x] Implement snapshot plus ordered-command replay inputs.
+- [x] Create read-only world projections.
+- [x] Keep all simulation data structured-clone compatible and worker-ready.
+- [x] Add golden fixtures for movement, gates, feeding, escape, visitors, and
   shared-gate contention.
-- [ ] Prove results are independent of display frame rate and requested speed.
-- [ ] Run identical fixtures in Node and browser.
+- [x] Prove results are independent of display frame rate and requested speed.
+- [x] Run identical fixtures in Node and browser.
 
 ### Integration Gate A
 
-- [ ] Load exact simulation fixtures through the Content Registry.
-- [ ] Display one robot and gate projection in a shell fixture without allowing
+- [x] Load exact simulation fixtures through the Content Registry.
+- [!] Display one robot and gate projection in a shell fixture without allowing
   UI mutation.
-- [ ] Verify exact replay after a newer content version is registered.
-- [ ] Run registry and simulation focused tests together.
+  - Blocked only on mandatory keyboard computer-use evidence: the 2026-08-19
+    in-app browser run rendered native buttons and passed pointer, semantic DOM,
+    focus styling, reduced-motion, high-contrast, and 150% text checks, but its
+    Enter, Space, and Tab injection did not activate or move focus on the
+    already-focused native controls. Automated rendered tests confirm native
+    keyboard-operable elements. Unblock by rerunning the keyboard scenarios in
+    a browser-control runtime whose key injection reaches the page, then mark
+    this item `[x]` if the same scenarios pass.
+- [x] Verify exact replay after a newer content version is registered.
+- [x] Run registry and simulation focused tests together.
 
 ---
 

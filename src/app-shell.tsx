@@ -267,6 +267,26 @@ function createRegistrations(
         message: "Park View remains safe and available.",
       },
     },
+    {
+      id: "foundation-lab",
+      order: 20,
+      requirement: "optional",
+      route: {
+        id: "foundation-lab",
+        path: "/foundation-lab",
+        mode: "diagnostics",
+        title: "Foundation Lab",
+      },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./foundation-lab/public.js");
+        return { render: module.FoundationLab };
+      },
+      failure: {
+        diagnosticCode: "FOUNDATION_LAB_FEATURE_FAILED",
+        title: "Foundation lab unavailable",
+        message: "Park View and the validated domain packages remain available.",
+      },
+    },
   ];
 }
 
@@ -524,6 +544,7 @@ function RunningShell(): React.JSX.Element {
       <nav className="primary-nav" aria-label="Primary navigation">
         <button type="button" onClick={() => navigate("/")}>Park View</button>
         <button type="button" onClick={() => navigate("/shell-lab")}>Shell diagnostics</button>
+        <button type="button" onClick={() => navigate("/foundation-lab")}>Foundation lab</button>
       </nav>
       <main id="main-content" tabIndex={-1}>
         {resolution.kind === "not-found" ? (

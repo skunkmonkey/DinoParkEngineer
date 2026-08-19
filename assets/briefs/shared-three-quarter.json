@@ -1,0 +1,25 @@
+{
+  "id": "assets:three-quarter-art-direction",
+  "version": "1.0.0",
+  "class": "AssetArtDirection",
+  "schemaVersion": "1",
+  "displayName": "Shared Three-Quarter Art Direction",
+  "author": "Dino Park Engineer",
+  "provenance": {
+    "source": "built-in",
+    "path": "assets/briefs/shared-three-quarter.json",
+    "author": "Dino Park Engineer"
+  },
+  "contextCost": 0,
+  "dependencies": [],
+  "tags": ["art-direction", "rendering", "three-quarter"],
+  "availability": "available",
+  "data": {
+    "orientation": "Grounded three-quarter view facing south-east; preserve a readable top plane and a stable ground-contact point.",
+    "lighting": "Soft daylight from the upper left with a restrained lower-right contact shadow; lighting must not encode gameplay state.",
+    "palette": ["charcoal-outline", "cool-mechanical", "park-green", "safety-amber", "warm-natural"],
+    "silhouette": "Recognizable at far semantic zoom, with tools and critical state variants remaining distinct by shape.",
+    "outline": "Consistent dark outer contour with sparse interior lines; transparent edges must remain clean at target scale.",
+    "tone": "Competent absurdity: credible park equipment operated with calm professionalism in an inherently ridiculous dinosaur park."
+  }
+}

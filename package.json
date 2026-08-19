@@ -5,6 +5,8 @@
   "description": "A deterministic browser game for learning AI engineering through dinosaur park automation.",
   "type": "module",
   "scripts": {
+    "assets:review-report": "node --import tsx scripts/rendering-assets/generate-review-report.mjs",
+    "assets:review-report:serve": "node scripts/rendering-assets/serve-review-report.mjs",
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
