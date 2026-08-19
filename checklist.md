@@ -422,16 +422,12 @@ Owning documents: `Specs/simulation_PRD.md` and `Specs/simulation_PLAN.md`.
 ### Integration Gate A
 
 - [x] Load exact simulation fixtures through the Content Registry.
-- [!] Display one robot and gate projection in a shell fixture without allowing
+- [x] Display one robot and gate projection in a shell fixture without allowing
   UI mutation.
-  - Blocked only on mandatory keyboard computer-use evidence: the 2026-08-19
-    in-app browser run rendered native buttons and passed pointer, semantic DOM,
-    focus styling, reduced-motion, high-contrast, and 150% text checks, but its
-    Enter, Space, and Tab injection did not activate or move focus on the
-    already-focused native controls. Automated rendered tests confirm native
-    keyboard-operable elements. Unblock by rerunning the keyboard scenarios in
-    a browser-control runtime whose key injection reaches the page, then mark
-    this item `[x]` if the same scenarios pass.
+  - Chrome computer-use verification on 2026-08-19 confirmed Enter and Space
+    activate the native simulation control and Tab moves focus to the next
+    control. The immutable robot/gate projection and persistent evidence stayed
+    synchronized with the authoritative command result.
 - [x] Verify exact replay after a newer content version is registered.
 - [x] Run registry and simulation focused tests together.
 
@@ -445,59 +441,59 @@ Owning documents: `Specs/simulation_PRD.md` and `Specs/simulation_PLAN.md`.
 
 Owning documents: `Specs/instruction_PRD.md` and `Specs/instruction_PLAN.md`.
 
-- [ ] Define exact Task, Prompt, Skill, System Prompt, Policy, tool instruction,
+- [x] Define exact Task, Prompt, Skill, System Prompt, Policy, tool instruction,
   knowledge-selection, verification, failure, escalation, delegation, and
   reporting artifact schemas.
-- [ ] Keep readable source text distinct from machine-readable behavior clauses.
-- [ ] Define declarative clause applicability, priority, required facts,
+- [x] Keep readable source text distinct from machine-readable behavior clauses.
+- [x] Define declarative clause applicability, priority, required facts,
   preconditions, allowed action, postconditions, verification, and failure path.
-- [ ] Implement bounded declarative expression operators and reject arbitrary
+- [x] Implement bounded declarative expression operators and reject arbitrary
   executable code.
-- [ ] Implement deterministic applicability ordering and conflict resolution.
-- [ ] Return one tool request, completion, wait, stop, or escalation result.
-- [ ] Return applied/rejected/conflicting clause provenance without hidden
+- [x] Implement deterministic applicability ordering and conflict resolution.
+- [x] Return one tool request, completion, wait, stop, or escalation result.
+- [x] Return applied/rejected/conflicting clause provenance without hidden
   chain-of-thought.
-- [ ] Ensure the executor can see only its supplied context snapshot.
-- [ ] Forward physical actions to Simulation and consume Simulation evidence.
-- [ ] Implement evidence source, freshness, agreement, alternate verification,
+- [x] Ensure the executor can see only its supplied context snapshot.
+- [x] Forward physical actions to Simulation and consume Simulation evidence.
+- [x] Implement evidence source, freshness, agreement, alternate verification,
   bounded retry, stop, and escalation.
-- [ ] Implement composition across Prompt, Skill, System Prompt, and Policy.
-- [ ] Preserve clause-source provenance and detect duplicates/conflicts.
-- [ ] Create self-contained and modular feeding approaches with real tradeoffs.
-- [ ] Prove changing prose alone changes no behavior.
-- [ ] Prove degraded gate-sensor evidence requires explicit fallback.
-- [ ] Add complete clause, conflict, verification, security, and production/eval
+- [x] Implement composition across Prompt, Skill, System Prompt, and Policy.
+- [x] Preserve clause-source provenance and detect duplicates/conflicts.
+- [x] Create self-contained and modular feeding approaches with real tradeoffs.
+- [x] Prove changing prose alone changes no behavior.
+- [x] Prove degraded gate-sensor evidence requires explicit fallback.
+- [x] Add complete clause, conflict, verification, security, and production/eval
   equivalence tests.
 
 ### Context foundation
 
 Owning documents: `Specs/context_PRD.md` and `Specs/context_PLAN.md`.
 
-- [ ] Define provenance-labeled context items for Task, System Prompt, Skill,
+- [x] Define provenance-labeled context items for Task, System Prompt, Skill,
   Policy, Knowledge, Memory, Tool, Message, Observation, Tool Result, and
   Task History.
-- [ ] Assign deterministic integer context-unit cost, exact source version,
+- [x] Assign deterministic integer context-unit cost, exact source version,
   tick, priority, eligibility, and pin state to every item.
-- [ ] Implement deterministic assembly from Agent/job/routes/sources/prior state.
-- [ ] Identify included, unavailable-required, inapplicable, excluded,
+- [x] Implement deterministic assembly from Agent/job/routes/sources/prior state.
+- [x] Identify included, unavailable-required, inapplicable, excluded,
   compacted, and externalized items.
-- [ ] Calculate exact numerical used/total capacity and category segments.
-- [ ] Add immutable before-retention and after-retention manifests.
-- [ ] Add runtime observations, results, messages, history, incident evidence,
+- [x] Calculate exact numerical used/total capacity and category segments.
+- [x] Add immutable before-retention and after-retention manifests.
+- [x] Add runtime observations, results, messages, history, incident evidence,
   and instructions only at decision boundaries.
-- [ ] Add next-decision demand and overflow preview.
-- [ ] Implement missing-context diagnostics without hidden world access.
-- [ ] Implement Strict / Halt and Signal.
-- [ ] Halt before the next decision and notify the external park fault port.
-- [ ] Prove there is no hidden emergency context capacity.
-- [ ] Implement Keep Newest with oldest-eligible-unpinned stable ordering.
-- [ ] Record every retained and excluded item plus downstream behavior.
-- [ ] Separate capacity from stale, duplicate, conflicting, irrelevant, and
+- [x] Add next-decision demand and overflow preview.
+- [x] Implement missing-context diagnostics without hidden world access.
+- [x] Implement Strict / Halt and Signal.
+- [x] Halt before the next decision and notify the external park fault port.
+- [x] Prove there is no hidden emergency context capacity.
+- [x] Implement Keep Newest with oldest-eligible-unpinned stable ordering.
+- [x] Record every retained and excluded item plus downstream behavior.
+- [x] Separate capacity from stale, duplicate, conflicting, irrelevant, and
   missing-required diagnostics.
-- [ ] Create the opening missing-maintenance-context fixture.
-- [ ] Create runtime-growth and behavior-changing eviction fixtures.
-- [ ] Add exact capacity and retention-matrix tests.
-- [ ] Fail any execution path that continues after unrecorded overflow.
+- [x] Create the opening missing-maintenance-context fixture.
+- [x] Create runtime-growth and behavior-changing eviction fixtures.
+- [x] Add exact capacity and retention-matrix tests.
+- [x] Fail any execution path that continues after unrecorded overflow.
 
 ---
 
