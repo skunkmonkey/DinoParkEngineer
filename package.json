@@ -5,7 +5,16 @@
   "description": "A deterministic browser game for learning AI engineering through dinosaur park automation.",
   "type": "module",
   "scripts": {
-    "validate": "node scripts/validate-environment.mjs"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -b --pretty false",
+    "lint": "eslint . --max-warnings=0",
+    "lint:architecture": "node scripts/lint-architecture.mjs",
+    "test": "node scripts/run-tests.mjs",
+    "test:shell": "node scripts/run-tests.mjs shell",
+    "validate:environment": "node scripts/validate-environment.mjs",
+    "validate": "node scripts/validate.mjs"
   },
   "engines": {
     "node": ">=22.13.0",
@@ -19,11 +28,18 @@
     "zod": "4.4.3"
   },
   "devDependencies": {
+    "@eslint/js": "9.39.5",
     "@types/node": "22.20.1",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
     "@vitejs/plugin-react": "6.0.5",
-    "typescript": "7.0.2",
-    "vite": "8.2.1"
+    "eslint": "9.39.5",
+    "eslint-plugin-react-hooks": "7.1.1",
+    "eslint-plugin-react-refresh": "0.5.4",
+    "tsx": "^4.23.12",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.67.0",
+    "vite": "8.2.1",
+    "vite-plugin-pwa": "^1.3.0"
   }
 }

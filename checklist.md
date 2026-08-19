@@ -261,66 +261,66 @@ The initial npm package manifest and committed lockfile are established by the
 Phase 0 environment gate so dependency installation has a valid source of
 truth.
 
-- [ ] Configure strict TypeScript project references and browser/Node targets.
-- [ ] Configure React 19 and client-only React DOM startup.
-- [ ] Configure Vite development and static production builds.
-- [ ] Configure base-path-aware asset and route behavior.
-- [ ] Add portable Node-based repository scripts that work from Windows
+- [x] Configure strict TypeScript project references and browser/Node targets.
+- [x] Configure React 19 and client-only React DOM startup.
+- [x] Configure Vite development and static production builds.
+- [x] Configure base-path-aware asset and route behavior.
+- [x] Add portable Node-based repository scripts that work from Windows
   PowerShell and macOS shells.
-- [ ] Add baseline CSS design tokens, text scaling, focus, contrast, and reduced
+- [x] Add baseline CSS design tokens, text scaling, focus, contrast, and reduced
   motion foundations.
-- [ ] Render an immediate accessible boot state.
-- [ ] Render actionable invalid-configuration and unsupported-browser states.
+- [x] Render an immediate accessible boot state.
+- [x] Render actionable invalid-configuration and unsupported-browser states.
 
 ### Shell contracts and routing
 
-- [ ] Create `src/shell/public.ts` as the only public shell import surface.
-- [ ] Define the browser feature registration contract.
-- [ ] Validate stable feature IDs, deterministic order, route contributions,
+- [x] Create `src/shell/public.ts` as the only public shell import surface.
+- [x] Define the browser feature registration contract.
+- [x] Validate stable feature IDs, deterministic order, route contributions,
   requirement level, lazy loaders, and failure presentations.
-- [ ] Reject duplicate feature IDs and duplicate route ownership.
-- [ ] Implement deterministic, base-aware clean route matching.
-- [ ] Implement stable mode identity and route titles.
-- [ ] Implement causal navigation payload pass-through without interpreting
+- [x] Reject duplicate feature IDs and duplicate route ownership.
+- [x] Implement deterministic, base-aware clean route matching.
+- [x] Implement stable mode identity and route titles.
+- [x] Implement causal navigation payload pass-through without interpreting
   domain identifiers.
-- [ ] Implement an accessible not-found route with a safe Park View action.
-- [ ] Verify direct deep-link reload and static-host fallback behavior.
+- [x] Implement an accessible not-found route with a safe Park View action.
+- [x] Verify direct deep-link reload and static-host fallback behavior.
 
 ### Providers, lifecycle, and failure isolation
 
-- [ ] Implement explicit provider dependency validation and stable startup order.
-- [ ] Implement deterministic reverse disposal order and idempotent teardown.
-- [ ] Add configuration, diagnostics, accessibility preference, audio, feature
+- [x] Implement explicit provider dependency validation and stable startup order.
+- [x] Implement deterministic reverse disposal order and idempotent teardown.
+- [x] Add configuration, diagnostics, accessibility preference, audio, feature
   status, and placeholder persistence ports.
-- [ ] Ensure providers expose commands and read-only projections rather than
+- [x] Ensure providers expose commands and read-only projections rather than
   mutable domain state.
-- [ ] Add lazy feature error boundaries.
-- [ ] Keep optional feature failure scoped to its own route.
-- [ ] Block required feature/provider failure with a stable diagnostic code and
+- [x] Add lazy feature error boundaries.
+- [x] Keep optional feature failure scoped to its own route.
+- [x] Block required feature/provider failure with a stable diagnostic code and
   recovery actions.
-- [ ] Add retry and safe-route recovery.
+- [x] Add retry and safe-route recovery.
 
 ### Offline and update behavior
 
-- [ ] Generate Workbox precaching from Vite build output.
-- [ ] Report first install, offline ready, update ready, and update failure.
-- [ ] Implement safe-checkpoint coordination before activating an update.
-- [ ] Prevent automatic refresh over mutable unsaved play.
-- [ ] Add local, generic static-host, and optional Hostinger SPA fallback
+- [x] Generate Workbox precaching from Vite build output.
+- [x] Report first install, offline ready, update ready, and update failure.
+- [x] Implement safe-checkpoint coordination before activating an update.
+- [x] Prevent automatic refresh over mutable unsaved play.
+- [x] Add local, generic static-host, and optional Hostinger SPA fallback
   documentation.
 
 ### Shell validation gate
 
-- [ ] Add feature-registry, route, provider, lifecycle, and failure contract
+- [x] Add feature-registry, route, provider, lifecycle, and failure contract
   tests.
-- [ ] Add rendered tests for boot, not-found, required failure, optional failure,
+- [x] Add rendered tests for boot, not-found, required failure, optional failure,
   offline-ready, and update-ready states.
-- [ ] Add architecture lint preventing shell-internal imports and direct UI
+- [x] Add architecture lint preventing shell-internal imports and direct UI
   domain mutation.
-- [ ] Add Windows and macOS CI jobs.
-- [ ] Verify startup, deep links, fallback, offline reload, keyboard navigation,
+- [x] Add Windows and macOS CI jobs.
+- [x] Verify startup, deep links, fallback, offline reload, keyboard navigation,
   reduced motion, text scaling, and safe update through browser computer use.
-- [ ] Run the complete validation command successfully.
+- [x] Run the complete validation command successfully.
 
 ---
 

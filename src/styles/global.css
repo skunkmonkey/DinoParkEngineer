@@ -1,0 +1,242 @@
+@import "./tokens.css";
+
+:root {
+  color-scheme: dark;
+  font-family: var(--dpe-font-family);
+  font-size: var(--dpe-font-size);
+  font-synthesis: none;
+  line-height: var(--dpe-line-height);
+  text-rendering: optimizeLegibility;
+  background: var(--dpe-color-canvas);
+  color: var(--dpe-color-text);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  min-width: 18rem;
+  min-height: 100%;
+  background: var(--dpe-color-canvas);
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 18rem;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--dpe-color-canvas);
+  color: var(--dpe-color-text);
+}
+
+[data-contrast="high"] {
+  --dpe-color-canvas: #000000;
+  --dpe-color-surface: #111111;
+  --dpe-color-surface-raised: #1c1c1c;
+  --dpe-color-border: #ffffff;
+  --dpe-color-text: #ffffff;
+  --dpe-color-text-muted: #ffffff;
+  --dpe-color-accent-strong: #ffff00;
+}
+
+[data-motion="reduced"] *,
+[data-motion="reduced"] *::before,
+[data-motion="reduced"] *::after {
+  animation-duration: 0.01ms !important;
+  transition-duration: 0.01ms !important;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+button,
+[role="button"] {
+  min-block-size: 2.75rem;
+  min-inline-size: 2.75rem;
+}
+
+button {
+  border: 1px solid var(--dpe-color-border);
+  border-radius: var(--dpe-radius-small);
+  background: var(--dpe-color-surface-raised);
+  color: var(--dpe-color-text);
+  cursor: pointer;
+  padding: var(--dpe-space-2) var(--dpe-space-4);
+  transition:
+    background-color var(--dpe-motion-duration) var(--dpe-motion-ease),
+    border-color var(--dpe-motion-duration) var(--dpe-motion-ease);
+}
+
+button:hover:not(:disabled) {
+  background: var(--dpe-color-border);
+}
+
+button:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+
+a {
+  color: var(--dpe-color-accent-strong);
+}
+
+code {
+  font-family: var(--dpe-font-family-mono);
+}
+
+.app-frame,
+.centered-shell {
+  inline-size: min(72rem, 100% - 2rem);
+  margin-inline: auto;
+}
+
+.centered-shell {
+  min-block-size: 70vh;
+  display: grid;
+  align-content: center;
+  justify-items: start;
+  gap: var(--dpe-space-3);
+}
+
+.app-header,
+.primary-nav,
+.button-row,
+.control-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--dpe-space-3);
+}
+
+.app-header {
+  align-items: end;
+  justify-content: space-between;
+  border-block-end: 1px solid var(--dpe-color-border);
+  padding-block: var(--dpe-space-5);
+}
+
+.app-header h1,
+.eyebrow {
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--dpe-color-accent);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mode-badge,
+.safe-state {
+  border: 1px solid var(--dpe-color-border);
+  border-radius: 999px;
+  padding: var(--dpe-space-2) var(--dpe-space-4);
+}
+
+.primary-nav {
+  padding-block: var(--dpe-space-4);
+}
+
+.feature-card,
+.shell-controls,
+.event-history {
+  background: var(--dpe-color-surface);
+  border: 1px solid var(--dpe-color-border);
+  border-radius: var(--dpe-radius-medium);
+  margin-block: var(--dpe-space-4);
+  padding: clamp(1rem, 3vw, 2rem);
+}
+
+.status-grid,
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: var(--dpe-space-3);
+}
+
+.status-grid div {
+  background: var(--dpe-color-surface-raised);
+  padding: var(--dpe-space-3);
+}
+
+.status-grid dt {
+  color: var(--dpe-color-text-muted);
+}
+
+.status-grid dd {
+  margin: var(--dpe-space-1) 0 0;
+  font-weight: 700;
+}
+
+.control-grid label {
+  display: flex;
+  align-items: center;
+  gap: var(--dpe-space-2);
+}
+
+.skip-link {
+  position: absolute;
+  inset-inline-start: var(--dpe-space-3);
+  inset-block-start: -10rem;
+  background: var(--dpe-color-focus);
+  color: var(--dpe-color-canvas);
+  padding: var(--dpe-space-3);
+  z-index: 10;
+}
+
+.skip-link:focus {
+  inset-block-start: var(--dpe-space-3);
+}
+
+footer {
+  color: var(--dpe-color-text-muted);
+  padding-block: var(--dpe-space-5);
+}
+
+:where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+  outline: 0.2rem solid var(--dpe-color-focus);
+  outline-offset: 0.2rem;
+  box-shadow: var(--dpe-shadow-focus);
+}
+
+::selection {
+  background: var(--dpe-color-accent);
+  color: var(--dpe-color-canvas);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: more) {
+  :root {
+    --dpe-color-border: #a9d7ef;
+    --dpe-color-text-muted: #e1f2fa;
+    --dpe-color-focus: #ffffff;
+  }
+}
+
+@media (forced-colors: active) {
+  button,
+  [role="button"] {
+    border: 1px solid ButtonText;
+    forced-color-adjust: none;
+  }
+
+  :where(a, button, input, select, textarea, summary, [tabindex]:not([tabindex="-1"])):focus-visible {
+    outline: 0.2rem solid Highlight;
+    box-shadow: none;
+  }
+}

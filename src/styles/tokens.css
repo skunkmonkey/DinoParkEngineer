@@ -1,0 +1,35 @@
+:root {
+  --dpe-font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
+  --dpe-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --dpe-font-size: 1rem;
+  --dpe-line-height: 1.5;
+
+  --dpe-space-1: 0.25rem;
+  --dpe-space-2: 0.5rem;
+  --dpe-space-3: 0.75rem;
+  --dpe-space-4: 1rem;
+  --dpe-space-5: 1.5rem;
+  --dpe-space-6: 2rem;
+  --dpe-space-7: 3rem;
+
+  --dpe-color-canvas: #07131f;
+  --dpe-color-surface: #0d2030;
+  --dpe-color-surface-raised: #153247;
+  --dpe-color-border: #37627e;
+  --dpe-color-text: #f1f7fb;
+  --dpe-color-text-muted: #b8cfdd;
+  --dpe-color-accent: #8ce3b1;
+  --dpe-color-accent-strong: #c1f7d3;
+  --dpe-color-danger: #ffb4ab;
+  --dpe-color-warning: #ffda8a;
+  --dpe-color-focus: #ffe082;
+
+  --dpe-radius-small: 0.25rem;
+  --dpe-radius-medium: 0.5rem;
+  --dpe-shadow-focus: 0 0 0 0.2rem var(--dpe-color-canvas),
+    0 0 0 0.4rem var(--dpe-color-focus);
+  --dpe-motion-duration: 160ms;
+  --dpe-motion-ease: cubic-bezier(0.2, 0, 0, 1);
+}
