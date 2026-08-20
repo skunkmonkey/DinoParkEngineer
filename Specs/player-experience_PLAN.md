@@ -63,4 +63,37 @@
      performance captures, complete accessibility checklist, and validation.
    - Browser proof: opening, selection, incident, causal navigation, all modes,
      semantic zoom, keyboard-only, text scale, contrast, sound substitution, and
-     reduced motion on Windows and macOS browser targets.
+   reduced motion on Windows and macOS browser targets.
+
+## Game Experience Remediation Slices
+
+8. **Friendly presentation and concise routine copy**
+   - Adds deterministic friendly names, task-language labels, and deliberate
+     `Inspect evidence` / `Advanced details` boundaries.
+   - Tests: default Park chrome contains no implementation headings or routine
+     stable IDs; exact identity remains inside semantic disclosures.
+
+9. **Viewport management-game shell**
+   - Replaces permanent global navigation, preferences, retention demo, and
+     history sections with shell drawers, a Park HUD, dominant viewport,
+     dismissible Inspector, and persistent time/action strip.
+   - Browser proof: 1366×768 and 1440×900 at 100% require no body scrolling;
+     Inspector, log, settings, and menu open/close without losing focus.
+
+10. **Authored park composition and living-world motion**
+    - Rebuilds terrain, habitats, boundaries, gates, routes, landmarks, water,
+      shade, landscaping, and overlays in the projection-only Pixi adapter.
+    - Adds presentational dinosaur, robot, visitor, gate, route, need, selection,
+      and emergency motion with reduced-motion static equivalents.
+
+11. **Focused-mode disclosure and root accessibility preferences**
+    - Keeps focused-mode orientation/primary actions in their viewport and
+      moves long exact evidence into internal scrollers or disclosures.
+    - Exposes the Shell accessibility port to every route; text scale inherits
+      from the persisted root variable without feature shadowing.
+
+12. **Remediation validation and human playtest gate**
+    - Runs complete validation plus connected-Chrome critical-path, keyboard,
+      focus, scale, zoom, contrast, reduced-motion, and offline checks.
+    - Representative newcomer and experienced Agent-user comprehension remain
+      external human gates and cannot be completed by AI self-assessment.

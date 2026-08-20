@@ -48,3 +48,31 @@ charges one `eval-build` transaction. Re-authoring the same version is
 idempotent and free. `runEval` requires that exact asset and charges the
 comparatively cheap `eval-run` category once per stable `runId`.
 
+## Capability progression
+
+The foundation progression contains `capability:context-optimization@1.0.0`.
+It starts `locked`; an explicit machine-readable pressure such as
+`pressure:missing-context` changes it to `available`, without spending credits
+or enabling the action. `purchaseCapability` is the separate intentional
+acceptance step. A successful purchase records an `acquisition` transaction and
+exposes the concrete `action:route-context` action. Repeating either pressure
+or purchase commands is deterministic and idempotent.
+
+## Expressive reward inventory
+
+The foundation reward is
+`reward:dinosaur-plushie@1.0.0`, bound to the approved runtime asset
+`assets:reward-dinosaur-plushie@1.0.0`. When an exact runtime asset catalog is
+provided, purchase fails closed if that asset cannot be resolved. The purchase
+uses the separate `expression` category and creates one immutable inventory
+item. `placeReward` and `removeReward` maintain exact placement records with a
+location, visibility-to-visitors flag, and tick provenance; the projection is
+serializable through `economyLedgerProjectionSchema` for persistence. The
+definition fixes `mechanicalBonus` at zero, so the plushie personalizes the park
+without increasing demand, rating, revenue, or future production leverage.
+
+The `/economy` browser route exposes the first-day settlement, separate
+capability offer and purchase, the resulting Workbench action, and the complete
+reward inventory workflow. The placed plushie is cropped from the approved
+local MVP atlas and has a persistent text equivalent naming its gift-shop
+location, visitor visibility, exact asset identity, and zero mechanical bonus.

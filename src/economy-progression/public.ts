@@ -1,6 +1,8 @@
 /** Sole downstream import surface for deterministic credits, rating, demand, and settlement. */
 export {
   DEFAULT_ECONOMY_RULE_SET,
+  DEFAULT_CAPABILITY_DEFINITIONS,
+  DEFAULT_REWARD_DEFINITIONS,
   calculateParkRating,
   calculateVisitorDemand,
   cancelQuote,
@@ -22,6 +24,14 @@ export {
   economyTransactionSchema,
   evalAssetSchema,
   evalRunRecordSchema,
+  capabilityStateSchema,
+  capabilityActionSchema,
+  progressionStateSchema,
+  economyCapabilityDefinitionSchema,
+  economyRewardDefinitionSchema,
+  rewardInventoryItemSchema,
+  rewardPlacementSchema,
+  rewardInventoryStateSchema,
   parkOutcomeRecordSchema,
 } from "./schemas.js";
 export type {
@@ -68,5 +78,20 @@ export type {
   SettlementCostInput,
   SettlementCostLine,
   VisitorDemand,
+  CapabilityAvailability,
+  CapabilityDefinition,
+  CapabilityState,
+  CapabilityAction,
+  ProgressionState,
+  RewardDefinition,
+  RewardInventoryItem,
+  RewardPlacement,
+  RewardInventoryState,
+  ProgressionProjection,
+  CapabilityAvailabilityInput,
+  CapabilityPurchaseInput,
+  RewardPurchaseInput,
+  RewardPlacementInput,
+  RewardRemovalInput,
 } from "./types.js";
-
+export { EconomyProgressionView } from "./view.js";

@@ -26,7 +26,28 @@ export type PersistenceDomain =
   | "parkOperations"
   | "context"
   | "traceReplay"
-  | "preferences";
+  | "preferences"
+  | "mvp";
+
+export type PortableScalar = null | boolean | number | string;
+export type PortableValue = PortableScalar | readonly PortableValue[] | { readonly [key: string]: PortableValue };
+
+/** State not already owned by the five foundation sections. */
+export interface MvpCompositeState {
+  readonly schemaVersion: PersistenceSchemaVersion;
+  readonly memory: PortableValue;
+  readonly evals: PortableValue;
+  readonly workbench: PortableValue;
+  readonly reviews: PortableValue;
+  readonly deployments: PortableValue;
+  readonly economy: PortableValue;
+  readonly incidents: PortableValue;
+  readonly response: PortableValue;
+  readonly progression: PortableValue;
+  readonly rewards: PortableValue;
+  readonly curriculum: PortableValue;
+  readonly consent: PortableValue;
+}
 
 /**
  * Versioned domain ports keep persistence independent from mutable engines.
@@ -55,7 +76,17 @@ export interface PersistenceDiagnostic {
     | "PERSISTENCE_REPOSITORY_WRITE_FAILED"
     | "PERSISTENCE_REPOSITORY_PROMOTION_FAILED"
     | "PERSISTENCE_SESSION_REPLACEMENT_FAILED"
-    | "PERSISTENCE_DELETE_CONFIRMATION_REQUIRED";
+    | "PERSISTENCE_DELETE_CONFIRMATION_REQUIRED"
+    | "PERSISTENCE_QUOTA_EXCEEDED"
+    | "PERSISTENCE_TRANSACTION_ABORTED"
+    | "PERSISTENCE_CORRUPT_RECORD"
+    | "PERSISTENCE_TRUNCATED_RECORD"
+    | "PERSISTENCE_STALE_STAGING"
+    | "PERSISTENCE_IMPORT_QUARANTINED"
+    | "PERSISTENCE_IMPORT_CONFLICT"
+    | "PERSISTENCE_MIGRATION_FAILED"
+    | "PERSISTENCE_MIGRATION_STEP_MISSING"
+    | "PERSISTENCE_SAFE_CHECKPOINT_REQUIRED";
   readonly path: string;
   readonly rule: string;
   readonly message: string;
@@ -121,6 +152,7 @@ export interface PersistenceSections {
   readonly context: PersistenceSection<ContextPersistenceState>;
   readonly traceReplay: PersistenceSection<TracePersistenceState>;
   readonly preferences: PersistenceSection<PlayerPreferences>;
+  readonly mvp?: PersistenceSection<MvpCompositeState>;
 }
 
 /** The complete first-playable state, without renderer or DOM projections. */
@@ -130,6 +162,7 @@ export interface PersistenceSession {
   readonly context: ContextPersistenceState;
   readonly traces: readonly Trace[];
   readonly preferences: PlayerPreferences;
+  readonly mvp?: MvpCompositeState;
 }
 
 export interface SaveEnvelope {
@@ -194,6 +227,62 @@ export interface SaveRepository {
   readonly list: () => readonly SaveMetadata[];
   readonly remove: (id: string, confirmed: boolean) => PersistenceRepositoryResult;
   readonly knownGoodId: () => string | undefined;
+}
+
+export interface AsyncSaveRepository {
+  readonly stage: (envelope: SaveEnvelope) => Promise<PersistenceRepositoryResult>;
+  readonly promote: (id: string) => Promise<PersistenceRepositoryResult>;
+  readonly read: (id?: string) => Promise<AsyncSaveReadResult>;
+  readonly list: () => Promise<readonly SaveMetadata[]>;
+  readonly remove: (id: string, confirmed: boolean) => Promise<PersistenceRepositoryResult>;
+  readonly knownGoodId: () => Promise<string | undefined>;
+  readonly discardStaleStages: (olderThanUpdatedAt: string) => Promise<PersistenceRepositoryResult>;
+}
+
+export type AsyncSaveReadResult =
+  | { readonly ok: true; readonly envelope: SaveEnvelope }
+  | { readonly ok: false; readonly diagnostics: readonly PersistenceDiagnostic[] };
+
+export interface SafeCheckpoint {
+  readonly safe: true;
+  readonly tick: number;
+  readonly request: SaveRequest;
+}
+
+export interface AutosaveCoordinator {
+  readonly request: (checkpoint: SafeCheckpoint) => Promise<SaveOperationResult>;
+  readonly flush: () => Promise<SaveOperationResult | undefined>;
+}
+
+export interface PortableSavePackage {
+  readonly format: "dino-park-save";
+  readonly formatVersion: "1";
+  readonly envelope: SaveEnvelope;
+  readonly fingerprint: string;
+}
+
+export interface MigrationAudit {
+  readonly fromVersion: string;
+  readonly toVersion: PersistenceSchemaVersion;
+  readonly stepId: string;
+  readonly originalFingerprint: string;
+  readonly migratedFingerprint: string;
+}
+
+export interface MigrationResult {
+  readonly ok: boolean;
+  readonly envelope?: SaveEnvelope;
+  readonly originalBackup: string;
+  readonly audit?: MigrationAudit;
+  readonly diagnostics: readonly PersistenceDiagnostic[];
+}
+
+export interface ImportResult {
+  readonly ok: boolean;
+  readonly quarantined: boolean;
+  readonly envelope?: SaveEnvelope;
+  readonly originalBackup: string;
+  readonly diagnostics: readonly PersistenceDiagnostic[];
 }
 
 export interface PersistenceRepositoryResult {
@@ -265,4 +354,9 @@ export interface PersistenceCoordinator {
   readonly save: (request: SaveRequest) => SaveOperationResult;
   readonly load: (id?: string) => LoadOperationResult;
   readonly replay: (saveId: string, traceId: string, options?: HistoricalReplayOptions) => HistoricalReplayResult;
+}
+
+export interface AsyncPersistenceCoordinator {
+  readonly save: (request: SaveRequest) => Promise<SaveOperationResult>;
+  readonly load: (id?: string) => Promise<LoadOperationResult>;
 }

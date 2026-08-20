@@ -175,6 +175,72 @@ export interface FeedingEvidence {
   readonly robotLocation: { readonly before: StableId; readonly after: StableId };
 }
 
+export interface OperationalAnchor {
+  readonly productionState: string;
+  readonly day: number;
+  readonly tick: number;
+  readonly rating: number | "unrated";
+  readonly credits: number;
+  readonly emergencyCount: number;
+  readonly selectedVersion: string;
+  readonly causalBreadcrumb: readonly string[];
+}
+
+export interface CausalOrigin {
+  readonly incidentId: StableId;
+  readonly eventId: StableId;
+  readonly entityId: StableId;
+  readonly jobId: StableId;
+  readonly traceId: StableId;
+  readonly artifactVersion: string;
+  readonly tick: number;
+}
+
+export interface CausalNavigation {
+  readonly origin: CausalOrigin;
+  readonly workbenchUrl: string;
+  readonly evalUrl: string;
+  readonly replayUrl: string;
+  readonly returnUrl: string;
+  readonly synchronizationKey: string;
+}
+
+export interface SynchronizedEvidencePresentation {
+  readonly synchronizationKey: string;
+  readonly incidentId: StableId;
+  readonly jobId: StableId;
+  readonly traceId: StableId;
+  readonly tick: number;
+  readonly selectedVersion: string;
+  readonly eval: { readonly label: "Eval · Isolated run"; readonly resultId: string; readonly caseReference: string; readonly status: "completed" | "passed" | "failed" | "invalid" | "timed-out" | "interrupted"; readonly reasonCode: string; readonly productionMutation: false };
+  readonly replay: { readonly label: "Historical Replay · Frozen evidence"; readonly sessionId: string; readonly traceId: string; readonly status: "available" | "unavailable"; readonly mode: "historical-replay"; readonly productionMutation: false };
+}
+
+export type GuidanceLevel = "world-cue" | "affordance" | "hint" | "explicit-help" | "complete";
+export interface GuidanceState {
+  readonly level: GuidanceLevel;
+  readonly interactionCount: number;
+  readonly text: string;
+  readonly actionSkippable: true;
+}
+
+export type RetentionPresentationLifecycle = "Excluded" | "Compacted" | "Externalized";
+export interface RetentionPresentationItem {
+  readonly itemId: string;
+  readonly lifecycle: RetentionPresentationLifecycle;
+  readonly reasonCode: string;
+  readonly destination: string;
+}
+export interface RetentionPresentation {
+  readonly id: StableId;
+  readonly occurrence: number;
+  readonly headline: string;
+  readonly animation: "first-memorable" | "later-fast" | "reduced-motion-static";
+  readonly durationMs: number;
+  readonly items: readonly RetentionPresentationItem[];
+  readonly persistent: true;
+}
+
 export interface PlayerExperienceSnapshot {
   readonly schemaVersion: "1";
   readonly mode: PlayerExperienceMode;
@@ -185,6 +251,12 @@ export interface PlayerExperienceSnapshot {
   readonly history: readonly HistoryEntry[];
   readonly audioSubstitutes: readonly AudioSubstitute[];
   readonly feedingEvidence?: FeedingEvidence;
+  readonly operationalAnchor: OperationalAnchor;
+  readonly causalNavigation?: CausalNavigation;
+  readonly synchronizedEvidence?: SynchronizedEvidencePresentation;
+  readonly guidance: GuidanceState;
+  readonly retentionPresentations: readonly RetentionPresentation[];
+  readonly permanentReward: number;
   readonly status: string;
   readonly authoritativeFingerprint: string;
 }
@@ -202,6 +274,9 @@ export type PlayerExperienceCommand =
   | { readonly kind: "acknowledge-alert"; readonly alertId?: StableId }
   | { readonly kind: "stabilize-incident"; readonly incidentId?: StableId }
   | { readonly kind: "resolve-incident"; readonly incidentId?: StableId }
+  | { readonly kind: "advance-guidance" }
+  | { readonly kind: "dismiss-guidance" }
+  | { readonly kind: "present-retention" }
   | { readonly kind: "set-preferences"; readonly preferences: Partial<PlayerPreferences> };
 
 export type PlayerExperienceCommandResult =
@@ -231,6 +306,10 @@ export interface PlayerExperienceOptions {
   readonly preferences?: Partial<PlayerPreferences>;
   readonly history?: readonly HistoryEntry[];
   readonly assetBundle?: RuntimeAssetBundle;
+  readonly rating?: number | "unrated";
+  readonly credits?: number;
+  readonly selectedVersion?: string;
+  readonly permanentReward?: number;
 }
 
 export type EntityState = DinosaurState | RobotState | GateState | VisitorGroupState;

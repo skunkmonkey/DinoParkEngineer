@@ -1,4 +1,5 @@
 import { fingerprint } from "../content-registry/public.js";
+import { runOpeningMaintenanceContextEval, type EvalCaseResult } from "../eval-runner/public.js";
 import {
   createParkOperations,
   createParkOperationsFoundationFixture,
@@ -27,7 +28,10 @@ import {
 import type {
   AudioSubstitute,
   CameraState,
+  CausalNavigation,
+  CausalOrigin,
   FeedingEvidence,
+  GuidanceState,
   HistoryEntry,
   PlayerExperienceCommand,
   PlayerExperienceCommandResult,
@@ -36,6 +40,8 @@ import type {
   PlayerExperienceService,
   PlayerExperienceSnapshot,
   PlayerPreferences,
+  RetentionPresentation,
+  SynchronizedEvidencePresentation,
 } from "./types.js";
 
 const DEFAULT_PREFERENCES: PlayerPreferences = Object.freeze({
@@ -46,6 +52,24 @@ const DEFAULT_PREFERENCES: PlayerPreferences = Object.freeze({
 });
 
 const id = (value: string): StableId => value as StableId;
+
+const query = (entries: readonly (readonly [string, string])[]): string =>
+  entries.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`).join("&");
+
+/** Preserve one exact originating park event across every focused surface. */
+export const buildCausalNavigation = (origin: CausalOrigin, exactSynchronizationKey?: string): CausalNavigation => {
+  const synchronizationKey = exactSynchronizationKey ?? `${origin.incidentId}|${origin.traceId}|${origin.tick}|${origin.artifactVersion}`;
+  const returnUrl = `/park?${query([["incident", origin.incidentId], ["event", origin.eventId], ["selected", origin.entityId], ["tick", String(origin.tick)]])}`;
+  const shared = [["incident", origin.incidentId], ["job", origin.jobId], ["trace", origin.traceId], ["artifact", origin.artifactVersion], ["tick", String(origin.tick)], ["return", returnUrl]] as const;
+  return {
+    origin: structuredClone(origin),
+    workbenchUrl: `/workbench?${query([...shared, ["action", "command:opening-reuse-open-gate"]])}`,
+    evalUrl: `/eval?${query([...shared, ["sync", synchronizationKey]])}`,
+    replayUrl: `/replay?${query([...shared, ["sync", synchronizationKey]])}`,
+    returnUrl,
+    synchronizationKey,
+  };
+};
 
 const modeLabel = (mode: PlayerExperienceMode): string => {
   switch (mode) {
@@ -190,6 +214,11 @@ export const createPlayerExperience = (
   let preferences: PlayerPreferences = { ...DEFAULT_PREFERENCES, ...options.preferences };
   let audioSubstitutes: AudioSubstitute[] = [];
   let feedingEvidence: FeedingEvidence | undefined;
+  let guidance: GuidanceState = { level: "world-cue", interactionCount: 0, text: "Tria's hunger cue points to the first safe feeding action.", actionSkippable: true };
+  let causalNavigation: CausalNavigation | undefined;
+  let synchronizedEvalResult: EvalCaseResult | undefined;
+  let retentionPresentations: RetentionPresentation[] = [];
+  const permanentReward = options.permanentReward ?? 100;
   let disposed = false;
   const listeners = new Set<() => void>();
 
@@ -222,6 +251,19 @@ export const createPlayerExperience = (
       renderFrame: frame,
     });
     const authority = fingerprint({ world, operations: operationsState });
+    const emergencyCount = operationsState.alerts.filter((alert) => alert.severity === "emergency" && alert.status !== "acknowledged").length;
+    const selectedLabel = scene.entities.find((entry) => entry.id === selectedEntityId)?.label ?? "No entity";
+    const selectedVersion = options.selectedVersion ?? "prompt:self-contained-feeding@1.0.0";
+    const synchronizedEvidence: SynchronizedEvidencePresentation | undefined = causalNavigation === undefined || synchronizedEvalResult === undefined ? undefined : {
+      synchronizationKey: causalNavigation.synchronizationKey,
+      incidentId: causalNavigation.origin.incidentId,
+      jobId: causalNavigation.origin.jobId,
+      traceId: synchronizedEvalResult.replay.traceId as StableId,
+      tick: causalNavigation.origin.tick,
+      selectedVersion: `${synchronizedEvalResult.candidateReference.id}@${synchronizedEvalResult.candidateReference.version}`,
+      eval: { label: "Eval · Isolated run", resultId: synchronizedEvalResult.resultId, caseReference: `${synchronizedEvalResult.caseReference.id}@${synchronizedEvalResult.caseReference.version}`, status: synchronizedEvalResult.status, reasonCode: synchronizedEvalResult.reasonCode, productionMutation: false },
+      replay: { label: "Historical Replay · Frozen evidence", sessionId: synchronizedEvalResult.replay.sessionId, traceId: synchronizedEvalResult.replay.traceId, status: synchronizedEvalResult.replay.available ? "available" : "unavailable", mode: synchronizedEvalResult.replay.mode, productionMutation: false },
+    };
     return {
       schemaVersion: "1",
       mode,
@@ -232,6 +274,21 @@ export const createPlayerExperience = (
       history: cloneHistory(history),
       audioSubstitutes: audioSubstitutes.map((entry) => ({ ...entry })),
       ...(feedingEvidence === undefined ? {} : { feedingEvidence: { ...feedingEvidence } }),
+      operationalAnchor: {
+        productionState: `${operationsState.paused ? "paused" : "running"} · ${operationsState.phase}`,
+        day: operationsState.day,
+        tick: operationsState.tick,
+        rating: options.rating ?? "unrated",
+        credits: options.credits ?? 1_000,
+        emergencyCount,
+        selectedVersion,
+        causalBreadcrumb: causalNavigation === undefined ? ["Park", selectedLabel, "Inspector"] : ["Park", causalNavigation.origin.incidentId, causalNavigation.origin.eventId, selectedLabel],
+      },
+      ...(causalNavigation === undefined ? {} : { causalNavigation: structuredClone(causalNavigation) }),
+      ...(synchronizedEvidence === undefined ? {} : { synchronizedEvidence }),
+      guidance: { ...guidance },
+      retentionPresentations: retentionPresentations.map((entry) => structuredClone(entry)),
+      permanentReward,
       status,
       authoritativeFingerprint: authority,
     };
@@ -288,6 +345,7 @@ export const createPlayerExperience = (
       return rejected(commandId, operationResultMessage(result));
     }
     status = "Robot Alpha accepted the feeding job. The safe feeding procedure is ready in Tria's Inspector.";
+    guidance = { level: "complete", interactionCount: guidance.interactionCount + 1, text: "Guidance complete: you acted before a hint was required.", actionSkippable: true };
     appendHistory("command", "success", `Assigned ${job.id} to Robot Alpha. Exact production versions remain pinned.`, [job.id, agentId]);
     requestAudioSubstitute("job-assigned", "Robot Alpha accepted the feeding job.");
     return accepted(commandId, result);
@@ -430,6 +488,10 @@ export const createPlayerExperience = (
       selectedEntityId = incidentId;
       const incident = operations.project().incidents.find((entry) => entry.id === incidentId);
       if (incident !== undefined) camera = focusCamera(camera, projectPlayerScene(simulation.project(), operations.project(), { camera }).entities.find((entry) => entry.id === incident.id)?.position ?? camera.center);
+      synchronizedEvalResult = runOpeningMaintenanceContextEval();
+      const origin = { incidentId, eventId: id("opening:near-miss"), entityId: id("gate:beta"), jobId: secondJob.id, traceId: id("trace:opening-feed-beta"), artifactVersion: "prompt:self-contained-feeding@1.0.0", tick };
+      const synchronizationKey = `${incidentId}|${synchronizedEvalResult.replay.traceId}|${synchronizedEvalResult.resultId}`;
+      causalNavigation = buildCausalNavigation(origin, synchronizationKey);
     }
     status = "Recoverable near miss staged. Production auto-paused; inspect expected, observed, consequence, immediate gap, and Trace evidence.";
     appendHistory("outcome", "emergency", "Near miss: the reused feeding instruction opened Gate Beta, the disabled closer did not restore containment, and Vera reached the keeper path. Production auto-paused before any casualty.", [id("gate:beta"), id("dinosaur:vera"), secondJob.id, ...(incidentId === undefined ? [] : [incidentId])]);
@@ -520,6 +582,7 @@ export const createPlayerExperience = (
           status = `Selected ${entity.label}. Inspector is open with exact state and route details.`;
           appendHistory("selection", "info", `Selected ${entity.label}: ${entity.status}.`, [entity.id]);
           requestAudioSubstitute("selection", `${entity.label} selected. ${entity.status}.`);
+          if (entity.id === id("dinosaur:tria") || entity.id === id("robot:alpha")) guidance = { level: "complete", interactionCount: guidance.interactionCount + 1, text: "Guidance complete: the relevant entity was selected directly.", actionSkippable: true };
         }
       } else {
         const entity = snapshot.scene.entities.find((entry) => entry.id === selectedFromCommand);
@@ -571,6 +634,39 @@ export const createPlayerExperience = (
         return stabilizeIncident(commandId, command.incidentId);
       case "resolve-incident":
         return resolveIncident(commandId, command.incidentId);
+      case "advance-guidance": {
+        const next = guidance.level === "world-cue" ? "affordance" : guidance.level === "affordance" ? "hint" : guidance.level === "hint" ? "explicit-help" : guidance.level;
+        const text = next === "affordance" ? "Tria and the feeding action are emphasized in the semantic navigator." : next === "hint" ? "Hint: select Tria, assign Robot Alpha, then run the safe feeding action." : next === "explicit-help" ? "Help: use Tria Inspector → Assign Robot Alpha → Feed Tria through Inspector." : guidance.text;
+        guidance = { level: next, interactionCount: guidance.interactionCount + 1, text, actionSkippable: true };
+        status = `Guidance escalated to ${next}. Any correct action skips what remains.`;
+        appendHistory("announcement", "info", status);
+        return accepted(commandId);
+      }
+      case "dismiss-guidance":
+        guidance = { level: "complete", interactionCount: guidance.interactionCount + 1, text: "Guidance dismissed; all park actions remain available.", actionSkippable: true };
+        status = guidance.text;
+        appendHistory("announcement", "info", status);
+        return accepted(commandId);
+      case "present-retention": {
+        const occurrence = retentionPresentations.length + 1;
+        const reduced = preferences.reducedMotion;
+        const presentation: RetentionPresentation = {
+          id: id(`retention-presentation:opening-${occurrence}`), occurrence,
+          headline: occurrence === 1 ? "Context limit reached: every item has a visible destination." : `Retention event ${occurrence}: destinations updated.`,
+          animation: reduced ? "reduced-motion-static" : occurrence === 1 ? "first-memorable" : "later-fast",
+          durationMs: reduced ? 0 : occurrence === 1 ? 1_200 : 240,
+          items: [
+            { itemId: "context:old-observation", lifecycle: "Excluded", reasonCode: "KEEP_NEWEST_OLDEST_FIRST", destination: "Excluded from the next Agent Context" },
+            { itemId: "context:job-history", lifecycle: "Compacted", reasonCode: "COMPACT_HISTORY_SOURCE_REPLACED", destination: "memory:feeding-summary@1.0.0" },
+            { itemId: "context:maintenance-log", lifecycle: "Externalized", reasonCode: "EXTERNALIZE_RETRIEVE_STORED", destination: "memory:maintenance-log@1.0.0" },
+          ],
+          persistent: true,
+        };
+        retentionPresentations = [...retentionPresentations, presentation];
+        status = `${presentation.headline} Exact Excluded, Compacted, and Externalized records remain below.`;
+        appendHistory("outcome", "info", status);
+        return accepted(commandId);
+      }
       case "set-preferences": {
         preferences = {
           ...preferences,

@@ -30,6 +30,7 @@ const collectReferences = (pkg: CurriculumPackage): readonly { readonly path: st
   });
   pkg.unlocks.forEach((unlock, index) => add(`unlocks[${index}].grants`, unlock.grants));
   pkg.transfers.forEach((transfer, index) => add(`transfers[${index}].scenario`, [transfer.scenario]));
+  pkg.transfers.forEach((transfer, index) => add(`transfers[${index}].fixture`, [transfer.fixture.task, transfer.fixture.speciesKnowledge, transfer.fixture.missingContextRoute.item, transfer.fixture.revisedContextRoute.item]));
   return collected;
 };
 
@@ -59,6 +60,10 @@ const validateEntities = (pkg: CurriculumPackage, inventory: CurriculumValidatio
       ...scenario.incident.affectedEntityIds,
     ];
     for (const id of new Set(ids)) if (!inventory.entityIds.has(id)) diagnostics.push(diagnostic("CURRICULUM_ENTITY_MISSING", `scenarios[${scenarioIndex}].entities`, `Entity ${id} is unavailable.`));
+  });
+  pkg.transfers.forEach((transfer, transferIndex) => {
+    const ids = [transfer.fixture.speciesId, transfer.fixture.dinosaurId, transfer.fixture.enclosureId, transfer.fixture.gateId, transfer.fixture.maintenanceSourceId];
+    for (const id of ids) if (!inventory.entityIds.has(id)) diagnostics.push(diagnostic("CURRICULUM_ENTITY_MISSING", `transfers[${transferIndex}].fixture`, `Transfer entity ${id} is unavailable.`));
   });
 };
 
@@ -146,6 +151,45 @@ const validateOpeningGoldens = (pkg: CurriculumPackage, diagnostics: CurriculumD
   });
 };
 
+const validateOpeningRun = (pkg: CurriculumPackage, diagnostics: CurriculumDiagnostic[]): void => {
+  const contract = pkg.openingRun;
+  const targets = contract.beats.map((beat) => beat.targetCumulativeSeconds);
+  const strictlyIncreasing = targets.every((target, index) => index === 0 || target > (targets[index - 1] ?? 0));
+  if (contract.targetHumanSeconds !== 300 || contract.timingAcceptance !== "human-playtest-required" || !strictlyIncreasing || targets.at(-1) !== contract.targetHumanSeconds) {
+    diagnostics.push(diagnostic("CURRICULUM_OPENING_TIMING_INVALID", "openingRun", "The authored opening must target five minutes with increasing beats ending at 300 seconds; human playtesting remains the acceptance gate."));
+  }
+  const success = pkg.copy[contract.successCopyId];
+  if (success === undefined || !/park|visitor|contain|feeding|open/u.test(success.toLowerCase()) || /lesson|curriculum|grade|course|learning complete/u.test(success.toLowerCase())) {
+    diagnostics.push(diagnostic("CURRICULUM_SUCCESS_COPY_INVALID", "openingRun.successCopyId", "Opening success copy must state a concrete park improvement without lesson-completion or grading language."));
+  }
+};
+
+const validateTransfer = (pkg: CurriculumPackage, diagnostics: CurriculumDiagnostic[]): void => {
+  const opening = pkg.scenarios[0];
+  const guidanceIds = new Set(pkg.guidance.map((guidance) => guidance.id));
+  pkg.transfers.forEach((transfer, index) => {
+    const fixture = transfer.fixture;
+    const changedIdentity = opening !== undefined && fixture.dinosaurId !== opening.entities.hungryDinosaurId && fixture.dinosaurId !== opening.entities.secondDinosaurId && fixture.enclosureId !== opening.entities.firstEnclosureId && fixture.enclosureId !== opening.entities.secondEnclosureId && fixture.gateId !== opening.entities.secondGateId;
+    const routesEquivalent = fixture.missingContextRoute.item.id === fixture.revisedContextRoute.item.id && !fixture.missingContextRoute.routed && fixture.missingContextRoute.unavailableReason === "not-routed" && fixture.revisedContextRoute.routed;
+    const openingGuidanceWithheld = opening !== undefined && opening.guidanceIds.length > 0 && opening.guidanceIds.every((id) => transfer.withheldGuidanceIds.includes(id));
+    const successObservable = transfer.successEventId === transfer.observableSuccess.eventId && transfer.observableSuccess.requiredActionIds.length > 0 && new Set(transfer.observableSuccess.requiredActionIds).size === transfer.observableSuccess.requiredActionIds.length;
+    const assistanceIsDelayed = transfer.delayedAssistance.availableAfterEventId !== transfer.successEventId && guidanceIds.has(transfer.delayedAssistance.guidanceId) && !transfer.withheldGuidanceIds.includes(transfer.delayedAssistance.guidanceId);
+    if (!changedIdentity || !routesEquivalent || transfer.openingGuidanceDisabled !== true || !openingGuidanceWithheld || !successObservable || !assistanceIsDelayed) {
+      diagnostics.push(diagnostic("CURRICULUM_TRANSFER_INVALID", `transfers[${index}]`, "Transfer must use novel species/enclosure identities, reproduce the missing-context boundary, disable opening guidance, expose action-based success, and delay optional assistance."));
+    }
+  });
+};
+
+const validateHandbookUnlock = (pkg: CurriculumPackage, diagnostics: CurriculumDiagnostic[]): void => {
+  const unlocks = new Map(pkg.unlocks.map((unlock) => [unlock.id, unlock]));
+  pkg.handbook.forEach((entry, index) => {
+    const unlock = unlocks.get(entry.unlockId);
+    if (unlock === undefined || unlock.triggerEventId !== "outcome:near-miss" || !unlock.grants.some((grant) => grant.id === entry.id && grant.expectedClass === "HandbookEntry")) {
+      diagnostics.push(diagnostic("CURRICULUM_HANDBOOK_UNLOCK_INVALID", `handbook[${index}].unlockId`, "The first relevant Handbook entry must unlock from the experienced opening incident and remain outside Agent Context."));
+    }
+  });
+};
+
 const reportFor = (pkg: CurriculumPackage): CurriculumReport => ({
   identity: `${pkg.packageId}@${pkg.packageVersion}`,
   fingerprint: pkg.fingerprint,
@@ -153,6 +197,8 @@ const reportFor = (pkg: CurriculumPackage): CurriculumReport => ({
   scenarioIds: pkg.scenarios.map((scenario) => `${scenario.id}@${scenario.version}`),
   openingChain: [...pkg.scenarios[0]!.goldenOutcomes].sort((left, right) => left.order - right.order).map((outcome) => `${outcome.id}:${outcome.result}`),
   assetBundleIdentities: pkg.assetBundles.map((bundle) => `${bundle.bundleId}@${bundle.bundleVersion}`),
+  timingTargetSeconds: pkg.openingRun.targetHumanSeconds,
+  transferSuccessEvents: pkg.transfers.map((transfer) => transfer.observableSuccess.eventId),
 });
 
 export const validateCurriculumPackage = (input: unknown, inventory: CurriculumValidationInventory): CurriculumValidationResult => {
@@ -167,6 +213,9 @@ export const validateCurriculumPackage = (input: unknown, inventory: CurriculumV
   validateUnlocks(pkg, diagnostics);
   validateLinksAndCopy(pkg, diagnostics);
   validateOpeningGoldens(pkg, diagnostics);
+  validateOpeningRun(pkg, diagnostics);
+  validateTransfer(pkg, diagnostics);
+  validateHandbookUnlock(pkg, diagnostics);
   return diagnostics.length > 0 ? { ok: false, diagnostics } : { ok: true, package: structuredClone(pkg), report: reportFor(pkg) };
 };
 

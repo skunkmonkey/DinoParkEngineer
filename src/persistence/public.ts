@@ -12,15 +12,22 @@ export {
   createMemorySessionPort,
   createPersistenceContentManifest,
   createPersistenceCoordinator,
+  createPersistenceSessionCandidate,
   createVersionedPersistencePort,
   createSaveEnvelope,
   validateSaveEnvelope,
 } from "./engine.js";
+export { createAsyncPersistenceCoordinator } from "./async-engine.js";
 export {
   createInMemoryRepository,
   createInMemorySaveRepository,
   createMemorySaveRepository,
 } from "./repository.js";
+export { createIndexedDbSaveRepository } from "./indexeddb.js";
+export { createAutosaveCoordinator, checkpointDiagnostic } from "./autosave.js";
+export { createLegacyV0Fixture, migrateSave } from "./migration.js";
+export { commitPortableImport, exportPortableSave, inspectPortableSave } from "./portable-package.js";
+export { exportPersistenceDiagnostics, loadLastKnownGood } from "./recovery.js";
 export {
   contextPersistenceStateSchema,
   persistenceContentManifestSchema,
@@ -29,6 +36,7 @@ export {
   persistenceSectionSchemas,
   persistenceSectionsSchema,
   playerPreferencesSchema,
+  mvpCompositeStateSchema,
   saveEnvelopeSchema,
   tracePersistenceStateSchema,
 } from "./schemas.js";
@@ -39,10 +47,17 @@ export {
 } from "./types.js";
 export type {
   ContextPersistenceState,
+  AsyncSaveReadResult,
+  AsyncSaveRepository,
+  AsyncPersistenceCoordinator,
+  AutosaveCoordinator,
   HistoricalReplayOptions,
   HistoricalReplayResult,
   LoadOperationResult,
   MemorySessionPort,
+  MigrationAudit,
+  MigrationResult,
+  MvpCompositeState,
   PersistenceContentManifest,
   PersistenceContentResolver,
   PersistenceCoordinator,
@@ -64,6 +79,10 @@ export type {
   PersistenceValidationFailure,
   PersistenceValidationResult,
   PersistenceValidationSuccess,
+  PortableSavePackage,
+  PortableValue,
+  ImportResult,
+  SafeCheckpoint,
   SaveEnvelope,
   SaveEnvelopeInput,
   SaveMetadata,

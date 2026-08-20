@@ -7,6 +7,7 @@ import {
   DEFAULT_CAMERA,
   ParkPlayerExperience,
   PlayerExperience,
+  buildCausalNavigation,
   createPlayerExperience,
   interpolateSceneProjection,
   openingAssetIds,
@@ -119,19 +120,20 @@ test("the authored near-miss control stays unavailable after its evidence is clo
   service.dispatch({ kind: "stabilize-incident" });
   service.dispatch({ kind: "resolve-incident" });
   const html = renderToStaticMarkup(<PlayerExperience runtime={service} />);
-  assert.match(html, /<button type="button" disabled="">Stage recoverable near miss<\/button>/u);
+  assert.doesNotMatch(html, /Stage recoverable near miss/u);
+  assert.match(html, /Recovery recorded/u);
 });
 
 test("near-miss inspection exposes the complete causal route into Workbench", () => {
   const service = createPlayerExperience();
   service.dispatch({ kind: "trigger-near-miss" });
   const html = renderToStaticMarkup(<PlayerExperience runtime={service} />);
-  assert.match(html, /Causal investigation path/u);
-  assert.match(html, /job:schedule-second-feed-day-1-tick-0/u);
+  assert.match(html, /What happened · exact route/u);
+  assert.match(html, /Opening-Day Near Miss/u);
   assert.match(html, /command:opening-reuse-open-gate/u);
   assert.match(html, /context:maintenance-policy/u);
   assert.match(html, /prompt:self-contained-feeding@1.0.0/u);
-  assert.match(html, /Open responsible artifact in Workbench/u);
+  assert.match(html, /Investigate in Workbench/u);
 });
 
 test("focused modes start with production and simulation paused", () => {
@@ -144,20 +146,78 @@ test("focused modes start with production and simulation paused", () => {
   }
 });
 
+test("focused operational anchor keeps exact production, economy, version, emergency, and causal identity", () => {
+  const service = createPlayerExperience({ mode: "eval", rating: 84, credits: 725, selectedVersion: "prompt:self-contained-feeding@1.0.0" });
+  const before = service.project().operationalAnchor;
+  assert.equal(before.productionState, "paused · pre-opening"); assert.equal(before.rating, 84); assert.equal(before.credits, 725);
+  assert.equal(before.selectedVersion, "prompt:self-contained-feeding@1.0.0"); assert.deepEqual(before.causalBreadcrumb, ["Park", "Tria", "Inspector"]);
+  service.dispatch({ kind: "trigger-near-miss" }); const after = service.project();
+  assert.equal(after.operationalAnchor.emergencyCount, 1); assert.equal(after.operationalAnchor.tick, 1);
+  assert.ok(after.operationalAnchor.causalBreadcrumb.includes("opening:near-miss"));
+});
+
+test("causal navigation synchronizes Eval and Historical Replay and restores the exact originating park event", () => {
+  const navigation = buildCausalNavigation({ incidentId: "incident:gate-beta" as `${string}:${string}`, eventId: "opening:near-miss" as `${string}:${string}`, entityId: "gate:beta" as `${string}:${string}`, jobId: "job:feed-beta" as `${string}:${string}`, traceId: "trace:opening-feed-beta" as `${string}:${string}`, artifactVersion: "prompt:self-contained-feeding@1.0.0", tick: 1 });
+  assert.match(navigation.workbenchUrl, /return=%2Fpark%3Fincident%3Dincident%253Agate-beta/u);
+  assert.match(navigation.returnUrl, /^\/park\?incident=incident%3Agate-beta&event=opening%3Anear-miss&selected=gate%3Abeta&tick=1$/u);
+  assert.match(navigation.evalUrl, /sync=incident%3Agate-beta%7Ctrace%3Aopening-feed-beta%7C1/u);
+  const service = createPlayerExperience(); service.dispatch({ kind: "trigger-near-miss" }); const snapshot = service.project();
+  assert.equal(snapshot.synchronizedEvidence?.incidentId, snapshot.operations.incidents[0]?.id);
+  assert.equal(snapshot.synchronizedEvidence?.eval.status, "passed"); assert.match(snapshot.synchronizedEvidence?.eval.resultId ?? "", /^result:/u);
+  assert.equal(snapshot.synchronizedEvidence?.replay.status, "available"); assert.equal(snapshot.synchronizedEvidence?.replay.mode, "historical-replay");
+  assert.equal(snapshot.synchronizedEvidence?.eval.productionMutation, false); assert.equal(snapshot.synchronizedEvidence?.replay.productionMutation, false);
+  assert.equal(snapshot.synchronizedEvidence?.synchronizationKey, snapshot.causalNavigation?.synchronizationKey);
+  const html = renderToStaticMarkup(<PlayerExperience runtime={service} mode="replay" />);
+  assert.match(html, /Synchronized Eval &amp; Historical Replay/u); assert.match(html, /result:/u); assert.match(html, /replay:/u); assert.match(html, /Inspect evidence/u);
+});
+
+test("guidance escalates by interaction, correct action skips it, and guidance/time choices never alter permanent reward", () => {
+  const service = createPlayerExperience({ permanentReward: 250 }); const initialFingerprint = service.project().authoritativeFingerprint;
+  assert.equal(service.project().guidance.level, "world-cue");
+  service.dispatch({ kind: "advance-guidance" }); assert.equal(service.project().guidance.level, "affordance");
+  service.dispatch({ kind: "advance-guidance" }); assert.equal(service.project().guidance.level, "hint");
+  assert.equal(service.project().authoritativeFingerprint, initialFingerprint);
+  service.dispatch({ kind: "set-time-control", paused: true, speed: 1 });
+  service.dispatch({ kind: "set-time-control", paused: true, speed: 2 });
+  assert.equal(service.project().permanentReward, 250);
+  service.dispatch({ kind: "assign-feeding-job" }); assert.equal(service.project().guidance.level, "complete"); assert.equal(service.project().permanentReward, 250);
+  const skipped = createPlayerExperience({ permanentReward: 250 }); skipped.dispatch({ kind: "dismiss-guidance" }); assert.equal(skipped.project().guidance.level, "complete"); assert.equal(skipped.project().permanentReward, 250);
+});
+
+test("first retention presentation is memorable while later and reduced-motion presentations are faster and all destinations persist", () => {
+  const service = createPlayerExperience(); service.dispatch({ kind: "present-retention" }); service.dispatch({ kind: "present-retention" });
+  const [first, later] = service.project().retentionPresentations;
+  assert.equal(first?.animation, "first-memorable"); assert.equal(first?.durationMs, 1_200); assert.equal(later?.animation, "later-fast"); assert.equal(later?.durationMs, 240);
+  assert.deepEqual(first?.items.map((entry) => entry.lifecycle), ["Excluded", "Compacted", "Externalized"]);
+  assert.ok(first?.items.every((entry) => entry.destination.length > 0 && entry.reasonCode.length > 0));
+  const reduced = createPlayerExperience({ preferences: { reducedMotion: true } }); reduced.dispatch({ kind: "present-retention" }); reduced.dispatch({ kind: "present-retention" });
+  assert.deepEqual(reduced.project().retentionPresentations.map((entry) => [entry.animation, entry.durationMs]), [["reduced-motion-static", 0], ["reduced-motion-static", 0]]);
+  const html = renderToStaticMarkup(<PlayerExperience runtime={service} />); assert.match(html, /Context retention/u); assert.match(html, /Excluded/u); assert.match(html, /Compacted/u); assert.match(html, /Externalized/u);
+});
+
 test("Park View has a responsive semantic canvas equivalent, Inspector, history, and non-color mode framing", () => {
   const html = renderToStaticMarkup(<ParkPlayerExperience />);
-  assert.match(html, /Pre-opening operations/u);
-  assert.match(html, /Dawn park scene/u);
-  assert.match(html, /three-quarter/u);
+  assert.match(html, /Dawn Valley/u);
+  assert.match(html, /LIVE PARK/u);
+  assert.match(html, /Current objective/u);
+  assert.match(html, /Feed hungry Tria/u);
   assert.match(html, /data-renderer-preference="webgl"/u);
-  assert.match(html, /Semantic navigation/u);
+  assert.match(html, /Park roster/u);
   assert.match(html, /role="listbox"/u);
-  assert.match(html, /Tria Inspector/u);
-  assert.match(html, /Assign Robot Alpha/u);
-  assert.match(html, /Feed Tria through Inspector/u);
-  assert.match(html, /Persistent operations history/u);
-  assert.match(html, /Reduced motion/u);
-  assert.match(html, /Sound substitution/u);
-  assert.match(html, /Expected/u);
-  assert.match(html, /Canvas content is synchronized/u);
+  assert.match(html, /Send Robot Alpha/u);
+  assert.match(html, /Park time controls/u);
+  assert.match(html, /Park log/u);
+  assert.match(html, /Inspect evidence/u);
+  assert.doesNotMatch(html, /Visual grammar|Semantic navigation|Operational anchor|Action-skippable opening guidance/u);
+  const routineVisualLayout = html.split('<details class="advanced-details">')[0] ?? html;
+  assert.doesNotMatch(routineVisualLayout, /dinosaur:tria|location:enclosure|prompt:self-contained-feeding/u);
+});
+
+test("friendly presentation names are deterministic while exact IDs stay in advanced evidence", () => {
+  const html = renderToStaticMarkup(<ParkPlayerExperience />);
+  assert.match(html, /North Paddock Gate/u);
+  assert.match(html, /South Habitat Gate/u);
+  assert.match(html, /Vera/u);
+  assert.match(html, /<summary>Inspect evidence<\/summary>/u);
+  assert.match(html, /<code>dinosaur:tria<\/code>/u);
 });

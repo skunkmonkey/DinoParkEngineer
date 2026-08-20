@@ -865,22 +865,22 @@ Owning documents:
 `Specs/review-deployment_PRD.md` and
 `Specs/review-deployment_PLAN.md`.
 
-- [ ] Implement immutable change requests with goal, author, exact base and
+- [x] Implement immutable change requests with goal, author, exact base and
   candidate, readable/behavioral diff, context/dependency/tool delta, expected
   effect, tradeoffs, and risks.
-- [ ] Bind exact selected eval cases/suites and immutable results.
-- [ ] Distinguish passed, failed, invalid, interrupted, and omitted evidence.
-- [ ] Link every failure to trace/replay diagnosis.
-- [ ] Implement request changes, retain production, deploy, and revert decisions.
-- [ ] Preserve reviewed candidates and linked feedback.
-- [ ] Implement explicit exact deployment confirmation by production slot/scope.
-- [ ] Resolve and fingerprint exact dependency manifests before activation.
-- [ ] Make activation atomic and fail closed.
-- [ ] Ensure only future jobs use the new deployment.
-- [ ] Preserve all existing job and historical version pins.
-- [ ] Implement explicit revert as a new deployment record.
-- [ ] Preserve deployment, review, eval, job, incident, and revert causal history.
-- [ ] Add decision, atomicity, evidence, before/after job, history, and
+- [x] Bind exact selected eval cases/suites and immutable results.
+- [x] Distinguish passed, failed, invalid, interrupted, and omitted evidence.
+- [x] Link every failure to trace/replay diagnosis.
+- [x] Implement request changes, retain production, deploy, and revert decisions.
+- [x] Preserve reviewed candidates and linked feedback.
+- [x] Implement explicit exact deployment confirmation by production slot/scope.
+- [x] Resolve and fingerprint exact dependency manifests before activation.
+- [x] Make activation atomic and fail closed.
+- [x] Ensure only future jobs use the new deployment.
+- [x] Preserve all existing job and historical version pins.
+- [x] Implement explicit revert as a new deployment record.
+- [x] Preserve deployment, review, eval, job, incident, and revert causal history.
+- [x] Add decision, atomicity, evidence, before/after job, history, and
   accessibility tests.
 
 ### Incident Response MVP
@@ -889,97 +889,138 @@ Owning documents:
 `Specs/incident-response_PRD.md` and
 `Specs/incident-response_PLAN.md`.
 
-- [ ] Implement external eligibility based on exact incident/world state.
-- [ ] Present location, immediate risk, capabilities, arrival, duration, cost,
+- [x] Implement external eligibility based on exact incident/world state.
+- [x] Present location, immediate risk, capabilities, arrival, duration, cost,
   closures, and limitations.
-- [ ] Implement explicit manual activation and idempotency.
-- [ ] Reserve and settle response cost through Economy.
-- [ ] Implement deterministic requested, dispatched, en route, operating,
+- [x] Implement explicit manual activation and idempotency.
+- [x] Reserve and settle response cost through Economy.
+- [x] Implement deterministic requested, dispatched, en route, operating,
   stabilized, limited/failed, and complete states.
-- [ ] Implement visitor evacuation, temporary containment, and stranded-robot
+- [x] Implement visitor evacuation, temporary containment, and stranded-robot
   recovery through Simulation commands.
-- [ ] Record response evidence, closures, downtime, cost, and rating effects.
-- [ ] Prove response never changes Context, artifacts, routes, Retention Policy,
+- [x] Record response evidence, closures, downtime, cost, and rating effects.
+- [x] Prove response never changes Context, artifacts, routes, Retention Policy,
   review, or deployment.
-- [ ] Keep stabilized incidents engineering-unresolved.
-- [ ] Add response eligibility, timing, limitations, boundary, economy, and
+- [x] Keep stabilized incidents engineering-unresolved.
+- [x] Add response eligibility, timing, limitations, boundary, economy, and
   accessibility tests.
 
 ### Persistence MVP completion
 
-- [ ] Implement IndexedDB staged writes and transactional known-good promotion.
-- [ ] Implement coalesced autosave at domain-declared safe checkpoints.
-- [ ] Handle quota, transaction abort, corruption, truncation, and stale staging.
-- [ ] Save/load every MVP domain: world, seed, time, content, jobs, context,
+- [x] Implement IndexedDB staged writes and transactional known-good promotion.
+- [x] Implement coalesced autosave at domain-declared safe checkpoints.
+- [x] Handle quota, transaction abort, corruption, truncation, and stale staging.
+- [x] Save/load every MVP domain: world, seed, time, content, jobs, context,
   memory, traces, evals, Workbench, reviews, deployments, economy, incidents,
   response, progression, rewards, curriculum, preferences, and consent state as
   applicable.
-- [ ] Preserve exact historical versions after deploy and revert.
-- [ ] Implement save listing and metadata.
-- [ ] Implement portable export/import quarantine and validation.
-- [ ] Implement explicit delete confirmation.
-- [ ] Implement one real deterministic schema migration with original backup.
-- [ ] Implement last-known-good and diagnostic-export recovery.
-- [ ] Add composite round-trip, fault injection, migration, export/import, and
+- [x] Preserve exact historical versions after deploy and revert.
+- [x] Implement save listing and metadata.
+- [x] Implement portable export/import quarantine and validation.
+- [x] Implement explicit delete confirmation.
+- [x] Implement one real deterministic schema migration with original backup.
+- [x] Implement last-known-good and diagnostic-export recovery.
+- [x] Add composite round-trip, fault injection, migration, export/import, and
   Windows/macOS portability tests.
 
 ### Economy and expression MVP completion
 
-- [ ] Settle the first full park day with explainable rating and credits.
-- [ ] Implement one Park Developer capability unlock that creates a real action.
-- [ ] Keep capability availability separate from purchase/acceptance.
-- [ ] Implement one expressive reward with approved rendering asset.
-- [ ] Implement reward inventory, placement, removal, persistence, and visible
+- [x] Settle the first full park day with explainable rating and credits.
+- [x] Implement one Park Developer capability unlock that creates a real action.
+- [x] Keep capability availability separate from purchase/acceptance.
+- [x] Implement one expressive reward with approved rendering asset.
+- [x] Implement reward inventory, placement, removal, persistence, and visible
   visitor/park use.
-- [ ] Prove the expressive reward has no large compounding mechanical bonus.
+- [x] Prove the expressive reward has no large compounding mechanical bonus.
 
 ### Player Experience MVP completion
 
-- [ ] Implement focused-mode operational anchor with production state/time,
+- [x] Implement focused-mode operational anchor with production state/time,
   rating, credits, emergency count, selected version, and causal breadcrumb.
-- [ ] Implement route restoration to the exact originating park event.
-- [ ] Implement visible degraded gate state and near-miss staging.
-- [ ] Implement grouped incident card and emergency auto-pause.
-- [ ] Implement synchronized Eval and Historical Replay presentation.
-- [ ] Implement action-skippable onboarding guidance escalation.
-- [ ] Ensure guidance use, pause, and slower speed do not change rewards.
-- [ ] Implement the first memorable retention animation plus exact persistent
+- [x] Implement route restoration to the exact originating park event.
+- [x] Implement visible degraded gate state and near-miss staging.
+- [x] Implement grouped incident card and emergency auto-pause.
+- [x] Implement synchronized Eval and Historical Replay presentation.
+- [x] Implement action-skippable onboarding guidance escalation.
+- [x] Ensure guidance use, pause, and slower speed do not change rewards.
+- [x] Implement the first memorable retention animation plus exact persistent
   Excluded/Compacted/Externalized information.
-- [ ] Keep later retention presentations faster and reduced-motion compatible.
+- [x] Keep later retention presentations faster and reduced-motion compatible.
 
 ### Curriculum opening and transfer completion
 
-- [ ] Complete the exact five-minute opening content package.
-- [ ] Add concrete success copy rather than lesson-completion language.
-- [ ] Unlock the first relevant Handbook entry after the incident.
-- [ ] Add a novel species/enclosure transfer case for missing context.
-- [ ] Disable repeated opening guidance during the transfer attempt.
-- [ ] Define observable transfer success and optional delayed assistance.
+- [x] Complete the exact five-minute opening content package.
+- [x] Add concrete success copy rather than lesson-completion language.
+- [x] Unlock the first relevant Handbook entry after the incident.
+- [x] Add a novel species/enclosure transfer case for missing context.
+- [x] Disable repeated opening guidance during the transfer attempt.
+- [x] Define observable transfer success and optional delayed assistance.
 
 ### MVP Acceptance Gate
 
-- [ ] Verify network-disabled core play without account, secret, backend, or
+- [x] Verify network-disabled core play without account, secret, backend, or
   runtime model.
-- [ ] Verify exact near-miss replay with identical state, versions, actions,
+- [x] Verify exact near-miss replay with identical state, versions, actions,
   trace, and outcome.
-- [ ] Verify prose-only changes do not change behavior.
-- [ ] Verify complete causal path from park consequence through deployment and
+- [x] Verify prose-only changes do not change behavior.
+- [x] Verify complete causal path from park consequence through deployment and
   back.
-- [ ] Verify exact Context Capacity composition, growth, overflow, retention,
+- [x] Verify exact Context Capacity composition, growth, overflow, retention,
   exclusions, and policy.
-- [ ] Verify no silent over-capacity execution path.
-- [ ] Verify every displayed eval result comes from a real fixture.
-- [ ] Verify historical jobs remain pinned after deployment.
-- [ ] Verify Incident Response stabilizes without repairing engineering.
-- [ ] Verify production, pause, eval, and replay without relying on color.
-- [ ] Verify all critical actions by keyboard and all transient cues in
+- [x] Verify no silent over-capacity execution path.
+- [x] Verify every displayed eval result comes from a real fixture.
+- [x] Verify historical jobs remain pinned after deployment.
+- [x] Verify Incident Response stabilizes without repairing engineering.
+- [x] Verify production, pause, eval, and replay without relying on color.
+- [x] Verify all critical actions by keyboard and all transient cues in
   persistent history.
-- [ ] Verify save, reload, replay, revert, and redeploy exactness.
-- [ ] Verify the novel transfer case.
-- [ ] Run the opening with representative newcomers and measure the provisional
-  five-minute target.
-- [ ] Obtain experienced Agent-user credibility feedback.
-- [ ] Run `npm run validate` and all browser computer-use scenarios.
+- [x] Verify save, reload, replay, revert, and redeploy exactness.
+- [x] Verify the novel transfer case.
+- [!] Run the opening with representative newcomers and measure the provisional
+  five-minute target. **Blocked:** no representative human newcomers or timed
+  research session are available inside this coding task; the exact authored
+  300-second instrumented run is ready. **Unblocks when:** representative
+  newcomers complete the opening and their elapsed-time observations are
+  recorded against `playtest:opening-timing`.
+- [!] Obtain experienced Agent-user credibility feedback. **Blocked:** no
+  experienced external Agent user is participating in this coding task and an
+  AI self-assessment cannot substitute for credibility feedback. **Unblocks
+  when:** an experienced Agent user completes the opening/transfer and records
+  feedback against `playtest:opening-authenticity`.
+- [x] Run `npm run validate` and all browser computer-use scenarios.
+
+### Game Experience Remediation
+
+Owning documents: `fix.md`, `Specs/player-experience_PRD.md`, and
+`Specs/player-experience_PLAN.md`.
+
+- [x] Replace the document-like Park route with a 100dvh HUD, dominant authored
+  park, dismissible Inspector, and time/action strip at desktop viewports.
+- [x] Move navigation, settings, Save, Handbook, Economy, history, and
+  diagnostics into concise drawers, disclosures, or focused modes.
+- [x] Add deterministic friendly-name presentation and keep exact IDs,
+  versions, fingerprints, and reason codes behind deliberate evidence actions.
+- [x] Rebuild the opening composition with readable habitats, boundaries,
+  gates, feeders, water/shade, visitor paths, service routes, landmarks, and
+  landscaping.
+- [x] Add presentation-only living-world motion and reduced-motion equivalents
+  for the opening feeding, near miss, routes, selection, and retention records.
+- [x] Apply progressive disclosure and viewport-contained evidence to
+  Workbench, Eval, Review, Incident Response, Persistence, Economy, and
+  Curriculum views.
+- [x] Centralize persisted text scale in the Shell accessibility port and verify
+  every Phase 7 route inherits the root variable without feature shadowing.
+- [!] Verify the complete critical path at actual Chrome 150% and 200% browser
+  zoom. **Blocked:** the connected-Chrome tab control delivered page keyboard
+  input but did not change browser-level zoom. The equivalent 683px CSS reflow
+  geometry is covered, and the full critical path passed at that geometry.
+  **Unblocks when:** a manual Chrome run confirms the same path at
+  browser zoom 150% and 200%.
+- [!] Run representative newcomer and experienced Agent-user first-look,
+  five-minute, and density playtests. **Blocked:** no representative human
+  participants are present in this coding task and `fix.md` prohibits AI
+  self-assessment. **Unblocks when:** representative participants complete the
+  remediated opening and observations are recorded.
 
 ---
 

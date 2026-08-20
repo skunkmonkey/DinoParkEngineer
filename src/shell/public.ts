@@ -45,6 +45,15 @@ export {
   createAccessibilityPreferencesPort,
   DEFAULT_ACCESSIBILITY_PREFERENCES,
 } from "./providers/accessibility.js";
+
+export {
+  AccessibilityPreferencesProvider,
+} from "./accessibility-provider.js";
+export { useAccessibilityPreferences } from "./use-accessibility-preferences.js";
+export type {
+  AccessibilityPreferencesProviderProps,
+} from "./accessibility-provider.js";
+export type { AccessibilityPreferencesProjection } from "./use-accessibility-preferences.js";
 export type {
   AccessibilityPort,
   AccessibilityPreferenceKey,

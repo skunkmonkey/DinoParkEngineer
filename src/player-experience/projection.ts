@@ -60,21 +60,21 @@ export const PLAYER_VISUAL_GRAMMAR: Readonly<Record<VisualGrammarKey, Readonly<{
 });
 
 export const OPENING_LOCATION_POINTS: Readonly<Record<string, Point2D>> = Object.freeze({
-  "location:enclosure": { x: 31, y: 45 },
-  "location:enclosure-beta": { x: 67, y: 43 },
-  "location:path": { x: 54, y: 61 },
-  "location:service": { x: 76, y: 70 },
-  "location:safe": { x: 88, y: 38 },
+  "location:enclosure": { x: 28, y: 43 },
+  "location:enclosure-beta": { x: 68, y: 38 },
+  "location:path": { x: 50, y: 64 },
+  "location:service": { x: 76, y: 72 },
+  "location:safe": { x: 91, y: 57 },
   "location:park": { x: 50, y: 50 },
 });
 
 const LOCATION_LABELS: Readonly<Record<string, string>> = Object.freeze({
-  "location:enclosure": "Enclosure Alpha",
-  "location:enclosure-beta": "Enclosure Beta",
-  "location:path": "Keeper path",
-  "location:service": "Service lane",
-  "location:safe": "Visitor safe zone",
-  "location:park": "Main park",
+  "location:enclosure": "Tria Habitat",
+  "location:enclosure-beta": "North Paddock",
+  "location:path": "Keeper Route",
+  "location:service": "Robot Depot",
+  "location:safe": "Visitor Arrival",
+  "location:park": "Dawn Valley Park",
 });
 
 const ASSET_IDS = Object.freeze({
@@ -134,13 +134,13 @@ const dinosaurProjection = (
   return {
     id: dinosaur.id,
     kind: "dinosaur",
-    label: dinosaur.id === "dinosaur:tria" ? "Tria" : dinosaur.species,
+    label: dinosaur.id === "dinosaur:tria" ? "Tria" : dinosaur.id === "dinosaur:vera" ? "Vera" : dinosaur.species,
     locationId: dinosaur.locationId,
     position: { x: position.x - 3, y: position.y - 2 },
     status: completed ? "Fed · calm" : hungry ? `Hungry · ${dinosaur.hunger}% need` : `Cared for · ${dinosaur.hunger}% hunger`,
     intent: completed ? "Resting after feeding" : hungry ? "Waiting for a safe feeding assignment" : "Foraging in its enclosure",
     route: [LOCATION_LABELS[dinosaur.locationId] ?? dinosaur.locationId, "Safe feeding route"],
-    accessibilityLabel: `${dinosaur.species} ${dinosaur.id === "dinosaur:tria" ? "Tria" : dinosaur.id}; ${completed ? "fed and calm" : hungry ? "hungry and needs feeding" : "cared for"}; located at ${LOCATION_LABELS[dinosaur.locationId] ?? dinosaur.locationId}`,
+    accessibilityLabel: `${dinosaur.species} ${dinosaur.id === "dinosaur:tria" ? "Tria" : dinosaur.id === "dinosaur:vera" ? "Vera" : "dinosaur"}; ${completed ? "fed and calm" : hungry ? "hungry and needs feeding" : "cared for"}; located at ${LOCATION_LABELS[dinosaur.locationId] ?? "park"}`,
     assetId: ASSET_IDS.dinosaur,
     assetVersion: "1.0.0",
     selected,
@@ -177,7 +177,7 @@ const robotProjection = (
     position: { x: position.x + 3, y: position.y + 1 },
     status: available ? "Available · battery 100%" : `${robot.action === "using-tool" ? "Using tool" : "Assigned"} · battery ${robot.battery}%`,
     intent: available ? "Waiting for a safe job" : assignedJob === undefined ? "Returning to standby" : `Working on ${assignedJob.task.id}`,
-    route: [LOCATION_LABELS[robot.locationId] ?? robot.locationId, "Gate Alpha", "Enclosure Alpha"],
+    route: [LOCATION_LABELS[robot.locationId] ?? "Robot Depot", "Keeper Route", "South Habitat Gate", "Tria Habitat"],
     accessibilityLabel: `Robot Alpha; ${available ? "available" : "assigned"}; battery ${robot.battery} percent; located at ${LOCATION_LABELS[robot.locationId] ?? robot.locationId}`,
     assetId: ASSET_IDS.robot,
     assetVersion: "1.0.0",
@@ -200,8 +200,8 @@ const gateProjection = (
 ): PlayerEntityProjection => {
   const beta = gate.id === asStableId("gate:beta");
   const position: Point2D = beta ? { x: 61, y: 53 } : { x: 44, y: 55 };
-  const gateLabel = beta ? "Gate Beta" : "Gate Alpha";
-  const enclosureLabel = beta ? "Enclosure Beta" : "Enclosure Alpha";
+  const gateLabel = beta ? "North Paddock Gate" : "South Habitat Gate";
+  const enclosureLabel = beta ? "North Paddock" : "Tria Habitat";
   const incident = operations.incidents.find((entry) => entry.entityIds.includes(gate.id) && entry.status !== "closed");
   const degraded = gate.sensorHealth !== "healthy" || gate.closer === "disabled";
   const emergency = incident?.risk !== undefined && incident.risk >= 80;
@@ -328,13 +328,13 @@ const jobProjection = (
   return {
     id: job.id,
     kind: "job",
-    label: job.targetId === "dinosaur:tria" ? "Feed Tria job" : `Job ${job.id}`,
+    label: job.targetId === "dinosaur:tria" ? "Feed Tria" : job.targetId === "dinosaur:vera" ? "Feed Vera" : "Park job",
     locationId: world.dinosaurs.find((entry) => entry.id === job.targetId)?.locationId ?? asStableId("location:park"),
     position: { x: position.x + 1, y: position.y - 8 },
     status: completed ? "Completed · result linked" : `${job.status} · priority ${job.priority}`,
-    intent: completed ? "Retain exact result evidence" : `Deliver ${job.task.id} to ${job.assignedAgentId ?? "an available Worker"}`,
-    route: ["Park Operations", job.id, job.targetId],
-    accessibilityLabel: `${job.targetId === "dinosaur:tria" ? "Feed Tria" : job.id} job; ${job.status}; priority ${job.priority}; exact pinned versions available`,
+    intent: completed ? "Feeding result recorded" : `Assign the feeding procedure to ${job.assignedAgentId === undefined ? "an available Worker Agent" : "Robot Alpha"}`,
+    route: ["Park Operations", job.targetId === "dinosaur:tria" ? "Tria Habitat" : "North Paddock"],
+    accessibilityLabel: `${job.targetId === "dinosaur:tria" ? "Feed Tria" : job.targetId === "dinosaur:vera" ? "Feed Vera" : "Park"} job; ${job.status}; priority ${job.priority}; exact pinned versions available in evidence`,
     assetId: ASSET_IDS.hazard,
     assetVersion: "1.0.0",
     selected,
@@ -394,13 +394,13 @@ const incidentProjection = (
   return {
     id: incident.id,
     kind: "incident",
-    label: "Containment near miss",
+    label: "Opening-Day Near Miss",
     locationId: incident.locationId,
     position: { x: position.x + 11, y: position.y - 14 },
     status: `${incident.status} · risk ${incident.risk}% · ${incident.entityIds.length} affected entities`,
     intent: incident.status === "stabilized" || incident.status === "resolved" || incident.status === "closed" ? "Retain recovery evidence" : "Compare expected, observed, consequence, and gap",
-    route: ["Park Operations", incident.id, ...incident.traceIds],
-    accessibilityLabel: `Containment near miss; ${incident.status}; risk ${incident.risk} percent; ${incident.immediateGap.join("; ")}`,
+    route: ["Park Operations", "North Paddock", "Opening-Day Near Miss"],
+    accessibilityLabel: `Opening-Day Near Miss; ${incident.status}; risk ${incident.risk} percent; ${incident.immediateGap.join("; ")}`,
     assetId: ASSET_IDS.hazard,
     assetVersion: "1.0.0",
     selected,
@@ -517,15 +517,21 @@ export const interpolateSceneProjection = (
   presentationTimeMs: number,
   reducedMotion: boolean,
 ): PlayerSceneProjection => {
-  const phase = reducedMotion ? 0 : Math.sin(presentationTimeMs / 280) * 0.6;
+  const phase = reducedMotion ? 0 : Math.sin(presentationTimeMs / 360);
   return {
     ...scene,
     renderFrame: scene.renderFrame + 1,
     entities: scene.entities.map((entity) => ({
       ...entity,
-      position: entity.cue?.motion === "gentle-pulse" || entity.cue?.motion === "urgent-pulse"
-        ? { x: entity.position.x, y: entity.position.y + phase }
-        : { ...entity.position },
+      position: reducedMotion ? { ...entity.position } : entity.kind === "dinosaur"
+        ? { x: entity.position.x + phase * 0.35, y: entity.position.y + Math.abs(phase) * 0.55 }
+        : entity.kind === "robot" && !entity.status.startsWith("Available")
+          ? { x: entity.position.x + phase * 1.4, y: entity.position.y - Math.abs(phase) * 0.35 }
+          : entity.kind === "visitor"
+            ? { x: entity.position.x - Math.abs(phase) * 0.7, y: entity.position.y }
+            : entity.cue?.motion === "gentle-pulse" || entity.cue?.motion === "urgent-pulse"
+              ? { x: entity.position.x, y: entity.position.y + phase * 0.8 }
+              : { ...entity.position },
     })),
     aggregates: scene.aggregates.map((aggregate) => ({
       ...aggregate,

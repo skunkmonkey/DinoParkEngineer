@@ -15,6 +15,7 @@ import React, {
 import {
   ConfigurationValidationError,
   createAccessibilityPreferencesPort,
+  AccessibilityPreferencesProvider,
   createAudioPort,
   createConfigurationPort,
   createDiagnosticsPort,
@@ -235,8 +236,8 @@ function createRegistrations(
       requirement: "required",
       route: { id: "park", path: "/", mode: "production", title: "Park View" },
       load: async (): Promise<LoadedFeature> => {
-        const module = await import("./park/public.js");
-        return { render: module.ParkPlaceholder };
+        const module = await import("./player-experience/public.js");
+        return { render: module.ParkPlayerExperience };
       },
       failure: {
         diagnosticCode: "SHELL_REQUIRED_FEATURE_FAILED",
@@ -306,7 +307,7 @@ function createRegistrations(
     },
     {
       id: "player-persistence",
-      order: 7,
+      order: 8,
       requirement: "optional",
       route: { id: "player-persistence", path: "/persistence", mode: "persistence", title: "Save and Restore" },
       load: async (): Promise<LoadedFeature> => {
@@ -317,6 +318,51 @@ function createRegistrations(
         diagnosticCode: "PLAYER_PERSISTENCE_FAILED",
         title: "Save and Restore unavailable",
         message: "The current park remains unchanged while persistence recovers.",
+      },
+    },
+    {
+      id: "player-incident-response",
+      order: 7,
+      requirement: "optional",
+      route: { id: "player-incident-response", path: "/incident-response", mode: "incident-response", title: "Incident Response" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./incident-response/public.js");
+        return { render: module.IncidentResponseView };
+      },
+      failure: {
+        diagnosticCode: "INCIDENT_RESPONSE_FEATURE_FAILED",
+        title: "Incident Response unavailable",
+        message: "Production remains paused and the engineering cause remains unchanged.",
+      },
+    },
+    {
+      id: "player-economy",
+      order: 9,
+      requirement: "optional",
+      route: { id: "player-economy", path: "/economy", mode: "economy", title: "Economy and Progression" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./economy-progression/public.js");
+        return { render: module.EconomyProgressionView };
+      },
+      failure: {
+        diagnosticCode: "ECONOMY_PROGRESSION_FEATURE_FAILED",
+        title: "Economy and Progression unavailable",
+        message: "The park ledger remains unchanged while this projection recovers.",
+      },
+    },
+    {
+      id: "player-curriculum",
+      order: 11,
+      requirement: "optional",
+      route: { id: "player-curriculum", path: "/curriculum", mode: "curriculum", title: "Opening and Transfer" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./curriculum-content/public.js");
+        return { render: module.CurriculumOpeningView };
+      },
+      failure: {
+        diagnosticCode: "CURRICULUM_CONTENT_FEATURE_FAILED",
+        title: "Opening and transfer content unavailable",
+        message: "The active park remains unchanged while authored content recovers.",
       },
     },
     {
@@ -340,8 +386,8 @@ function createRegistrations(
       requirement: "optional",
       route: { id: "player-review", path: "/review", mode: "review", title: "Review and Deployment" },
       load: async (): Promise<LoadedFeature> => {
-        const module = await import("./player-experience/public.js");
-        return { render: module.ReviewPlayerExperience };
+        const module = await import("./review-deployment/public.js");
+        return { render: module.ReviewDeploymentView };
       },
       failure: {
         diagnosticCode: "PLAYER_REVIEW_FAILED",
@@ -439,6 +485,10 @@ function RunningShell(): React.JSX.Element {
   const [startupFailure, setStartupFailure] = useState<string>();
   const [loadedFeature, setLoadedFeature] = useState<LoadedFeature>();
   const [loadFailure, setLoadFailure] = useState<Error>();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
   const [eventHistory, setEventHistory] = useState<readonly string[]>([
     "Shell boot started.",
   ]);
@@ -497,15 +547,36 @@ function RunningShell(): React.JSX.Element {
   );
 
   useEffect(() => {
-    const onPopState = (): void => setPathname(window.location.pathname);
+    const onPopState = (): void => {
+      setPathname(window.location.pathname);
+      setMenuOpen(false);
+      setSettingsOpen(false);
+    };
     window.addEventListener("popstate", onPopState);
     return (): void => window.removeEventListener("popstate", onPopState);
   }, []);
 
   useEffect(() => {
+    if (!menuOpen && !settingsOpen) return;
+    const onKeyDown = (event: KeyboardEvent): void => {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      if (settingsOpen) {
+        setSettingsOpen(false);
+        settingsButtonRef.current?.focus();
+        return;
+      }
+      setMenuOpen(false);
+      menuButtonRef.current?.focus();
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return (): void => window.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen, settingsOpen]);
+
+  useEffect(() => {
     document.documentElement.dataset.contrast = preferences.highContrast ? "high" : "standard";
     document.documentElement.dataset.motion = preferences.reducedMotion ? "reduced" : "standard";
-    document.documentElement.style.setProperty("--dpe-font-size", `${preferences.textScale}rem`);
+    document.documentElement.style.setProperty("--dpe-player-font-scale", String(preferences.textScale));
     try {
       window.localStorage.setItem(ACCESSIBILITY_STORAGE_KEY, JSON.stringify(preferences));
     } catch {
@@ -611,6 +682,8 @@ function RunningShell(): React.JSX.Element {
     const target = withBase(basePath, path);
     window.history.pushState({}, "", target);
     setPathname(window.location.pathname);
+    setMenuOpen(false);
+    setSettingsOpen(false);
   }, [basePath]);
 
   const retry = useCallback((): void => {
@@ -636,27 +709,42 @@ function RunningShell(): React.JSX.Element {
     );
   }
 
+  const isParkRoute = resolution.mode === "production" || resolution.mode === "paused-production";
+
   return (
-    <div className="app-frame">
+    <AccessibilityPreferencesProvider port={accessibility}>
+    <div className={`app-frame ${isParkRoute ? "app-frame-park" : "app-frame-focused"}`}>
       <a className="skip-link" href="#main-content">Skip to main content</a>
       <header className="app-header">
-        <div>
-          <p className="eyebrow">Dino Park Engineer</p>
-          <h1>{resolution.title}</h1>
+        <button className="brand-button" type="button" onClick={() => navigate("/")} aria-label="Return to Park View">
+          <span aria-hidden="true">DP</span><span>Dino Park Engineer</span>
+        </button>
+        <div className="shell-menu-actions">
+          <span className="mode-badge">{resolution.title}</span>
+          <button ref={menuButtonRef} type="button" aria-haspopup="true" aria-expanded={menuOpen} aria-controls="game-menu" onClick={() => { setSettingsOpen(false); setMenuOpen((open) => !open); }}>Game menu</button>
+          <button ref={settingsButtonRef} type="button" aria-haspopup="true" aria-expanded={settingsOpen} aria-controls="settings-drawer" onClick={() => { setMenuOpen(false); setSettingsOpen((open) => !open); }}>Settings</button>
         </div>
-        <p className="mode-badge">Mode: {resolution.mode}</p>
       </header>
-      <nav className="primary-nav" aria-label="Primary navigation">
-        <button type="button" onClick={() => navigate("/")}>Park View</button>
-        <button type="button" onClick={() => navigate("/pause")}>Pause frame</button>
-        <button type="button" onClick={() => navigate("/workbench")}>Workbench</button>
-        <button type="button" onClick={() => navigate("/eval")}>Eval / Incident</button>
-        <button type="button" onClick={() => navigate("/replay")}>Historical Replay</button>
-        <button type="button" onClick={() => navigate("/review")}>Review / Deploy</button>
-        <button type="button" onClick={() => navigate("/persistence")}>Save / Restore</button>
-        <button type="button" onClick={() => navigate("/shell-lab")}>Shell diagnostics</button>
-        <button type="button" onClick={() => navigate("/foundation-lab")}>Foundation lab</button>
-      </nav>
+      {menuOpen ? <nav id="game-menu" className="game-menu" aria-label="Game destinations">
+        <button type="button" onClick={() => navigate("/")}>Return to park</button>
+        <button type="button" onClick={() => navigate("/workbench")}>Engineering Workbench</button>
+        <button type="button" onClick={() => navigate("/eval")}>Evals</button>
+        <button type="button" onClick={() => navigate("/review")}>Review &amp; deployment</button>
+        <button type="button" onClick={() => navigate("/incident-response")}>Incident Response</button>
+        <button type="button" onClick={() => navigate("/persistence")}>Save &amp; restore</button>
+        <button type="button" onClick={() => navigate("/economy")}>Park economy</button>
+        <button type="button" onClick={() => navigate("/curriculum")}>Handbook &amp; scenarios</button>
+        <details><summary>Diagnostics</summary><div className="button-row"><button type="button" onClick={() => navigate("/replay")}>Historical replay</button><button type="button" onClick={() => navigate("/shell-lab")}>Shell diagnostics</button><button type="button" onClick={() => navigate("/foundation-lab")}>Foundation lab</button></div></details>
+      </nav> : null}
+      {settingsOpen ? <div id="settings-drawer" className="settings-drawer"><ShellControls
+        preferences={preferences}
+        setPreferences={(patch) => accessibility.setPreferences(patch)}
+        persistence={persistence}
+        offline={offline}
+        offlineState={offlineState}
+        activateServiceWorker={async (): Promise<void> => { await updateServiceWorker.current?.(true); }}
+        addHistory={(message) => setEventHistory((items) => [...items, message])}
+      /></div> : null}
       <main id="main-content" tabIndex={-1}>
         {resolution.kind === "not-found" ? (
           <NotFoundSurface
@@ -691,25 +779,9 @@ function RunningShell(): React.JSX.Element {
           </FeatureBoundary>
         )}
       </main>
-      <ShellControls
-        preferences={preferences}
-        setPreferences={(patch) => accessibility.setPreferences(patch)}
-        persistence={persistence}
-        offline={offline}
-        offlineState={offlineState}
-        activateServiceWorker={async (): Promise<void> => {
-          await updateServiceWorker.current?.(true);
-        }}
-        addHistory={(message) => setEventHistory((items) => [...items, message])}
-      />
-      <aside className="event-history" aria-labelledby="history-heading">
-        <h2 id="history-heading">Shell event history</h2>
-        <ol>{eventHistory.map((event, index) => <li key={`${index}-${event}`}>{event}</li>)}</ol>
-      </aside>
-      <footer>
-        <p>Build <code>{BUILD_ID}</code> · Base <code>{basePath}</code></p>
-      </footer>
+      {resolution.mode === "diagnostics" ? <aside className="event-history" aria-labelledby="history-heading"><h2 id="history-heading">Shell event history</h2><ol>{eventHistory.map((event, index) => <li key={`${index}-${event}`}>{event}</li>)}</ol><p>Build <code>{BUILD_ID}</code> · Base <code>{basePath}</code></p></aside> : null}
     </div>
+    </AccessibilityPreferencesProvider>
   );
 }
 
@@ -749,7 +821,7 @@ function ShellControls({
 
   return (
     <section className="shell-controls" aria-labelledby="controls-heading">
-      <h2 id="controls-heading">Shell preferences and updates</h2>
+      <div className="section-heading-row"><div><p className="eyebrow">Game settings</p><h2 id="controls-heading">Accessibility &amp; offline</h2></div></div>
       <div className="control-grid">
         <label>
           <input
@@ -764,6 +836,13 @@ function ShellControls({
             checked={preferences.highContrast}
             onChange={(event) => setPreferences({ highContrast: event.currentTarget.checked })}
           /> High contrast
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={preferences.soundSubstitution}
+            onChange={(event) => setPreferences({ soundSubstitution: event.currentTarget.checked })}
+          /> Sound substitutes
         </label>
         <label>
           Text size

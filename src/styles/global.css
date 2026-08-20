@@ -3,7 +3,7 @@
 :root {
   color-scheme: dark;
   font-family: var(--dpe-font-family);
-  font-size: var(--dpe-font-size);
+  font-size: calc(var(--dpe-font-size) * var(--dpe-player-font-scale));
   font-synthesis: none;
   line-height: var(--dpe-line-height);
   text-rendering: optimizeLegibility;
@@ -244,8 +244,7 @@ footer {
 /* Player Experience: the park scene is spectacle; these DOM surfaces retain
    the exact state, actions, focus order, and non-color meaning. */
 .player-experience {
-  --dpe-player-font-scale: 1;
-  font-size: calc(1em * var(--dpe-player-font-scale));
+  font-size: 1rem;
 }
 
 .player-mode-frame,
@@ -744,4 +743,654 @@ footer {
   .handbook-card {
     grid-column: auto;
   }
+}
+
+/* Game-shell remediation: park first, routine state concise, exact evidence on demand. */
+.visually-hidden {
+  block-size: 1px;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  inline-size: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+}
+
+.app-frame-park,
+.app-frame-focused {
+  inline-size: 100%;
+  max-inline-size: none;
+  padding-inline: clamp(0.5rem, 1.2vw, 1rem);
+}
+
+.app-frame-park {
+  block-size: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.app-frame-park > main {
+  min-block-size: 0;
+}
+
+.app-frame-focused {
+  block-size: 100dvh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  overflow: hidden;
+}
+
+.app-frame-focused > main {
+  min-block-size: 0;
+  overflow: auto;
+  padding: 0 clamp(0.25rem, 2vw, 2rem) 2rem;
+  scrollbar-gutter: stable;
+}
+
+.app-frame-focused > main > section {
+  inline-size: min(86rem, 100%);
+  margin-inline: auto;
+}
+
+.app-header {
+  align-items: center;
+  background: linear-gradient(180deg, #102b34, #0a2029);
+  border: 1px solid #35545c;
+  border-radius: 0 0 0.8rem 0.8rem;
+  min-block-size: 3.4rem;
+  padding: 0.35rem 0.65rem;
+  position: relative;
+  z-index: 40;
+}
+
+.brand-button {
+  align-items: center;
+  background: transparent;
+  border: 0;
+  display: flex;
+  font-weight: 850;
+  gap: 0.55rem;
+  padding: 0.2rem;
+}
+
+.brand-button > span:first-child {
+  align-items: center;
+  background: #e0a94d;
+  border: 2px solid #ffdf9f;
+  border-radius: 50%;
+  color: #122f32;
+  display: flex;
+  font-size: 0.7rem;
+  block-size: 2.25rem;
+  inline-size: 2.25rem;
+  justify-content: center;
+}
+
+.shell-menu-actions {
+  align-items: center;
+  display: flex;
+  gap: 0.45rem;
+}
+
+.shell-menu-actions button,
+.shell-menu-actions .mode-badge {
+  min-block-size: 2.35rem;
+  padding: 0.35rem 0.7rem;
+}
+
+.game-menu,
+.settings-drawer {
+  background: rgba(7, 22, 28, 0.98);
+  border: 1px solid var(--dpe-color-border);
+  border-radius: 0.75rem;
+  box-shadow: 0 1rem 3rem rgba(0, 0, 0, 0.45);
+  inset-block-start: 3.8rem;
+  max-block-size: calc(100dvh - 4.5rem);
+  overflow: auto;
+  padding: 0.75rem;
+  position: fixed;
+  z-index: 60;
+}
+
+.game-menu {
+  display: grid;
+  gap: 0.4rem;
+  inset-inline-end: 0.75rem;
+  inline-size: min(22rem, calc(100vw - 1.5rem));
+}
+
+.game-menu > button {
+  text-align: start;
+}
+
+.settings-drawer {
+  inset-inline-end: 0.75rem;
+  inline-size: min(32rem, calc(100vw - 1.5rem));
+}
+
+.settings-drawer .shell-controls {
+  border: 0;
+  margin: 0;
+  padding: 0.5rem;
+}
+
+.park-game-shell {
+  block-size: 100%;
+  display: grid;
+  gap: 0.55rem;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  min-block-size: 0;
+  padding-block: 0.55rem;
+}
+
+.park-hud {
+  align-items: stretch;
+  background: linear-gradient(145deg, rgba(18, 48, 49, 0.98), rgba(10, 31, 39, 0.98));
+  border: 1px solid #47716d;
+  border-radius: 0.75rem;
+  box-shadow: 0 0.5rem 1.8rem rgba(0, 0, 0, 0.28);
+  display: grid;
+  gap: 0.5rem;
+  grid-template-columns: auto minmax(0, 1fr) minmax(12rem, 0.55fr);
+  min-block-size: 4.3rem;
+  padding: 0.45rem 0.6rem;
+}
+
+.park-hud-brand,
+.hud-objective {
+  align-items: center;
+  display: flex;
+  gap: 0.55rem;
+}
+
+.park-hud-brand div,
+.hud-objective {
+  display: grid;
+}
+
+.park-hud-brand small,
+.hud-objective span,
+.hud-meters dt {
+  color: #b7d1c7;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.live-marker {
+  color: #88e0a9;
+  filter: drop-shadow(0 0 0.35rem #88e0a9);
+}
+
+.hud-meters {
+  display: grid;
+  gap: 0.35rem;
+  grid-template-columns: repeat(4, minmax(6.5rem, 1fr));
+  margin: 0;
+}
+
+.hud-meters div {
+  background: rgba(255, 255, 255, 0.045);
+  border-inline-start: 0.18rem solid #6f9b86;
+  display: grid;
+  padding: 0.3rem 0.55rem;
+}
+
+.hud-meters dd {
+  font-size: 0.9rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.hud-meters .hud-emergency {
+  border-inline-start-color: #ff9b79;
+  background: rgba(255, 101, 75, 0.16);
+}
+
+.hud-objective {
+  border-inline-start: 1px solid #47716d;
+  padding-inline-start: 0.75rem;
+}
+
+.park-stage {
+  display: grid;
+  gap: 0.55rem;
+  grid-template-columns: minmax(0, 1fr);
+  min-block-size: 0;
+}
+
+.park-stage.inspector-is-open {
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+}
+
+.park-viewport,
+.park-scene-shell {
+  min-block-size: 0;
+}
+
+.park-viewport {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+}
+
+.park-scene-shell {
+  aspect-ratio: auto;
+  block-size: 100%;
+  border: 2px solid #4a786a;
+  border-radius: 0.9rem;
+  box-shadow: inset 0 0 0 0.35rem rgba(4, 20, 22, 0.45), 0 0.7rem 2rem rgba(0, 0, 0, 0.35);
+}
+
+.world-objective-cue {
+  align-items: center;
+  backdrop-filter: blur(0.4rem);
+  background: rgba(11, 31, 35, 0.84);
+  border: 1px solid #e4c376;
+  border-radius: 999px;
+  display: flex;
+  gap: 0.5rem;
+  inset-block-start: 0.65rem;
+  inset-inline-start: 50%;
+  max-inline-size: min(34rem, calc(100% - 2rem));
+  padding: 0.4rem 0.8rem;
+  position: absolute;
+  transform: translateX(-50%);
+  z-index: 8;
+}
+
+.world-objective-cue span:first-child {
+  color: #ffe08f;
+  font-size: 1.3rem;
+}
+
+.camera-controls {
+  margin-block-start: 0.35rem;
+}
+
+.camera-controls button {
+  min-block-size: 2.25rem;
+  min-inline-size: 2.35rem;
+  padding: 0.25rem 0.5rem;
+}
+
+.camera-controls span {
+  color: var(--dpe-color-text-muted);
+  font-size: 0.75rem;
+}
+
+.scene-entity-hit-target {
+  background: rgba(8, 25, 29, 0.35);
+  border-color: rgba(255, 255, 255, 0.16);
+  block-size: 2.85rem;
+  font-weight: 900;
+}
+
+.scene-entity-hit-target.cue-need {
+  border-color: #ffe08f;
+  border-radius: 45% 45% 50% 50%;
+}
+
+.scene-entity-hit-target.cue-degraded {
+  border-style: dashed;
+  border-color: #ffd16c;
+}
+
+.scene-entity-hit-target.cue-emergency,
+.scene-entity-hit-target.cue-warning {
+  border-color: #ff9b79;
+  border-radius: 0.4rem;
+}
+
+.scene-entity-hit-target.is-selected {
+  background: rgba(6, 27, 30, 0.88);
+  box-shadow: 0 0 0 0.25rem rgba(255, 224, 130, 0.36), 0 0 1rem rgba(255, 224, 130, 0.75);
+}
+
+.open-inspector {
+  inset-block-end: 0.75rem;
+  inset-inline-end: 0.75rem;
+  position: absolute;
+  z-index: 8;
+}
+
+.park-inspector {
+  background: linear-gradient(170deg, #173940, #0c252f);
+  border: 1px solid #4d7474;
+  border-radius: 0.9rem;
+  min-block-size: 0;
+  overflow: auto;
+  padding: 0.8rem;
+  scrollbar-gutter: stable;
+}
+
+.inspector-title-row {
+  align-items: start;
+  display: flex;
+  justify-content: space-between;
+}
+
+.inspector-title-row p,
+.inspector-title-row h3 {
+  margin: 0;
+}
+
+.inspector-title-row p {
+  color: #9ec7b8;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.icon-button {
+  border-radius: 50%;
+  font-size: 1.35rem;
+  min-block-size: 2.35rem;
+  min-inline-size: 2.35rem;
+  padding: 0;
+}
+
+.inspector-status {
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 0;
+  border-inline-start: 0.25rem solid #8ce3b1;
+  display: flex;
+  gap: 0.45rem;
+  margin: 0.7rem 0;
+  padding: 0.55rem;
+}
+
+.inspector-status.severity-warning,
+.inspector-status.severity-emergency {
+  border-inline-start-color: #ffae74;
+}
+
+.inspector-summary {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+}
+
+.inspector-summary div {
+  display: grid;
+  grid-template-columns: 4rem minmax(0, 1fr);
+}
+
+.inspector-summary dt {
+  color: #a8c5bf;
+  font-size: 0.75rem;
+}
+
+.inspector-summary dd {
+  margin: 0;
+}
+
+.inspector-primary-action {
+  margin-block: 0.8rem;
+}
+
+.primary-action {
+  background: linear-gradient(180deg, #edbc59, #c7882d);
+  border-color: #ffe2a0;
+  color: #10282b;
+  font-weight: 900;
+  inline-size: 100%;
+}
+
+.danger-action {
+  background: linear-gradient(180deg, #ffb778, #d47445);
+}
+
+.compact-job,
+.incident-summary,
+.advanced-details,
+.roster-details {
+  border-block-start: 1px solid #3f6465;
+  margin-block-start: 0.65rem;
+  padding-block-start: 0.65rem;
+}
+
+.compact-job h4,
+.compact-job p,
+.incident-summary h4,
+.incident-summary p {
+  margin-block: 0.2rem;
+}
+
+.compact-success {
+  color: #a6edbd;
+  font-weight: 850;
+  margin: 0;
+}
+
+.advanced-details > div,
+.roster-details > div {
+  margin-block-start: 0.6rem;
+}
+
+.advanced-details code {
+  overflow-wrap: anywhere;
+}
+
+.entity-navigator {
+  max-block-size: 17rem;
+  overflow: auto;
+}
+
+.navigator-option {
+  min-block-size: 2.7rem;
+}
+
+.park-action-strip {
+  align-items: center;
+  background: linear-gradient(180deg, #15333a, #0a242d);
+  border: 1px solid #426568;
+  border-radius: 0.8rem;
+  display: flex;
+  gap: 0.6rem;
+  min-block-size: 3.4rem;
+  padding: 0.35rem 0.55rem;
+  position: relative;
+}
+
+.time-buttons {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.time-buttons button {
+  min-block-size: 2.45rem;
+  min-inline-size: 2.45rem;
+  padding: 0.3rem 0.55rem;
+}
+
+.time-buttons .pause-button {
+  align-items: center;
+  display: flex;
+  gap: 0.35rem;
+  min-inline-size: 6.5rem;
+}
+
+.time-buttons button[aria-pressed="true"] {
+  background: #dca64c;
+  color: #10282b;
+}
+
+.park-time-status {
+  color: #bdd3ce;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.park-history-popover,
+.hint-popover {
+  margin-inline-start: auto;
+  position: relative;
+}
+
+.hint-popover {
+  margin-inline-start: 0;
+}
+
+.park-history-popover[open] ol,
+.hint-popover[open] > :not(summary) {
+  background: #0b252d;
+  border: 1px solid #496d6b;
+  border-radius: 0.7rem;
+  bottom: 3rem;
+  box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.45);
+  inline-size: min(30rem, 80vw);
+  max-block-size: 45vh;
+  overflow: auto;
+  padding: 0.75rem 1rem;
+  position: absolute;
+  right: 0;
+  z-index: 20;
+}
+
+.park-history-popover li {
+  display: grid;
+  gap: 0.2rem;
+  margin-block: 0.45rem;
+}
+
+@media (max-width: 68rem) {
+  .hud-objective {
+    display: none;
+  }
+
+  .park-hud {
+    grid-template-columns: auto minmax(0, 1fr);
+  }
+
+  .park-stage.inspector-is-open {
+    grid-template-columns: minmax(0, 1fr) minmax(16rem, 19rem);
+  }
+}
+
+@media (max-width: 54rem), (max-height: 42rem) {
+  .app-frame-park {
+    block-size: auto;
+    min-block-size: 100dvh;
+    overflow: visible;
+  }
+
+  .park-stage.inspector-is-open {
+    grid-template-columns: 1fr;
+  }
+
+  .park-scene-shell {
+    min-block-size: 24rem;
+  }
+
+  .park-inspector {
+    max-block-size: 30rem;
+  }
+}
+
+@media (max-width: 42rem) {
+  .app-header .mode-badge,
+  .brand-button > span:last-child,
+  .park-hud-brand {
+    display: none;
+  }
+
+  .park-hud {
+    display: block;
+  }
+
+  .hud-meters {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .park-action-strip {
+    align-items: stretch;
+    flex-wrap: wrap;
+  }
+
+  .park-time-status {
+    inline-size: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .scene-entity-hit-target.cue-need:not(.is-selected) {
+    animation: dpe-need-breathe 1.8s ease-in-out infinite;
+  }
+
+  .scene-entity-hit-target.cue-emergency:not(.is-selected) {
+    animation: dpe-emergency-focus 0.8s step-end infinite;
+  }
+}
+
+@keyframes dpe-need-breathe {
+  50% { transform: translate(-50%, -55%) scale(1.08); }
+}
+
+@keyframes dpe-emergency-focus {
+  50% { outline: 0.28rem double #fff2bf; }
+}
+
+/* Focused modes keep orientation and the next decision in view; long evidence
+   scrolls inside the workspace or an explicitly opened disclosure. */
+.app-frame-focused .player-mode-frame {
+  backdrop-filter: blur(0.65rem);
+  margin-block: 0 0.65rem;
+  position: sticky;
+  inset-block-start: 0;
+  z-index: 12;
+}
+
+.app-frame-focused .operational-anchor {
+  margin-block: 0.5rem;
+  padding: 0.7rem;
+}
+
+.app-frame-focused .status-grid {
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+}
+
+.app-frame-focused .feature-card {
+  overflow-wrap: anywhere;
+}
+
+.workbench-grid .primary-workbench-action {
+  border-color: #d8b75b;
+  box-shadow: inset 0.3rem 0 0 #d8b75b;
+  grid-column: 1 / -1;
+  order: -10;
+}
+
+.workbench-grid > details.feature-card {
+  align-self: start;
+}
+
+.evidence-scroll {
+  max-block-size: 42vh;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.evidence-scroll table {
+  min-inline-size: 42rem;
+}
+
+.review-experience > .button-row,
+.incident-response-experience > .button-row {
+  background: rgba(13, 32, 48, 0.96);
+  border-block: 1px solid var(--dpe-color-border);
+  bottom: -0.1rem;
+  padding-block: 0.55rem;
+  position: sticky;
+  z-index: 8;
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 750;
+}
+
+details[open] > summary {
+  margin-block-end: 0.55rem;
 }

@@ -1,18 +1,16 @@
-# Persistence foundation
+# Persistence
 
-The persistence foundation is a headless, local-first boundary for exact park
-saves. Its public surface is [src/persistence/public.ts](../src/persistence/public.ts).
+Persistence is the local-first boundary for exact, replayable park saves. Its
+only downstream import surface is `src/persistence/public.ts`.
 
 ## Format
 
-Every save is a schema-versioned `SaveEnvelope` with a stable save ID,
-application and save schema versions, metadata timestamps, logical tick/day and
-seed, an exact Content Registry manifest, five versioned domain sections, a
-canonical FNV-1a-64 integrity fingerprint, and the `SAVE_COMPLETE` marker.
-Sections currently cover Simulation, Park Operations, Context manifests and
-Retention Policy audits, historical Trace records, and Player Experience
-preferences. Renderer projections, DOM nodes, functions, classes, and platform
-paths are rejected by the portable-data boundary.
+The v1 `SaveEnvelope` retains the five foundation sections for Simulation, Park
+Operations/jobs, Context, Trace history, and preferences. A versioned `mvp`
+composite adds Memory, Eval assets/results, Workbench state, reviews, deployment
+and revert history, economy, incidents, response/suspension state, progression,
+rewards, curriculum, and consent. Omitting this new section remains valid, so
+existing v1 saves and integrations continue to load unchanged.
 
 Canonical serialization sorts record keys and uses JSON-compatible values. Save
 creation copies data, and repository reads return copies, so a caller cannot
@@ -54,13 +52,40 @@ const saved = persistence.save({ id: "save:opening", contentManifest });
 const loaded = persistence.load("save:opening");
 ```
 
-The `/persistence` foundation route exposes the Phase 6 manual proof with
-semantic keyboard controls: save the exact first-playable checkpoint, advance
-the unsaved world, restore the validated candidate, replay the saved feeding,
-and attempt an invalid load while observing that the current session remains
-unchanged. The surface intentionally uses the in-memory repository so this
-slice remains deterministic and does not imply that the later IndexedDB,
-autosave, export/import, migration, and recovery slices are complete.
+## IndexedDB and checkpoints
 
-The repository and session ports remain replaceable so those later browser
-adapters can be added without changing the save format.
+`createIndexedDbSaveRepository` stores canonical text in separate `staging`,
+`saves`, and `control` object stores. Promotion reads and validates staged bytes,
+replaces the named save, moves the known-good pointer, and removes staging in
+one transaction. An abort exposes either the former known-good save or the
+complete new save. Typed diagnostics distinguish quota, transaction abort,
+corrupt data, truncated JSON, missing data, and stale-stage cleanup.
+
+`createAsyncPersistenceCoordinator` provides manual save/load.
+`createAutosaveCoordinator` accepts only explicit safe checkpoints, verifies
+the snapshot tick, coalesces redundant queued requests, and records the exact
+logical tick. Persistence never infers safety from wall-clock time.
+
+## Export, import, migration, and recovery
+
+`exportPortableSave` emits a platform-neutral package with its own fingerprint.
+`inspectPortableSave` keeps bytes quarantined until package, envelope, sections,
+integrity, exact content, and migration output validate. ID conflicts block
+instead of overwriting. `commitPortableImport` is separate so inspection cannot
+mutate storage, and deletion requires explicit confirmation.
+
+The deterministic `persistence:0-to-1-preferences-and-mvp` migration moves the
+legacy root `accessibilityPreferences` into its versioned section and creates a
+complete empty MVP composite. It returns the exact original bytes as a backup
+and records before/after fingerprints. Missing steps, failed preconditions, or
+invalid output leave the current session and known-good save unchanged.
+
+Recovery callers can retry, load the last known-good save, retain/export the
+original migration/import bytes, or use `exportPersistenceDiagnostics`. Starting
+a separate park never removes a damaged save; removal always needs confirmation.
+
+Focused tests cover legacy v1 compatibility, complete composite round trips,
+deploy/revert history, portability, import quarantine/conflicts, migration and
+backup, autosave coalescing, quota propagation, last-known-good recovery, and
+diagnostic export. Integrated browser verification must also exercise real
+IndexedDB, offline reload, recovery, export/import, migration, and keyboard use.

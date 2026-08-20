@@ -1,7 +1,10 @@
 import {
+  capabilityStateSchema,
   economyQuoteSchema,
   economyRuleSetSchema,
   economyTransactionSchema,
+  progressionStateSchema,
+  rewardInventoryStateSchema,
 } from "./schemas.js";
 import { parkOperationsStateSchema } from "../park-operations/public.js";
 import type {
@@ -40,8 +43,22 @@ import type {
   SettlementCostInput,
   SettlementCostLine,
   VisitorDemand,
+  CapabilityAction,
+  CapabilityAvailabilityInput,
+  CapabilityDefinition,
+  CapabilityPurchaseInput,
+  CapabilityState,
+  ProgressionState,
+  RewardDefinition,
+  RewardInventoryItem,
+  RewardInventoryState,
+  RewardPlacement,
+  RewardPlacementInput,
+  RewardPurchaseInput,
+  RewardRemovalInput,
 } from "./types.js";
 import type { ParkIncident, ParkJob } from "../park-operations/public.js";
+import type { RuntimeAssetCatalog } from "../rendering-assets/public.js";
 
 const COST_CATEGORIES: readonly EconomyCostCategory[] = [
   "authoring",
@@ -130,6 +147,35 @@ const defaultRules = (): EconomyRuleSet => ({
 
 export const DEFAULT_ECONOMY_RULE_SET: EconomyRuleSet = immutable(defaultRules());
 
+export const DEFAULT_CAPABILITY_DEFINITIONS: readonly CapabilityDefinition[] = immutable([
+  {
+    id: "capability:context-optimization",
+    version: "1.0.0",
+    name: "Context Optimization",
+    description: "Route the missing maintenance record into a Worker Context before the next decision.",
+    actionId: "action:route-context",
+    actionLabel: "Route maintenance Context",
+    prerequisites: [],
+    pressureIds: ["pressure:missing-context"],
+    cost: 25,
+  },
+]);
+
+export const DEFAULT_REWARD_DEFINITIONS: readonly RewardDefinition[] = immutable([
+  {
+    id: "reward:dinosaur-plushie",
+    version: "1.0.0",
+    name: "Dinosaur Plushie",
+    description: "A cheerful gift-shop plushie that celebrates safe park engineering.",
+    assetId: "assets:reward-dinosaur-plushie",
+    assetVersion: "1.0.0",
+    cost: 10,
+    mechanicalBonus: 0,
+    visibleToVisitors: true,
+    prerequisites: [],
+  },
+]);
+
 const normalizeRules = (input: EconomyRuleSet | undefined): EconomyRuleSet => {
   const candidate = input === undefined ? defaultRules() : clone(input);
   const parsed = economyRuleSetSchema.safeParse(candidate);
@@ -206,6 +252,12 @@ interface InternalState {
   readonly authoredEvals: Map<string, EvalAsset>;
   readonly evalRuns: Map<string, EvalRunRecord>;
   readonly settlements: Map<string, DaySettlementSummary>;
+  readonly capabilities: Map<string, CapabilityState>;
+  readonly pressureIds: Set<string>;
+  readonly rewards: Map<string, RewardInventoryItem>;
+  readonly placements: Map<string, RewardPlacement>;
+  readonly rewardDefinitions: Map<string, RewardDefinition>;
+  readonly assetCatalog?: Pick<RuntimeAssetCatalog, "resolveExact">;
 }
 
 const reservationAmount = (state: InternalState): number => [...state.reservations.values()]
@@ -221,10 +273,34 @@ const projection = (state: InternalState): EconomyLedgerProjection => immutable(
   authoredEvals: [...state.authoredEvals.values()].sort((left, right) => lexical(`${left.id}@${left.version}`, `${right.id}@${right.version}`)),
   evalRuns: [...state.evalRuns.values()].sort((left, right) => lexical(left.runId, right.runId)),
   settlements: [...state.settlements.keys()],
+  progression: progressionProjection(state),
+  rewards: rewardProjection(state),
   balance: deriveBalance(state.initialBalance, state.transactions),
   reservedBalance: reservationAmount(state),
   availableBalance: deriveBalance(state.initialBalance, state.transactions) - reservationAmount(state),
 });
+
+const progressionProjection = (state: InternalState): ProgressionState => {
+  const capabilities = [...state.capabilities.values()].sort((left, right) => lexical(left.id, right.id));
+  const actions: CapabilityAction[] = capabilities.map((capability) => ({
+    id: capability.actionId,
+    label: capability.actionLabel,
+    capabilityId: capability.id,
+    available: capability.status === "purchased",
+    description: capability.description,
+  }));
+  const value: ProgressionState = { schemaVersion: "1", pressureIds: [...state.pressureIds].sort(lexical), capabilities, actions };
+  return progressionStateSchema.safeParse(value).success ? immutable(value) : immutable({ schemaVersion: "1", pressureIds: [], capabilities: [], actions: [] });
+};
+
+const rewardProjection = (state: InternalState): RewardInventoryState => {
+  const value: RewardInventoryState = {
+    schemaVersion: "1",
+    items: [...state.rewards.values()].sort((left, right) => lexical(left.itemId, right.itemId)),
+    placements: [...state.placements.values()].sort((left, right) => lexical(left.placementId, right.placementId)),
+  };
+  return rewardInventoryStateSchema.safeParse(value).success ? immutable(value) : immutable({ schemaVersion: "1", items: [], placements: [] });
+};
 
 const success = <T>(state: InternalState, value: T): EconomyResult<T> => ({
   ok: true,
@@ -714,6 +790,14 @@ const settleDay = (state: InternalState, input: ParkDaySettlementInput): Economy
     ...relatedFields(input),
   };
   state.settlements.set(input.settlementId, immutable(result));
+  if (summary.failedJobIds.length > 0 || summary.incidentIds.length > 0) {
+    state.pressureIds.add("pressure:missing-context");
+    for (const capability of state.capabilities.values()) {
+      if (capability.status === "locked" && capability.pressureIds.includes("pressure:missing-context") && capability.prerequisites.every((prerequisite) => capabilityById(state, prerequisite)?.status === "purchased")) {
+        state.capabilities.set(capability.id, immutable({ ...capability, status: "available" as const, availableTick: input.tick }));
+      }
+    }
+  }
   return success(state, result);
 };
 
@@ -804,9 +888,120 @@ const runEval = (state: InternalState, input: EvalRunInput): EconomyResult<EvalR
   return success(state, { run, transaction: committed.value, charged: quote.amount, idempotent: false });
 };
 
+const rewardKey = (id: string, version: string): string => `${id}@${version}`;
+
+const capabilityById = (state: InternalState, id: string): CapabilityState | undefined =>
+  [...state.capabilities.values()].find((entry) => entry.id === id);
+
+const rewardById = (state: InternalState, id: string): RewardDefinition | undefined =>
+  [...state.rewardDefinitions.values()].find((entry) => entry.id === id);
+
+const markPressureInternal = (state: InternalState, input: CapabilityAvailabilityInput): EconomyResult<ProgressionState> => {
+  if (!validId(input.capabilityId) || !validNonnegativeInteger(input.tick)) return failure(state, diagnostic("ECONOMY_INVALID_INPUT", "capabilityId/tick", "stable-input", "Capability pressure requires a stable capability ID and non-negative tick."));
+  const capability = capabilityById(state, input.capabilityId);
+  if (capability === undefined) return failure(state, diagnostic("ECONOMY_CAPABILITY_NOT_FOUND", "capabilityId", "known-capability", `Capability ${input.capabilityId} is not registered.`));
+  const pressureIds = uniqueSorted([...(input.pressureIds ?? capability.pressureIds), ...[...state.pressureIds]]);
+  for (const pressureId of pressureIds) state.pressureIds.add(pressureId);
+  const current = capabilityById(state, capability.id);
+  if (current === undefined) return failure(state, diagnostic("ECONOMY_CAPABILITY_NOT_FOUND", "capabilityId", "known-capability", `Capability ${input.capabilityId} is not registered.`));
+  const prerequisitesMet = current.prerequisites.every((prerequisite) => capabilityById(state, prerequisite)?.status === "purchased");
+  const pressureMet = current.pressureIds.length === 0 || current.pressureIds.some((pressure) => state.pressureIds.has(pressure));
+  if (current.status === "locked" && prerequisitesMet && pressureMet) {
+    state.capabilities.set(current.id, immutable({ ...current, status: "available" as const, availableTick: input.tick }));
+  }
+  return success(state, progressionProjection(state));
+};
+
+const purchaseCapabilityInternal = (state: InternalState, input: CapabilityPurchaseInput): EconomyResult<CapabilityState> => {
+  const current = capabilityById(state, input.capabilityId);
+  if (current === undefined) return failure(state, diagnostic("ECONOMY_CAPABILITY_NOT_FOUND", "capabilityId", "known-capability", `Capability ${input.capabilityId} is not registered.`));
+  if (!validNonnegativeInteger(input.day) || !validNonnegativeInteger(input.tick)) return failure(state, diagnostic("ECONOMY_INVALID_INPUT", "day/tick", "non-negative-integer", "Capability purchase day and tick must be non-negative integers."));
+  if (current.status === "purchased") return success(state, current);
+  if (current.status === "locked") return failure(state, diagnostic("ECONOMY_CAPABILITY_LOCKED", "capabilityId", "pressure-before-tool", `Capability ${current.id} remains locked until its pressure and prerequisites are present.`));
+  const quoteResult = makeQuote(state, { id: `quote:capability-${token(current.id)}`, category: "acquisition", day: input.day, tick: input.tick, amount: current.cost, source: { kind: "command", id: input.commandId ?? `capability:${token(current.id)}` }, description: `Purchase ${current.name}` });
+  if (!quoteResult.ok) return quoteResult;
+  const reserved = reserveQuoteInternal(state, quoteResult.value);
+  if (!reserved.ok) return reserved;
+  const committed = commitQuoteInternal(state, reserved.value.id, { commandId: input.commandId, day: input.day, tick: input.tick });
+  if (!committed.ok) return committed;
+  const purchased: CapabilityState = immutable({ ...current, status: "purchased" as const, purchasedTick: input.tick, purchaseTransactionId: committed.value.id });
+  state.capabilities.set(current.id, purchased);
+  return success(state, purchased);
+};
+
+const purchaseRewardInternal = (state: InternalState, input: RewardPurchaseInput): EconomyResult<RewardInventoryItem> => {
+  const definition = rewardById(state, input.rewardId);
+  if (definition === undefined) return failure(state, diagnostic("ECONOMY_REWARD_NOT_FOUND", "rewardId", "known-reward", `Reward ${input.rewardId} is not registered.`));
+  if (!validNonnegativeInteger(input.day) || !validNonnegativeInteger(input.tick)) return failure(state, diagnostic("ECONOMY_INVALID_INPUT", "day/tick", "non-negative-integer", "Reward purchase day and tick must be non-negative integers."));
+  if (definition.prerequisites.some((prerequisite) => capabilityById(state, prerequisite)?.status !== "purchased")) return failure(state, diagnostic("ECONOMY_REWARD_LOCKED", "rewardId", "reward-prerequisites", `Reward ${definition.id} is not yet available.`));
+  const existing = [...state.rewards.values()].find((item) => item.rewardId === definition.id);
+  if (existing !== undefined) return success(state, existing);
+  if (state.assetCatalog !== undefined) {
+    const asset = state.assetCatalog.resolveExact(definition.assetId, definition.assetVersion);
+    if (asset === undefined || asset.placeholder || asset.source.approvalReviewId.trim() === "") return failure(state, diagnostic("ECONOMY_REWARD_ASSET_UNRESOLVED", "assetId", "approved-exact-runtime-asset", `Approved runtime asset ${definition.assetId}@${definition.assetVersion} is unavailable.`));
+  }
+  const quoteResult = makeQuote(state, { id: `quote:reward-${token(definition.id)}`, category: "expression", day: input.day, tick: input.tick, amount: definition.cost, source: { kind: "command", id: input.commandId ?? `reward:${token(definition.id)}` }, description: `Purchase ${definition.name}` });
+  if (!quoteResult.ok) return quoteResult;
+  const reserved = reserveQuoteInternal(state, quoteResult.value);
+  if (!reserved.ok) return reserved;
+  const committed = commitQuoteInternal(state, reserved.value.id, { commandId: input.commandId, day: input.day, tick: input.tick });
+  if (!committed.ok) return committed;
+  const item: RewardInventoryItem = immutable({ itemId: `reward-item:${token(definition.id)}`, rewardId: definition.id, rewardVersion: definition.version, status: "owned" as const, purchaseTransactionId: committed.value.id, purchasedDay: input.day, purchasedTick: input.tick });
+  state.rewards.set(item.itemId, item);
+  return success(state, item);
+};
+
+const placeRewardInternal = (state: InternalState, input: RewardPlacementInput): EconomyResult<RewardPlacement> => {
+  if (!validId(input.itemId) || !validId(input.placementId) || !validId(input.locationId) || !validNonnegativeInteger(input.tick)) return failure(state, diagnostic("ECONOMY_INVALID_INPUT", "placement", "stable-placement-input", "Reward placement requires stable IDs and a non-negative tick."));
+  const item = state.rewards.get(input.itemId);
+  if (item === undefined) return failure(state, diagnostic("ECONOMY_REWARD_NOT_OWNED", "itemId", "owned-inventory-item", `Reward item ${input.itemId} is not owned.`));
+  if (item.status === "placed") return failure(state, diagnostic("ECONOMY_REWARD_ALREADY_PLACED", "itemId", "one-placement-at-a-time", `Reward item ${input.itemId} is already placed.`));
+  const definition = rewardById(state, item.rewardId);
+  if (definition === undefined) return failure(state, diagnostic("ECONOMY_REWARD_NOT_FOUND", "rewardId", "known-reward", `Reward ${item.rewardId} is not registered.`));
+  const existing = state.placements.get(input.placementId);
+  if (existing !== undefined && existing.removedTick === undefined) return failure(state, diagnostic("ECONOMY_REWARD_PLACEMENT_CONFLICT", "placementId", "unique-active-placement", `Placement ${input.placementId} already exists.`));
+  const placement: RewardPlacement = immutable({ placementId: input.placementId, itemId: item.itemId, rewardId: definition.id, assetId: definition.assetId, assetVersion: definition.assetVersion, locationId: input.locationId, visibleToVisitors: definition.visibleToVisitors, placedTick: input.tick });
+  state.placements.set(placement.placementId, placement);
+  state.rewards.set(item.itemId, immutable({ ...item, status: "placed" as const, placementId: placement.placementId }));
+  return success(state, placement);
+};
+
+const removeRewardInternal = (state: InternalState, input: RewardRemovalInput): EconomyResult<RewardPlacement> => {
+  if (!validId(input.placementId) || !validNonnegativeInteger(input.tick)) return failure(state, diagnostic("ECONOMY_INVALID_INPUT", "placementId/tick", "stable-removal-input", "Reward removal requires a stable placement ID and non-negative tick."));
+  const placement = state.placements.get(input.placementId);
+  if (placement === undefined) return failure(state, diagnostic("ECONOMY_REWARD_PLACEMENT_NOT_FOUND", "placementId", "known-placement", `Placement ${input.placementId} does not exist.`));
+  if (placement.removedTick !== undefined) return success(state, placement);
+  const removed: RewardPlacement = immutable({ ...placement, removedTick: input.tick });
+  const item = state.rewards.get(placement.itemId);
+  if (item !== undefined) state.rewards.set(item.itemId, immutable({ ...item, status: "removed" as const, placementId: undefined }));
+  state.placements.set(placement.placementId, removed);
+  return success(state, removed);
+};
+
 const createState = (options: EconomyOptions = {}): InternalState => {
   const initialBalance = options.initialBalance ?? options.startingCredits ?? 100;
   if (!validNonnegativeInteger(initialBalance)) throw new TypeError("Economy initialBalance must be a non-negative integer.");
+  const definitions = options.capabilities ?? DEFAULT_CAPABILITY_DEFINITIONS;
+  const rewardDefinitions = options.rewards ?? DEFAULT_REWARD_DEFINITIONS;
+  const capabilities = new Map<string, CapabilityState>();
+  for (const definition of definitions) {
+    if (!validId(definition.id) || !validId(definition.version) || capabilities.has(definition.id)) throw new TypeError(`Duplicate or invalid capability: ${definition.id}`);
+    const state: CapabilityState = { ...clone(definition), status: "locked" };
+    if (!capabilityStateSchema.safeParse(state).success) throw new TypeError(`Invalid capability: ${definition.id}`);
+    capabilities.set(definition.id, immutable(state));
+  }
+  const rewardMap = new Map<string, RewardDefinition>();
+  for (const definition of rewardDefinitions) {
+    if (!validId(definition.id) || !validId(definition.version) || rewardMap.has(rewardKey(definition.id, definition.version))) throw new TypeError(`Duplicate or invalid reward: ${definition.id}`);
+    rewardMap.set(rewardKey(definition.id, definition.version), immutable(definition));
+  }
+  const pressureIds = new Set(options.pressureIds ?? []);
+  for (const capability of capabilities.values()) {
+    if (capability.status === "locked" && (capability.pressureIds.length === 0 || capability.pressureIds.some((pressure) => pressureIds.has(pressure)))) {
+      const prerequisitesMet = capability.prerequisites.every((prerequisite) => capabilities.get(prerequisite)?.status === "purchased");
+      if (prerequisitesMet) capabilities.set(capability.id, immutable({ ...capability, status: "available" as const, availableTick: 0 }));
+    }
+  }
   return {
     initialBalance,
     rules: normalizeRules(options.rules),
@@ -816,6 +1011,12 @@ const createState = (options: EconomyOptions = {}): InternalState => {
     authoredEvals: new Map(),
     evalRuns: new Map(),
     settlements: new Map(),
+    capabilities,
+    pressureIds,
+    rewards: new Map(),
+    placements: new Map(),
+    rewardDefinitions: rewardMap,
+    assetCatalog: options.assetCatalog,
   };
 };
 
@@ -840,6 +1041,14 @@ export const createEconomyService = (options: EconomyOptions = {}): EconomyServi
     quoteEvalRun: (input) => evalQuoteRequest(state, input, "eval-run"),
     authorEval: (input) => authorEval(state, input),
     runEval: (input) => runEval(state, input),
+    progression: () => progressionProjection(state),
+    rewards: () => rewardProjection(state),
+    availableActions: () => progressionProjection(state).actions,
+    markPressure: (input) => markPressureInternal(state, input),
+    purchaseCapability: (input) => purchaseCapabilityInternal(state, input),
+    purchaseReward: (input) => purchaseRewardInternal(state, input),
+    placeReward: (input) => placeRewardInternal(state, input),
+    removeReward: (input) => removeRewardInternal(state, input),
   };
   return service;
 };

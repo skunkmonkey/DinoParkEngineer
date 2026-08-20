@@ -35,6 +35,48 @@ export interface TransferCase {
   readonly changedSurfaceDetails: readonly string[];
   readonly withheldGuidanceIds: readonly string[];
   readonly successEventId: string;
+  readonly fixture: {
+    readonly seed: number;
+    readonly speciesId: string;
+    readonly dinosaurId: string;
+    readonly enclosureId: string;
+    readonly gateId: string;
+    readonly maintenanceSourceId: string;
+    readonly task: ExactContentReference;
+    readonly speciesKnowledge: ExactContentReference;
+    readonly missingContextRoute: ContextRouteFixture;
+    readonly revisedContextRoute: ContextRouteFixture;
+  };
+  readonly openingGuidanceDisabled: true;
+  readonly observableSuccess: {
+    readonly requiredActionIds: readonly string[];
+    readonly eventId: string;
+    readonly result: "feeding-succeeded";
+    readonly fatalities: 0;
+    readonly injuries: 0;
+  };
+  readonly delayedAssistance: {
+    readonly optional: true;
+    readonly availableAfterEventId: string;
+    readonly guidanceId: string;
+    readonly rewardPenalty: false;
+  };
+}
+
+export interface OpeningSequenceBeat {
+  readonly id: string;
+  readonly targetCumulativeSeconds: number;
+  readonly action: string;
+  readonly observableEventId: string;
+}
+
+export interface OpeningRunContract {
+  readonly targetHumanSeconds: 300;
+  readonly timingAcceptance: "human-playtest-required";
+  readonly pauseExcluded: true;
+  readonly guidancePenalty: false;
+  readonly successCopyId: string;
+  readonly beats: readonly OpeningSequenceBeat[];
 }
 
 export interface HandbookEntry {
@@ -161,6 +203,7 @@ export interface CurriculumPackage {
   readonly copy: Readonly<Record<string, string>>;
   readonly assetBundles: readonly AssetBundleDependency[];
   readonly playtestTags: readonly PlaytestTag[];
+  readonly openingRun: OpeningRunContract;
   readonly fingerprint: string;
 }
 
@@ -183,7 +226,11 @@ export type CurriculumDiagnosticCode =
   | "CURRICULUM_ASSET_BUNDLE_MISSING"
   | "CURRICULUM_ASSET_MISSING"
   | "CURRICULUM_FATAL_ONBOARDING"
-  | "CURRICULUM_GOLDEN_INVALID";
+  | "CURRICULUM_GOLDEN_INVALID"
+  | "CURRICULUM_OPENING_TIMING_INVALID"
+  | "CURRICULUM_SUCCESS_COPY_INVALID"
+  | "CURRICULUM_TRANSFER_INVALID"
+  | "CURRICULUM_HANDBOOK_UNLOCK_INVALID";
 
 export interface CurriculumDiagnostic {
   readonly code: CurriculumDiagnosticCode;
@@ -202,4 +249,6 @@ export interface CurriculumReport {
   readonly scenarioIds: readonly string[];
   readonly openingChain: readonly string[];
   readonly assetBundleIdentities: readonly string[];
+  readonly timingTargetSeconds: number;
+  readonly transferSuccessEvents: readonly string[];
 }

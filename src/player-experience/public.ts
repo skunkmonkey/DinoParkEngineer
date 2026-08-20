@@ -1,6 +1,7 @@
 /** Browser-facing Player Experience contracts and adapters. */
 export { PlayerExperience, ParkPlayerExperience, PausedProductionPlayerExperience, WorkbenchPlayerExperience, EvalPlayerExperience, ReplayPlayerExperience, ReviewPlayerExperience } from "./view.js";
-export { createPlayerExperience, DEFAULT_PLAYER_PREFERENCES, presentationalFrame } from "./runtime.js";
+export { buildCausalNavigation, createPlayerExperience, DEFAULT_PLAYER_PREFERENCES, presentationalFrame } from "./runtime.js";
+export { friendlyName, friendlyVersion } from "./presentation.js";
 export { createPlayerAudioAdapter } from "./audio.js";
 export { PixiParkSceneAdapter } from "./pixi-scene.js";
 export {
@@ -23,10 +24,15 @@ export {
 } from "./projection.js";
 export type {
   AudioSubstitute,
+  CausalNavigation,
+  CausalOrigin,
   FeedingEvidence,
   CameraBounds,
   CameraState,
   HistoryEntry,
+  GuidanceLevel,
+  GuidanceState,
+  OperationalAnchor,
   PlayerEntityKind,
   PlayerEntityProjection,
   PlayerExperienceCommand,
@@ -40,6 +46,10 @@ export type {
   Point2D,
   SceneAggregate,
   SemanticZoomLevel,
+  SynchronizedEvidencePresentation,
+  RetentionPresentation,
+  RetentionPresentationItem,
+  RetentionPresentationLifecycle,
   VisualCue,
   VisualGrammarKey,
   VisualShape,

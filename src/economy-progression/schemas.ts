@@ -146,6 +146,17 @@ export const economyRuleSetSchema = z.strictObject({
   }),
 });
 
+const capabilityDefinition = z.strictObject({ id, version: z.string().min(1), name: z.string().min(1), description: z.string().min(1), actionId: id, actionLabel: z.string().min(1), prerequisites: z.array(id), pressureIds: z.array(id), cost: nonnegativeInteger });
+export const capabilityStateSchema = capabilityDefinition.extend({ status: z.enum(["locked", "available", "purchased"]), availableTick: nonnegativeInteger.optional(), purchasedTick: nonnegativeInteger.optional(), purchaseTransactionId: id.optional() });
+export const capabilityActionSchema = z.strictObject({ id, label: z.string().min(1), capabilityId: id, available: z.boolean(), description: z.string().min(1) });
+export const progressionStateSchema = z.strictObject({ schemaVersion: z.literal("1"), pressureIds: z.array(id), capabilities: z.array(capabilityStateSchema), actions: z.array(capabilityActionSchema) });
+export const rewardDefinitionSchema = z.strictObject({ id, version: z.string().min(1), name: z.string().min(1), description: z.string().min(1), assetId: id, assetVersion: z.string().min(1), cost: nonnegativeInteger, mechanicalBonus: z.literal(0), visibleToVisitors: z.boolean(), prerequisites: z.array(id) });
+export const rewardInventoryItemSchema = z.strictObject({ itemId: id, rewardId: id, rewardVersion: z.string().min(1), status: z.enum(["owned", "placed", "removed"]), purchaseTransactionId: id, purchasedDay: nonnegativeInteger, purchasedTick: nonnegativeInteger, placementId: id.optional() });
+export const rewardPlacementSchema = z.strictObject({ placementId: id, itemId: id, rewardId: id, assetId: id, assetVersion: z.string().min(1), locationId: id, visibleToVisitors: z.boolean(), placedTick: nonnegativeInteger, removedTick: nonnegativeInteger.optional() });
+export const rewardInventoryStateSchema = z.strictObject({ schemaVersion: z.literal("1"), items: z.array(rewardInventoryItemSchema), placements: z.array(rewardPlacementSchema) });
+export const economyCapabilityDefinitionSchema = capabilityDefinition;
+export const economyRewardDefinitionSchema = rewardDefinitionSchema;
+
 export const economyLedgerStateSchema = z.strictObject({
   schemaVersion: z.literal("1"),
   initialBalance: signedInteger,
@@ -155,6 +166,8 @@ export const economyLedgerStateSchema = z.strictObject({
   authoredEvals: z.array(evalAssetSchema),
   evalRuns: z.array(evalRunRecordSchema),
   settlements: z.array(id),
+  progression: progressionStateSchema,
+  rewards: rewardInventoryStateSchema,
 });
 
 export const economyLedgerProjectionSchema = economyLedgerStateSchema.extend({
@@ -183,4 +196,3 @@ export const parkOutcomeRecordSchema = z.strictObject({
   sourceId: id,
   ...related,
 });
-

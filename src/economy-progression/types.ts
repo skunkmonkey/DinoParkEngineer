@@ -4,6 +4,7 @@ import type {
   ParkJob,
   ParkOperationsState,
 } from "../park-operations/public.js";
+import type { RuntimeAssetCatalog } from "../rendering-assets/public.js";
 
 /** Credit costs are intentionally itemized so a player can inspect tradeoffs. */
 export type EconomyCostCategory =
@@ -121,6 +122,8 @@ export interface EconomyLedgerState {
   readonly authoredEvals: readonly EvalAsset[];
   readonly evalRuns: readonly EvalRunRecord[];
   readonly settlements: readonly string[];
+  readonly progression: ProgressionState;
+  readonly rewards: RewardInventoryState;
 }
 
 export interface EconomyLedgerProjection extends EconomyLedgerState {
@@ -163,6 +166,19 @@ export interface EconomyDiagnostic {
     | "ECONOMY_SETTLEMENT_CONFLICT"
     | "ECONOMY_EVAL_NOT_AUTHORED"
     | "ECONOMY_EVAL_CONFLICT"
+    | "ECONOMY_CAPABILITY_NOT_FOUND"
+    | "ECONOMY_CAPABILITY_LOCKED"
+    | "ECONOMY_CAPABILITY_NOT_AVAILABLE"
+    | "ECONOMY_CAPABILITY_CONFLICT"
+    | "ECONOMY_ACTION_UNAVAILABLE"
+    | "ECONOMY_REWARD_NOT_FOUND"
+    | "ECONOMY_REWARD_LOCKED"
+    | "ECONOMY_REWARD_CONFLICT"
+    | "ECONOMY_REWARD_ASSET_UNRESOLVED"
+    | "ECONOMY_REWARD_NOT_OWNED"
+    | "ECONOMY_REWARD_ALREADY_PLACED"
+    | "ECONOMY_REWARD_PLACEMENT_NOT_FOUND"
+    | "ECONOMY_REWARD_PLACEMENT_CONFLICT"
     | "ECONOMY_RECORD_INVALID";
   readonly path: string;
   readonly rule: string;
@@ -221,6 +237,132 @@ export interface EconomyRuleSet {
     readonly capacity: number;
   };
   readonly rating: RatingRules;
+}
+
+export type CapabilityAvailability = "locked" | "available" | "purchased";
+
+export interface CapabilityDefinition {
+  readonly id: string;
+  readonly version: string;
+  readonly name: string;
+  readonly description: string;
+  readonly actionId: string;
+  readonly actionLabel: string;
+  readonly prerequisites: readonly string[];
+  readonly pressureIds: readonly string[];
+  readonly cost: number;
+}
+
+export interface CapabilityState extends CapabilityDefinition {
+  readonly status: CapabilityAvailability;
+  readonly availableTick?: number;
+  readonly purchasedTick?: number;
+  readonly purchaseTransactionId?: string;
+}
+
+export interface CapabilityAction {
+  readonly id: string;
+  readonly label: string;
+  readonly capabilityId: string;
+  readonly available: boolean;
+  readonly description: string;
+}
+
+export interface ProgressionState {
+  readonly schemaVersion: "1";
+  readonly pressureIds: readonly string[];
+  readonly capabilities: readonly CapabilityState[];
+  readonly actions: readonly CapabilityAction[];
+}
+
+export interface RewardDefinition {
+  readonly id: string;
+  readonly version: string;
+  readonly name: string;
+  readonly description: string;
+  readonly assetId: string;
+  readonly assetVersion: string;
+  readonly cost: number;
+  /** Expressive rewards intentionally have no production multiplier. */
+  readonly mechanicalBonus: 0;
+  readonly visibleToVisitors: boolean;
+  readonly prerequisites: readonly string[];
+}
+
+export interface RewardInventoryItem {
+  readonly itemId: string;
+  readonly rewardId: string;
+  readonly rewardVersion: string;
+  readonly status: "owned" | "placed" | "removed";
+  readonly purchaseTransactionId: string;
+  readonly purchasedDay: number;
+  readonly purchasedTick: number;
+  readonly placementId?: string;
+}
+
+export interface RewardPlacement {
+  readonly placementId: string;
+  readonly itemId: string;
+  readonly rewardId: string;
+  readonly assetId: string;
+  readonly assetVersion: string;
+  readonly locationId: string;
+  readonly visibleToVisitors: boolean;
+  readonly placedTick: number;
+  readonly removedTick?: number;
+}
+
+export interface RewardInventoryState {
+  readonly schemaVersion: "1";
+  readonly items: readonly RewardInventoryItem[];
+  readonly placements: readonly RewardPlacement[];
+}
+
+export interface ProgressionProjection {
+  readonly progression: ProgressionState;
+  readonly rewards: RewardInventoryState;
+}
+
+export interface CapabilityAvailabilityInput {
+  readonly capabilityId: string;
+  readonly tick: number;
+  readonly pressureIds?: readonly string[];
+}
+
+export interface CapabilityPurchaseInput {
+  readonly capabilityId: string;
+  readonly day: number;
+  readonly tick: number;
+  readonly commandId?: string;
+}
+
+export interface RewardPurchaseInput {
+  readonly rewardId: string;
+  readonly day: number;
+  readonly tick: number;
+  readonly commandId?: string;
+}
+
+export interface RewardPlacementInput {
+  readonly itemId: string;
+  readonly placementId: string;
+  readonly locationId: string;
+  readonly tick: number;
+}
+
+export interface RewardRemovalInput {
+  readonly placementId: string;
+  readonly tick: number;
+}
+
+export interface EconomyOptions {
+  readonly initialBalance?: number;
+  readonly startingCredits?: number;
+  readonly rules?: EconomyRuleSet;
+  readonly capabilities?: readonly CapabilityDefinition[];
+  readonly rewards?: readonly RewardDefinition[];
+  readonly assetCatalog?: Pick<RuntimeAssetCatalog, "resolveExact">;
+  readonly pressureIds?: readonly string[];
 }
 
 export type ParkOutcomeKind =
@@ -387,12 +529,6 @@ export interface EvalRunResult {
   readonly idempotent: boolean;
 }
 
-export interface EconomyOptions {
-  readonly initialBalance?: number;
-  readonly startingCredits?: number;
-  readonly rules?: EconomyRuleSet;
-}
-
 export interface ReserveInput {
   readonly quote: EconomyQuote | string;
   readonly reservationId?: string;
@@ -429,5 +565,12 @@ export interface EconomyService extends EconomyLedger {
   quoteEvalRun(input: Omit<EconomyQuoteRequest, "category">): EconomyResult<EconomyQuote>;
   authorEval(input: EvalAuthoringInput): EconomyResult<EvalAuthoringResult>;
   runEval(input: EvalRunInput): EconomyResult<EvalRunResult>;
+  progression(): ProgressionState;
+  rewards(): RewardInventoryState;
+  availableActions(): readonly CapabilityAction[];
+  markPressure(input: CapabilityAvailabilityInput): EconomyResult<ProgressionState>;
+  purchaseCapability(input: CapabilityPurchaseInput): EconomyResult<CapabilityState>;
+  purchaseReward(input: RewardPurchaseInput): EconomyResult<RewardInventoryItem>;
+  placeReward(input: RewardPlacementInput): EconomyResult<RewardPlacement>;
+  removeReward(input: RewardRemovalInput): EconomyResult<RewardPlacement>;
 }
-

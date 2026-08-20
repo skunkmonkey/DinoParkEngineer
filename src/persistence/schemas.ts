@@ -84,6 +84,22 @@ export const playerPreferencesSchema = z.strictObject({
   soundSubstitution: z.boolean(),
 });
 
+export const mvpCompositeStateSchema = z.strictObject({
+  schemaVersion: z.literal(PERSISTENCE_SCHEMA_VERSION),
+  memory: z.json(),
+  evals: z.json(),
+  workbench: z.json(),
+  reviews: z.json(),
+  deployments: z.json(),
+  economy: z.json(),
+  incidents: z.json(),
+  response: z.json(),
+  progression: z.json(),
+  rewards: z.json(),
+  curriculum: z.json(),
+  consent: z.json(),
+});
+
 export const persistencePackageManifestSchema = z.strictObject({
   packageId: contentId,
   packageVersion: version,
@@ -124,6 +140,11 @@ const preferencesSectionSchema = z.strictObject({
   fingerprint,
   data: playerPreferencesSchema,
 });
+const mvpSectionSchema = z.strictObject({
+  schemaVersion: z.literal(PERSISTENCE_SCHEMA_VERSION),
+  fingerprint,
+  data: mvpCompositeStateSchema,
+});
 
 export const persistenceSectionSchemas = Object.freeze({
   simulation: simulationSectionSchema,
@@ -131,6 +152,7 @@ export const persistenceSectionSchemas = Object.freeze({
   context: contextSectionSchema,
   traceReplay: traceSectionSchema,
   preferences: preferencesSectionSchema,
+  mvp: mvpSectionSchema,
 });
 
 export const persistenceSectionsSchema = z.strictObject({
@@ -139,6 +161,7 @@ export const persistenceSectionsSchema = z.strictObject({
   context: contextSectionSchema,
   traceReplay: traceSectionSchema,
   preferences: preferencesSectionSchema,
+  mvp: mvpSectionSchema.optional(),
 });
 
 export const saveEnvelopeSchema = z.strictObject({
@@ -169,6 +192,7 @@ export const persistenceSchemas = Object.freeze({
   contextPersistenceStateSchema,
   tracePersistenceStateSchema,
   playerPreferencesSchema,
+  mvpCompositeStateSchema,
   persistencePackageManifestSchema,
   persistenceContentManifestSchema,
   persistenceSectionsSchema,

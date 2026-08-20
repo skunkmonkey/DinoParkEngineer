@@ -35,7 +35,7 @@ test("opening package validates exact references, unlock reachability, asset rea
   assert.equal(result.report.identity, `${OPENING_CURRICULUM_IDS.package}@1.0.0`);
   assert.deepEqual(result.report.assetBundleIdentities, [`${OPENING_CURRICULUM_IDS.bundle}@${OPENING_CURRICULUM_IDS.bundleVersion}`]);
   assert.deepEqual(result.package.assetBundles[0]?.requiredAssets.map((asset) => asset.id), OPENING_RUNTIME_ASSET_IDS);
-  assert.deepEqual(result.package.unlocks.map((unlock) => unlock.id), ["unlock:opening-start", "unlock:opening-workbench", "unlock:opening-reward"]);
+  assert.deepEqual(result.package.unlocks.map((unlock) => unlock.id), ["unlock:opening-start", "unlock:opening-workbench", "unlock:opening-handbook", "unlock:opening-reward"]);
 });
 
 test("dawn scenario authors the closed pausable park, partial first success, changed closer, and explicit Context omission", () => {
@@ -84,6 +84,57 @@ test("guidance has action-skippable accessible equivalents and transfer withhold
   assert.equal(pkg.playtestTags.some((tag) => tag.purpose === "timing" && tag.measure.includes("five-minute")), true);
 });
 
+test("opening authors an exact five-minute sequence while leaving timing acceptance to human playtesting", () => {
+  const pkg = validateOpening().package;
+  assert.deepEqual(pkg.openingRun, {
+    targetHumanSeconds: 300,
+    timingAcceptance: "human-playtest-required",
+    pauseExcluded: true,
+    guidancePenalty: false,
+    successCopyId: "copy:opening-success",
+    beats: pkg.openingRun.beats,
+  });
+  assert.deepEqual(pkg.openingRun.beats.map((beat) => beat.targetCumulativeSeconds), [45, 75, 130, 200, 265, 300]);
+  assert.deepEqual(pkg.openingRun.beats.map((beat) => beat.observableEventId), ["outcome:first-feed-success", "event:first-feeding-inspected", "outcome:near-miss", "event:opening-candidate-ready", "event:opening-deployment-active", "outcome:park-open"]);
+  const successCopy = pkg.copy[pkg.openingRun.successCopyId] ?? "";
+  assert.match(successCopy, /park opened safely/u);
+  assert.doesNotMatch(successCopy, /lesson|curriculum|grade|course|learning complete/iu);
+  assert.equal(validateOpening().report.timingTargetSeconds, 300);
+});
+
+test("the incident unlocks the first relevant Handbook entry rather than announcing a lesson", () => {
+  const pkg = validateOpening().package;
+  const entry = pkg.handbook[0];
+  assert.ok(entry);
+  const unlock = pkg.unlocks.find((candidate) => candidate.id === entry.unlockId);
+  assert.equal(unlock?.triggerEventId, "outcome:near-miss");
+  assert.equal(unlock?.grants.some((grant) => grant.id === entry.id && grant.expectedClass === "HandbookEntry"), true);
+  assert.equal(entry.agentContextEligible, false);
+});
+
+test("novel Ankylosaurus transfer reproduces missing Context with opening guidance disabled and observable success", () => {
+  const pkg = validateOpening().package;
+  const opening = pkg.scenarios[0]!;
+  const transfer = pkg.transfers[0]!;
+  assert.equal(transfer.fixture.speciesId, "species:ankylosaurus");
+  assert.equal(transfer.fixture.task.id, "task:feed-ankylosaurus");
+  assert.equal(transfer.fixture.speciesKnowledge.id, "knowledge:ankylosaurus-care");
+  assert.notEqual(transfer.fixture.dinosaurId, opening.entities.hungryDinosaurId);
+  assert.notEqual(transfer.fixture.dinosaurId, opening.entities.secondDinosaurId);
+  assert.notEqual(transfer.fixture.enclosureId, opening.entities.firstEnclosureId);
+  assert.notEqual(transfer.fixture.enclosureId, opening.entities.secondEnclosureId);
+  assert.equal(transfer.fixture.missingContextRoute.routed, false);
+  assert.equal(transfer.fixture.revisedContextRoute.routed, true);
+  assert.equal(transfer.fixture.missingContextRoute.item.id, transfer.fixture.revisedContextRoute.item.id);
+  assert.equal(transfer.openingGuidanceDisabled, true);
+  assert.deepEqual(transfer.withheldGuidanceIds, opening.guidanceIds);
+  assert.deepEqual(transfer.observableSuccess, { requiredActionIds: ["action:inspect-transfer-context", "action:route-gamma-maintenance", "action:rerun-gamma-feeding"], eventId: "event:transfer-context-routed", result: "feeding-succeeded", fatalities: 0, injuries: 0 });
+  assert.equal(transfer.delayedAssistance.optional, true);
+  assert.equal(transfer.delayedAssistance.availableAfterEventId, "event:transfer-missing-context-observed");
+  assert.equal(transfer.delayedAssistance.rewardPenalty, false);
+  assert.deepEqual(validateOpening().report.transferSuccessEvents, [transfer.successEventId]);
+});
+
 test("boundary schema rejects executable content and malformed imported package data", () => {
   const pkg = createOpeningCurriculumPackage();
   assert.equal(curriculumPackageSchema.safeParse({ ...pkg, executable: () => "unsafe" }).success, false);
@@ -114,4 +165,29 @@ test("validation reports missing exact references, asset contents, circular unlo
   const fatalResult = validateCurriculumPackage(fatal, inventory);
   assert.equal(fatalResult.ok, false);
   if (!fatalResult.ok) assert.equal(fatalResult.diagnostics.some((entry) => entry.code === "CURRICULUM_FATAL_ONBOARDING"), true);
+});
+
+test("validation rejects fake timing completion, lesson copy, memorized transfer, and delayed Handbook unlock", () => {
+  const pkg = createOpeningCurriculumPackage();
+  const inventory = createOpeningCurriculumInventory();
+  const invalidTiming = resign({ ...pkg, openingRun: { ...pkg.openingRun, beats: pkg.openingRun.beats.map((beat, index) => index === pkg.openingRun.beats.length - 1 ? { ...beat, targetCumulativeSeconds: 299 } : beat) } });
+  const timingResult = validateCurriculumPackage(invalidTiming, inventory);
+  assert.equal(timingResult.ok, false);
+  if (!timingResult.ok) assert.equal(timingResult.diagnostics.some((entry) => entry.code === "CURRICULUM_OPENING_TIMING_INVALID"), true);
+
+  const lessonCopy = resign({ ...pkg, copy: { ...pkg.copy, "copy:opening-success": "Context lesson complete. Grade awarded." } });
+  const copyResult = validateCurriculumPackage(lessonCopy, inventory);
+  assert.equal(copyResult.ok, false);
+  if (!copyResult.ok) assert.equal(copyResult.diagnostics.some((entry) => entry.code === "CURRICULUM_SUCCESS_COPY_INVALID"), true);
+
+  const transfer = pkg.transfers[0]!;
+  const memorizedTransfer = resign({ ...pkg, transfers: [{ ...transfer, fixture: { ...transfer.fixture, dinosaurId: pkg.scenarios[0]!.entities.secondDinosaurId } }] });
+  const transferResult = validateCurriculumPackage(memorizedTransfer, inventory);
+  assert.equal(transferResult.ok, false);
+  if (!transferResult.ok) assert.equal(transferResult.diagnostics.some((entry) => entry.code === "CURRICULUM_TRANSFER_INVALID"), true);
+
+  const delayedHandbook = resign({ ...pkg, handbook: pkg.handbook.map((entry) => ({ ...entry, unlockId: "unlock:opening-reward" })) });
+  const handbookResult = validateCurriculumPackage(delayedHandbook, inventory);
+  assert.equal(handbookResult.ok, false);
+  if (!handbookResult.ok) assert.equal(handbookResult.diagnostics.some((entry) => entry.code === "CURRICULUM_HANDBOOK_UNLOCK_INVALID"), true);
 });

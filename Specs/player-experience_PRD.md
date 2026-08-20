@@ -161,6 +161,36 @@ commands.
 - FR-07.5: Audio cues SHALL have persistent visual/text substitutes and respect
   user volume/mute settings and browser autoplay constraints.
 
+### FR-08: Management-Game Shell and Progressive Disclosure
+
+- FR-08.1: At 1366×768 or larger and 100% in-game text scale, Park View SHALL
+  fit within one 100dvh application shell without body scrolling.
+- FR-08.2: A compact HUD SHALL keep Park time, pause/speed, rating, credits,
+  emergencies, and the current objective visible with the living park.
+- FR-08.3: The selected-object Inspector SHALL be docked or overlaid,
+  independently scrollable, dismissible, and restorable without leaving Park View.
+- FR-08.4: Save, settings, Handbook, Economy, and diagnostic destinations SHALL
+  use concise menus or focused modes instead of permanent page sections.
+- FR-08.5: Routine presentation SHALL use deterministic friendly names. Stable
+  IDs, fingerprints, reason codes, manifests, and exact versions SHALL appear
+  only in deliberate evidence, replay, export, support, or diagnostic views.
+- FR-08.6: Routine information SHALL follow world consequence, one concise
+  operational explanation, optional engineering evidence, and optional
+  Handbook depth. Long evidence SHALL scroll inside an opened panel or focused
+  workspace.
+- FR-08.7: The opening scene SHALL be an authored composition with terrain,
+  habitat ground and boundaries, gates, feeders, water/shade, visitor paths,
+  service routes, buildings, vegetation, entities, and overlays.
+- FR-08.8: Presentational animation SHALL stage dinosaur, Worker Agent, gate,
+  visitor, route, selection, alert, incident, and Context-retention states while
+  remaining unable to advance authoritative state. Reduced motion SHALL replace
+  motion with immediate states and persistent semantic records.
+- FR-08.9: The visual grammar SHALL remain a design-system and optional Handbook
+  reference; routine Park View SHALL NOT require or permanently display a legend.
+- FR-08.10: The Shell accessibility preference port SHALL be the one persisted
+  application text-scale source. Every route SHALL inherit the root scale, and
+  no feature stylesheet may shadow it.
+
 ## Non-Functional Requirements
 
 - **NFR-01: Responsiveness** - Park animation, selection, and UI remain
@@ -200,6 +230,15 @@ commands.
   events.
 - **PD-04: Focus pauses by default** - Difficulty comes from judgment, not
   reading speed.
+- **PD-05: Viewport-bound park shell** - Desktop Park View uses a stable HUD,
+  dominant park viewport, contextual Inspector, and time/action strip; document
+  flow is reserved for narrow or highly zoomed reflow.
+- **PD-06: Friendly routine identity** - Domain IDs stay authoritative while a
+  deterministic presentation projection supplies ordinary park names. Exact
+  identity is evidence, not routine chrome.
+- **PD-07: No prerequisite legend** - Symbols are introduced in context and
+  keep accessible names and non-color treatments; visual grammar is not a
+  permanent opening panel.
 
 ## Implementation Decisions
 

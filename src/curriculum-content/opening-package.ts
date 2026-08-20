@@ -64,6 +64,9 @@ const unsignedOpeningPackage: Omit<CurriculumPackage, "fingerprint"> = {
     ref("workbench:minimum-opening", "WorkbenchSurface"),
     ref("handbook:context-boundary", "HandbookEntry"),
     ref("scenario:opening-transfer-enclosure", "Scenario"),
+    ref("task:feed-ankylosaurus", "Task"),
+    ref("knowledge:ankylosaurus-care", "Knowledge"),
+    ref("content:gamma-maintenance-note", "Knowledge"),
   ],
   arcs: [{
     id: OPENING_CURRICULUM_IDS.arc,
@@ -151,7 +154,8 @@ const unsignedOpeningPackage: Omit<CurriculumPackage, "fingerprint"> = {
   unlocks: [
     { id: "unlock:opening-start", prerequisites: [], grants: [ref("park:feed-triceratops", "Prompt")], triggerEventId: "event:park-loaded" },
     { id: "unlock:opening-workbench", prerequisites: ["unlock:opening-start"], grants: [ref("eval:opening-maintenance-context", "EvalCase"), ref("workbench:minimum-opening", "WorkbenchSurface")], triggerEventId: "outcome:near-miss" },
-    { id: "unlock:opening-reward", prerequisites: ["unlock:opening-workbench"], grants: [ref("reward:dinosaur-plushie", "Reward"), ref("handbook:context-boundary", "HandbookEntry")], triggerEventId: "outcome:park-open" },
+    { id: "unlock:opening-handbook", prerequisites: ["unlock:opening-start"], grants: [ref("handbook:context-boundary", "HandbookEntry")], triggerEventId: "outcome:near-miss" },
+    { id: "unlock:opening-reward", prerequisites: ["unlock:opening-workbench", "unlock:opening-handbook"], grants: [ref("reward:dinosaur-plushie", "Reward")], triggerEventId: "outcome:park-open" },
   ],
   guidance: [
     {
@@ -168,17 +172,33 @@ const unsignedOpeningPackage: Omit<CurriculumPackage, "fingerprint"> = {
       accessibilityEquivalent: "Persistent incident text states closer status, gate state, affected entities, and the missing route.",
       copyIds: ["copy:guidance-diagnose-help", "copy:guidance-diagnose-hint"],
     },
+    {
+      id: "guidance:transfer-delayed-context", worldCue: "The ankylosaurus feeding remains paused while Gamma Gate maintenance is visible in the enclosure log.",
+      affordanceEmphasis: "After the failed transfer observation, emphasize Context inspection without selecting a route.", conciseHint: "Check which enclosure facts reached the Worker.",
+      explicitHelp: "Inspect the Gamma maintenance note and route it into the transfer job Context before rerunning.", skipCondition: "The player routes any relevant Gamma maintenance record.",
+      accessibilityEquivalent: "Persistent text names Gamma Gate, the maintenance source, the transfer job, and the unavailable Context record.",
+      copyIds: ["copy:guidance-transfer-help", "copy:guidance-transfer-hint"],
+    },
   ],
   transfers: [{
     id: OPENING_CURRICULUM_IDS.transfer, concept: "Context boundaries and selective routing",
     scenario: ref("scenario:opening-transfer-enclosure", "Scenario"),
-    changedSurfaceDetails: ["different dinosaur species", "different enclosure and gate", "maintenance note supplied by a different source"],
+    changedSurfaceDetails: ["Ankylosaurus instead of Triceratops", "Gamma enclosure and Gamma Gate instead of the opening enclosures", "maintenance note supplied by the enclosure log instead of the opening source"],
     withheldGuidanceIds: ["guidance:opening-assign", "guidance:opening-diagnose"], successEventId: "event:transfer-context-routed",
+    fixture: {
+      seed: 2602, speciesId: "species:ankylosaurus", dinosaurId: "dinosaur:bramble", enclosureId: "enclosure:gamma", gateId: "gate:gamma", maintenanceSourceId: "source:gamma-enclosure-log",
+      task: ref("task:feed-ankylosaurus", "Task"), speciesKnowledge: ref("knowledge:ankylosaurus-care", "Knowledge"),
+      missingContextRoute: { id: "route:gamma-maintenance-missing", item: ref("content:gamma-maintenance-note", "Knowledge"), routed: false, unavailableReason: "not-routed" },
+      revisedContextRoute: { id: "route:gamma-maintenance-routed", item: ref("content:gamma-maintenance-note", "Knowledge"), routed: true },
+    },
+    openingGuidanceDisabled: true,
+    observableSuccess: { requiredActionIds: ["action:inspect-transfer-context", "action:route-gamma-maintenance", "action:rerun-gamma-feeding"], eventId: "event:transfer-context-routed", result: "feeding-succeeded", fatalities: 0, injuries: 0 },
+    delayedAssistance: { optional: true, availableAfterEventId: "event:transfer-missing-context-observed", guidanceId: "guidance:transfer-delayed-context", rewardPenalty: false },
   }],
   handbook: [{
     id: "handbook:context-boundary", term: "Context", definitionCopyId: "copy:handbook-context-definition",
     visualGrammarCopyId: "copy:handbook-context-visual", encounteredExampleCopyId: "copy:handbook-context-example",
-    unlockId: "unlock:opening-reward", agentContextEligible: false,
+    unlockId: "unlock:opening-handbook", agentContextEligible: false,
   }],
   copy: {
     "copy:choice-revise": "Revise the feeding instruction",
@@ -187,6 +207,8 @@ const unsignedOpeningPackage: Omit<CurriculumPackage, "fingerprint"> = {
     "copy:guidance-assign-hint": "Robot Alpha can take the feeding job.",
     "copy:guidance-diagnose-help": "Follow the incident Trace and inspect unavailable Context.",
     "copy:guidance-diagnose-hint": "Compare what changed with what the Worker received.",
+    "copy:guidance-transfer-help": "Inspect the Gamma maintenance note and route it into the transfer job Context before rerunning.",
+    "copy:guidance-transfer-hint": "Check which enclosure facts reached the Worker.",
     "copy:handbook-context-definition": "Context is the finite, provenance-labeled information available to an Agent for a decision.",
     "copy:handbook-context-example": "The gate closer was disabled in the park but its maintenance record was not routed to Robot Alpha.",
     "copy:handbook-context-visual": "Included, unavailable, and excluded items use text labels and distinct shapes as well as color.",
@@ -194,6 +216,7 @@ const unsignedOpeningPackage: Omit<CurriculumPackage, "fingerprint"> = {
     "copy:incident-expected": "The feeding instruction expected the automatic closer to restore containment.",
     "copy:incident-gap": "The closer was disabled for maintenance, but that record was not routed into Worker Context.",
     "copy:incident-observed": "The gate remained open after Robot Alpha left the second enclosure.",
+    "copy:opening-success": "The reviewed feeding route kept both enclosures contained, and the park opened safely for the waiting visitors.",
   },
   assetBundles: [assetDependency],
   playtestTags: [
@@ -202,6 +225,17 @@ const unsignedOpeningPackage: Omit<CurriculumPackage, "fingerprint"> = {
     { id: "playtest:opening-comprehension", purpose: "comprehension", measure: "A newcomer diagnoses the unavailable maintenance record without facilitator explanation." },
     { id: "playtest:opening-timing", purpose: "timing", measure: "Record elapsed play time against the provisional five-minute opening target without penalizing pause or guidance." },
   ],
+  openingRun: {
+    targetHumanSeconds: 300, timingAcceptance: "human-playtest-required", pauseExcluded: true, guidancePenalty: false, successCopyId: "copy:opening-success",
+    beats: [
+      { id: "beat:assign-first-feeding", targetCumulativeSeconds: 45, action: "Recognize the hungry dinosaur and assign the supplied instruction to Robot Alpha.", observableEventId: "outcome:first-feed-success" },
+      { id: "beat:observe-first-success", targetCumulativeSeconds: 75, action: "Observe the contained first feeding before the changed maintenance condition appears.", observableEventId: "event:first-feeding-inspected" },
+      { id: "beat:reuse-and-near-miss", targetCumulativeSeconds: 130, action: "Reuse the instruction and observe the stabilized containment near miss.", observableEventId: "outcome:near-miss" },
+      { id: "beat:diagnose-and-revise", targetCumulativeSeconds: 200, action: "Follow the Trace, identify unavailable maintenance Context, and request the minimum change.", observableEventId: "event:opening-candidate-ready" },
+      { id: "beat:eval-review-deploy", targetCumulativeSeconds: 265, action: "Run the free Eval, inspect its exact evidence, review, and intentionally deploy.", observableEventId: "event:opening-deployment-active" },
+      { id: "beat:rerun-and-open", targetCumulativeSeconds: 300, action: "Rerun successfully and intentionally open the park.", observableEventId: "outcome:park-open" },
+    ],
+  },
 };
 
 export const createOpeningCurriculumPackage = (): CurriculumPackage => {
@@ -216,10 +250,11 @@ const referenceInventory = [
   ref("review:opening-feeding-revision", "Review"), ref("deployment:opening-feeding-revision", "Deployment"),
   ref("reward:dinosaur-plushie", "Reward"), ref("workbench:minimum-opening", "WorkbenchSurface"),
   ref("handbook:context-boundary", "HandbookEntry"), ...assetDependency.requiredAssets,
+  ref("task:feed-ankylosaurus", "Task"), ref("knowledge:ankylosaurus-care", "Knowledge"), ref("content:gamma-maintenance-note", "Knowledge"),
 ];
 
 export const createOpeningCurriculumInventory = (): CurriculumValidationInventory => ({
   exactReferences: new Map(referenceInventory.map((reference) => [`${reference.id}@${reference.version}`, { expectedClass: reference.expectedClass, expectedSchemaVersion: reference.expectedSchemaVersion }])),
-  entityIds: new Set(["dinosaur:stella", "dinosaur:tria", "enclosure:alpha", "enclosure:beta", "gate:beta", "robot:alpha", "visitor:morning"]),
+  entityIds: new Set(["dinosaur:stella", "dinosaur:tria", "dinosaur:bramble", "enclosure:alpha", "enclosure:beta", "enclosure:gamma", "gate:beta", "gate:gamma", "robot:alpha", "species:ankylosaurus", "source:gamma-enclosure-log", "visitor:morning"]),
   assetBundles: new Map([[`${assetDependency.bundleId}@${assetDependency.bundleVersion}`, new Set(assetDependency.requiredAssets.map((reference) => `${reference.id}@${reference.version}`))]]),
 });

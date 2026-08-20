@@ -14,6 +14,7 @@ export {
   unlockSchema,
 } from "./schemas.js";
 export { projectGoldenOutcomes, validateCurriculumPackage } from "./validator.js";
+export { CurriculumOpeningView } from "./view.js";
 export type {
   AssetBundleDependency,
   ContextRouteFixture,
@@ -29,6 +30,8 @@ export type {
   GuidanceRecord,
   HandbookEntry,
   OpeningJob,
+  OpeningRunContract,
+  OpeningSequenceBeat,
   OpeningScenario,
   PlaytestTag,
   TransferCase,

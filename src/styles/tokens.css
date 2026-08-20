@@ -4,6 +4,7 @@
   --dpe-font-family-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
   --dpe-font-size: 1rem;
+  --dpe-player-font-scale: 1;
   --dpe-line-height: 1.5;
 
   --dpe-space-1: 0.25rem;

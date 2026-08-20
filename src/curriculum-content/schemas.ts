@@ -21,9 +21,24 @@ export const guidanceSchema = z.strictObject({
   explicitHelp: nonempty, skipCondition: nonempty, accessibilityEquivalent: nonempty,
   copyIds: z.array(id).min(1).superRefine(sortedUnique),
 });
+const transferContextRouteSchema = z.strictObject({
+  id, item: exactContentReferenceSchema, routed: z.boolean(), unavailableReason: z.literal("not-routed").optional(),
+}).superRefine((route, context) => {
+  if (route.routed === (route.unavailableReason !== undefined)) context.addIssue({ code: "custom", path: ["unavailableReason"], message: "is required exactly when a route is unavailable" });
+});
 export const transferSchema = z.strictObject({
   id, concept: nonempty, scenario: exactContentReferenceSchema,
   changedSurfaceDetails: z.array(nonempty).min(1), withheldGuidanceIds: z.array(id), successEventId: id,
+  fixture: z.strictObject({
+    seed: z.number().int().nonnegative(), speciesId: id, dinosaurId: id, enclosureId: id, gateId: id, maintenanceSourceId: id,
+    task: exactContentReferenceSchema, speciesKnowledge: exactContentReferenceSchema,
+    missingContextRoute: transferContextRouteSchema, revisedContextRoute: transferContextRouteSchema,
+  }),
+  openingGuidanceDisabled: z.literal(true),
+  observableSuccess: z.strictObject({
+    requiredActionIds: z.array(id).min(1), eventId: id, result: z.literal("feeding-succeeded"), fatalities: z.literal(0), injuries: z.literal(0),
+  }),
+  delayedAssistance: z.strictObject({ optional: z.literal(true), availableAfterEventId: id, guidanceId: id, rewardPenalty: z.literal(false) }),
 });
 export const handbookEntrySchema = z.strictObject({
   id, term: nonempty, definitionCopyId: id, visualGrammarCopyId: id,
@@ -83,4 +98,8 @@ export const curriculumPackageSchema = z.strictObject({
   unlocks: z.array(unlockSchema).min(1), guidance: z.array(guidanceSchema).min(1), transfers: z.array(transferSchema).min(1),
   handbook: z.array(handbookEntrySchema).min(1), copy: copyCatalogSchema, assetBundles: z.array(assetBundleDependencySchema).min(1),
   playtestTags: z.array(playtestTagSchema).min(1), fingerprint: z.string().regex(/^fnv1a64:[0-9a-f]{16}$/u),
+  openingRun: z.strictObject({
+    targetHumanSeconds: z.literal(300), timingAcceptance: z.literal("human-playtest-required"), pauseExcluded: z.literal(true), guidancePenalty: z.literal(false), successCopyId: id,
+    beats: z.array(z.strictObject({ id, targetCumulativeSeconds: z.number().int().positive().max(300), action: nonempty, observableEventId: id })).min(5),
+  }),
 });

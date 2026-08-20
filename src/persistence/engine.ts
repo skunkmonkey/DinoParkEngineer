@@ -130,7 +130,11 @@ const sessionFromEnvelope = (envelope: SaveEnvelope): PersistenceSession => ({
   context: clonePortable(envelope.sections.context.data),
   traces: clonePortable(envelope.sections.traceReplay.data.traces),
   preferences: clonePortable(envelope.sections.preferences.data),
+  ...(envelope.sections.mvp === undefined ? {} : { mvp: clonePortable(envelope.sections.mvp.data) }),
 });
+
+/** Constructs a detached restoration candidate; callers replace only after validation. */
+export const createPersistenceSessionCandidate = (envelope: SaveEnvelope): PersistenceSession => sessionFromEnvelope(envelope);
 
 const collectReferences = (session: PersistenceSession): readonly ContentReference[] => {
   const references: ContentReference[] = [];
@@ -323,6 +327,7 @@ export const createSaveEnvelope = (input: SaveEnvelopeInput): SaveEnvelope => {
     context: section(context),
     traceReplay: section(traces),
     preferences: section(session.preferences),
+    ...(session.mvp === undefined ? {} : { mvp: section(session.mvp) }),
   };
   const payload = {
     schemaVersion: PERSISTENCE_SCHEMA_VERSION,
@@ -374,12 +379,13 @@ export const validateSaveEnvelope = (
   diagnostics.push(...manifestDiagnostics);
   const sectionResults = persistenceSectionsSchema.safeParse(envelope.sections);
   if (!sectionResults.success) diagnostics.push(...sectionResults.error.issues.map((issue) => diagnostic("PERSISTENCE_SECTION_INVALID", `sections.${issue.path.join(".")}`, "domain section schema", issue.message)));
-  const sectionEntries: readonly [string, { readonly data: unknown; readonly fingerprint: string }][] = [
+  const sectionEntries: ReadonlyArray<readonly [string, { readonly data: unknown; readonly fingerprint: string }]> = [
     ["simulation", envelope.sections.simulation],
     ["parkOperations", envelope.sections.parkOperations],
     ["context", envelope.sections.context],
     ["traceReplay", envelope.sections.traceReplay],
     ["preferences", envelope.sections.preferences],
+    ...(envelope.sections.mvp === undefined ? [] : [["mvp", envelope.sections.mvp] as const]),
   ];
   for (const [name, entry] of sectionEntries) {
     if (entry.fingerprint !== fingerprintSaveData(entry.data)) diagnostics.push(diagnostic("PERSISTENCE_INTEGRITY_MISMATCH", `sections.${name}.fingerprint`, "canonical domain section fingerprint", `The ${name} section fingerprint does not match its data.`));
