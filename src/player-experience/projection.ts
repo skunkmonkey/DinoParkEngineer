@@ -61,6 +61,7 @@ export const PLAYER_VISUAL_GRAMMAR: Readonly<Record<VisualGrammarKey, Readonly<{
 
 export const OPENING_LOCATION_POINTS: Readonly<Record<string, Point2D>> = Object.freeze({
   "location:enclosure": { x: 31, y: 45 },
+  "location:enclosure-beta": { x: 67, y: 43 },
   "location:path": { x: 54, y: 61 },
   "location:service": { x: 76, y: 70 },
   "location:safe": { x: 88, y: 38 },
@@ -69,6 +70,7 @@ export const OPENING_LOCATION_POINTS: Readonly<Record<string, Point2D>> = Object
 
 const LOCATION_LABELS: Readonly<Record<string, string>> = Object.freeze({
   "location:enclosure": "Enclosure Alpha",
+  "location:enclosure-beta": "Enclosure Beta",
   "location:path": "Keeper path",
   "location:service": "Service lane",
   "location:safe": "Visitor safe zone",
@@ -196,7 +198,10 @@ const gateProjection = (
   operations: ParkOperationsState,
   selected: boolean,
 ): PlayerEntityProjection => {
-  const position: Point2D = { x: 44, y: 55 };
+  const beta = gate.id === asStableId("gate:beta");
+  const position: Point2D = beta ? { x: 61, y: 53 } : { x: 44, y: 55 };
+  const gateLabel = beta ? "Gate Beta" : "Gate Alpha";
+  const enclosureLabel = beta ? "Enclosure Beta" : "Enclosure Alpha";
   const incident = operations.incidents.find((entry) => entry.entityIds.includes(gate.id) && entry.status !== "closed");
   const degraded = gate.sensorHealth !== "healthy" || gate.closer === "disabled";
   const emergency = incident?.risk !== undefined && incident.risk >= 80;
@@ -208,13 +213,13 @@ const gateProjection = (
   return {
     id: gate.id,
     kind: "gate",
-    label: "Gate Alpha",
+    label: gateLabel,
     locationId: gate.locationA,
     position,
     status,
     intent: gate.position === "open" ? "Transition open" : "Containment restored",
-    route: ["Gate Alpha", "Enclosure Alpha", "Keeper path"],
-    accessibilityLabel: `Gate Alpha; ${status}; ${gate.position === "closed" ? "containment closed" : "containment open"}`,
+    route: [gateLabel, enclosureLabel, "Keeper path"],
+    accessibilityLabel: `${gateLabel}; ${status}; ${gate.position === "closed" ? "containment closed" : "containment open"}`,
     assetId: ASSET_IDS.gate,
     assetVersion: "1.0.0",
     selected,

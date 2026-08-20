@@ -749,27 +749,27 @@ Owning documents:
 `Specs/engineering-workbench_PRD.md` and
 `Specs/engineering-workbench_PLAN.md`.
 
-- [ ] Implement focused Workbench mode with production paused by default.
-- [ ] Add the single Park Developer presence and capability profile.
-- [ ] Explicitly exclude developer hiring, candidates, salaries, replacement,
+- [x] Implement focused Workbench mode with production paused by default.
+- [x] Add the single Park Developer presence and capability profile.
+- [x] Explicitly exclude developer hiring, candidates, salaries, replacement,
   and teams.
-- [ ] Implement exact artifact inspection for source, clauses, context,
+- [x] Implement exact artifact inspection for source, clauses, context,
   dependencies, tools, tradeoffs, deployment, and history.
-- [ ] Visually and semantically distinguish prose from executable clauses.
-- [ ] Implement semantic comparison across readable, behavioral, context,
+- [x] Visually and semantically distinguish prose from executable clauses.
+- [x] Implement semantic comparison across readable, behavioral, context,
   dependency, tool, verification, failure, and tradeoff differences.
-- [ ] Link duplicate, missing, stale, conflicting, and irrelevant findings to
+- [x] Link duplicate, missing, stale, conflicting, and irrelevant findings to
   exact supporting evidence.
-- [ ] Implement bounded deterministic component/clause composition.
-- [ ] Implement context-route composition and exact capacity preview.
-- [ ] Implement work request goal, base version, capability, inputs, quote, and
+- [x] Implement bounded deterministic component/clause composition.
+- [x] Implement context-route composition and exact capacity preview.
+- [x] Implement work request goal, base version, capability, inputs, quote, and
   status.
-- [ ] Implement immutable candidate creation and linked revision feedback.
-- [ ] Ensure candidate work never changes production.
-- [ ] Implement Engineering Handbook term, visual grammar, encountered example,
+- [x] Implement immutable candidate creation and linked revision feedback.
+- [x] Ensure candidate work never changes production.
+- [x] Implement Engineering Handbook term, visual grammar, encountered example,
   search, filter, and incident links.
-- [ ] Keep Handbook content outside Agent context.
-- [ ] Add artifact, comparison, composition, work, immutability, Handbook, and
+- [x] Keep Handbook content outside Agent context.
+- [x] Add artifact, comparison, composition, work, immutability, Handbook, and
   accessibility tests.
 
 #### E2 - Eval Runner
@@ -777,26 +777,26 @@ Owning documents:
 Owning documents: `Specs/eval-runner_PRD.md` and
 `Specs/eval-runner_PLAN.md`.
 
-- [ ] Define exact versioned eval case, fixture, assertion, suite, risk, and cost
+- [x] Define exact versioned eval case, fixture, assertion, suite, risk, and cost
   reference schemas.
-- [ ] Define bounded deterministic assertions over world, job, context, trace,
+- [x] Define bounded deterministic assertions over world, job, context, trace,
   tool, message, and outcome records.
-- [ ] Reject arbitrary executable grader code.
-- [ ] Implement exact case and named-suite selection.
-- [ ] Show risks, unavailable cases, previous results, and estimated run cost.
-- [ ] Instantiate a fresh isolated production-equivalent domain environment per
+- [x] Reject arbitrary executable grader code.
+- [x] Implement exact case and named-suite selection.
+- [x] Show risks, unavailable cases, previous results, and estimated run cost.
+- [x] Instantiate a fresh isolated production-equivalent domain environment per
   case.
-- [ ] Prevent all access to production world/economy/persistence mutation paths.
-- [ ] Inject the exact candidate and resolved dependency manifest.
-- [ ] Implement completed, passed, failed, invalid, timed-out, and interrupted
+- [x] Prevent all access to production world/economy/persistence mutation paths.
+- [x] Inject the exact candidate and resolved dependency manifest.
+- [x] Implement completed, passed, failed, invalid, timed-out, and interrupted
   results.
-- [ ] Record expected, observed, pass/fail, evidence, mismatch, trace, and replay.
-- [ ] Derive all case/suite scores only from executed assertions.
-- [ ] Prohibit fabricated reliability/confidence percentages.
-- [ ] Implement exact rerun and like-for-like result/trace comparison.
-- [ ] Implement persistent SIMULATION framing distinct from production.
-- [ ] Create and run the free opening maintenance-context eval.
-- [ ] Add isolation, result derivation, ordering, timeout, interruption, rerun,
+- [x] Record expected, observed, pass/fail, evidence, mismatch, trace, and replay.
+- [x] Derive all case/suite scores only from executed assertions.
+- [x] Prohibit fabricated reliability/confidence percentages.
+- [x] Implement exact rerun and like-for-like result/trace comparison.
+- [x] Implement persistent SIMULATION framing distinct from production.
+- [x] Create and run the free opening maintenance-context eval.
+- [x] Add isolation, result derivation, ordering, timeout, interruption, rerun,
   comparison, and accessibility tests.
 
 #### E3 - Economy foundation
@@ -805,16 +805,16 @@ Owning documents:
 `Specs/economy-progression_PRD.md` and
 `Specs/economy-progression_PLAN.md`.
 
-- [ ] Implement immutable transaction ledger and derived balance.
-- [ ] Implement atomic idempotent quote/reserve/commit/cancel protocol.
-- [ ] Separate authoring/acquisition, runtime, eval build/run, operation,
+- [x] Implement immutable transaction ledger and derived balance.
+- [x] Implement atomic idempotent quote/reserve/commit/cancel protocol.
+- [x] Separate authoring/acquisition, runtime, eval build/run, operation,
   response, recovery, expansion, and expression costs.
-- [ ] Implement deterministic day settlement from exact Park Operations records.
-- [ ] Implement park rating with inspectable safety, guest experience, and
+- [x] Implement deterministic day settlement from exact Park Operations records.
+- [x] Implement park rating with inspectable safety, guest experience, and
   dinosaur welfare contributors.
-- [ ] Implement rating-driven demand and visitor revenue.
-- [ ] Implement one-time eval authoring cost and cheap reruns.
-- [ ] Add transaction, settlement, quote, rating, demand, and no-double-charge
+- [x] Implement rating-driven demand and visitor revenue.
+- [x] Implement one-time eval authoring cost and cheap reruns.
+- [x] Add transaction, settlement, quote, rating, demand, and no-double-charge
   tests.
 
 #### E4 - Persistence foundation
@@ -822,36 +822,36 @@ Owning documents:
 Owning documents: `Specs/persistence_PRD.md` and
 `Specs/persistence_PLAN.md`.
 
-- [ ] Define versioned save envelope, content manifest, domain sections,
+- [x] Define versioned save envelope, content manifest, domain sections,
   integrity data, and completion marker.
-- [ ] Define public versioned persistence ports for stable implemented domains.
-- [ ] Implement canonical serializable save data without functions, DOM,
+- [x] Define public versioned persistence ports for stable implemented domains.
+- [x] Implement canonical serializable save data without functions, DOM,
   renderer, or platform paths.
-- [ ] Implement in-memory repository for tests.
-- [ ] Implement complete candidate validation before session replacement.
-- [ ] Implement exact manual save/load of first-playable world, jobs, versions,
+- [x] Implement in-memory repository for tests.
+- [x] Implement complete candidate validation before session replacement.
+- [x] Implement exact manual save/load of first-playable world, jobs, versions,
   context, trace, and preferences.
-- [ ] Prove historical replay after reload.
-- [ ] Keep current session unchanged when validation fails.
-- [ ] Add first round-trip, missing-content, invalid-domain, and isolation tests.
+- [x] Prove historical replay after reload.
+- [x] Keep current session unchanged when validation fails.
+- [x] Add first round-trip, missing-content, invalid-domain, and isolation tests.
 
 ### Integration Gate C - Near miss diagnosis
 
-- [ ] Present the visible disabled gate closer before the second feeding.
-- [ ] Reuse the first instruction with maintenance information absent from
+- [x] Present the visible disabled gate closer before the second feeding.
+- [x] Reuse the first instruction with maintenance information absent from
   Worker context.
-- [ ] Produce the exact recoverable near miss.
-- [ ] Group related symptoms into one evolving incident.
-- [ ] Pause production and focus the affected enclosure.
-- [ ] Present expected, observed, consequence, and immediate causal gap.
-- [ ] Navigate Park → incident → job → action → context → evidence → responsible
+- [x] Produce the exact recoverable near miss.
+- [x] Group related symptoms into one evolving incident.
+- [x] Pause production and focus the affected enclosure.
+- [x] Present expected, observed, consequence, and immediate causal gap.
+- [x] Navigate Park → incident → job → action → context → evidence → responsible
   artifact.
-- [ ] Open Workbench with the correct paused operational anchor.
-- [ ] Compare the deployed artifact with a valid correction.
-- [ ] Compose or commission the minimum context/instruction fix.
-- [ ] Produce an immutable candidate without changing production.
-- [ ] Run and replay the free exact eval.
-- [ ] Return to the same causal event and preserve all IDs.
+- [x] Open Workbench with the correct paused operational anchor.
+- [x] Compare the deployed artifact with a valid correction.
+- [x] Compose or commission the minimum context/instruction fix.
+- [x] Produce an immutable candidate without changing production.
+- [x] Run and replay the free exact eval.
+- [x] Return to the same causal event and preserve all IDs.
 
 ---
 

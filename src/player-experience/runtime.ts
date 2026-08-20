@@ -141,9 +141,28 @@ const entityId = (command: PlayerExperienceCommand): StableId | undefined => {
 export const createPlayerExperience = (
   options: PlayerExperienceOptions = {},
 ): PlayerExperienceService => {
-  const simulation: SimulationEngine = createSimulation(createSimulationFoundationFixture());
+  const baseSimulationFixture = createSimulationFoundationFixture();
+  const simulation: SimulationEngine = createSimulation({
+    ...baseSimulationFixture,
+    initialState: {
+      ...baseSimulationFixture.initialState,
+      locations: [...baseSimulationFixture.initialState.locations, { id: id("location:enclosure-beta"), kind: "enclosure" as const, enclosureId: id("enclosure:beta") }].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0),
+      enclosureBoundaries: [...baseSimulationFixture.initialState.enclosureBoundaries, { id: id("boundary:beta"), enclosureId: id("enclosure:beta"), edgeIds: [id("edge:enclosure-beta-path")], gateIds: [id("gate:beta")] }].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0),
+      navigationEdges: [...baseSimulationFixture.initialState.navigationEdges, { id: id("edge:enclosure-beta-path"), from: id("location:enclosure-beta"), to: id("location:path"), gateId: id("gate:beta") }].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0),
+      gates: [...baseSimulationFixture.initialState.gates, { id: id("gate:beta"), locationA: id("location:enclosure-beta"), locationB: id("location:path"), position: "closed" as const, locked: false, jammed: false, closer: "disabled" as const, sensorReading: "closed" as const, sensorHealth: "healthy" as const, accessZones: [id("zone:keepers")] }].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0),
+      robots: baseSimulationFixture.initialState.robots.map((robot) => robot.id === id("robot:alpha") ? { ...robot, carried: robot.carried.map((entry) => entry.itemId === id("item:food") ? { ...entry, quantity: 3 } : entry) } : robot),
+      dinosaurs: [...baseSimulationFixture.initialState.dinosaurs, { id: id("dinosaur:vera"), species: "Velociraptor", locationId: id("location:enclosure-beta"), homeEnclosureId: id("location:enclosure-beta"), contained: true, hunger: 76, agitation: 24, allowedTerrain: ["enclosure" as const, "path" as const], hazardInteraction: "avoid" as const }].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0),
+    },
+  });
   const operationsFixture = createParkOperationsFoundationFixture();
-  const operations = createParkOperations(operationsFixture.state, {
+  const operationsState = {
+    ...operationsFixture.state,
+    schedules: [...operationsFixture.state.schedules, {
+      id: id("schedule:second-feed"), task: { id: "task:feed-triceratops", version: "1.0.0" }, targetId: id("dinosaur:vera"), priority: 90, dueTickOffset: 0,
+      artifactVersions: [{ id: "park:safe-feeding", version: "1.0.0" }, { id: "park:containment-policy", version: "1.0.0" }], requiredForOpening: true, enabled: true,
+    }].sort((left, right) => left.id < right.id ? -1 : left.id > right.id ? 1 : 0),
+  };
+  const operations = createParkOperations(operationsState, {
     resolver: operationsFixture.resolver,
     knownAgentIds: operationsFixture.knownAgentIds,
     ports: {
@@ -345,38 +364,64 @@ export const createPlayerExperience = (
   };
 
   const triggerNearMiss = (commandId: StableId): PlayerExperienceCommandResult => {
+    const secondJob = operations.project().jobs.find((entry) => entry.targetId === id("dinosaur:vera"));
+    if (secondJob === undefined) return rejected(commandId, "The second feeding job is unavailable; no world state changed.");
+    if (secondJob.status === "queued") {
+      const assigned = runOperation({ id: commandIdFor(++commandSequence, "assign-second-feed"), kind: "assign-job", expectedTick: operations.project().tick, jobId: secondJob.id, agentId: PARK_OPERATIONS_FOUNDATION_IDS.robot });
+      if (!assigned.accepted) return rejected(commandId, operationResultMessage(assigned));
+    }
+    const refreshedSecondJob = operations.project().jobs.find((entry) => entry.id === secondJob.id);
+    if (refreshedSecondJob?.status === "assigned") {
+      const started = runOperation({ id: commandIdFor(++commandSequence, "start-second-feed"), kind: "start-job", expectedTick: operations.project().tick, jobId: secondJob.id });
+      if (!started.accepted) return rejected(commandId, operationResultMessage(started));
+    }
+    const worldTick = simulation.snapshot().tick;
+    const reusedInstructionResults = simulation.executeBatch([
+      feedCommand(id("command:opening-reuse-open-gate"), worldTick, "operate-gate", { gateId: id("gate:beta"), operation: "open", tool: { id: "tool:gate-control", version: "1.0.0" } }),
+      feedCommand(id("command:opening-reuse-bait-path"), worldTick, "bait", { dinosaurId: id("dinosaur:vera"), destinationId: id("location:path"), itemId: id("item:food"), tool: { id: "tool:bait", version: "1.0.0" } }),
+    ]);
+    const rejectedWorldCommand = reusedInstructionResults.find((entry) => !entry.accepted);
+    if (rejectedWorldCommand !== undefined) return rejected(commandId, rejectedWorldCommand.diagnostics[0]?.message ?? "The second feeding procedure was rejected; no partial world state was kept.");
+    simulation.setPaused(false);
+    const nearMissTick = simulation.requestTicks(1);
+    simulation.setPaused(true);
+    const operationsAdvance = operations.advanceToTick(nearMissTick.resultingTick);
+    if (!operationsAdvance.accepted) return rejected(commandId, operationResultMessage(operationsAdvance));
+    const escapedEvent = nearMissTick.events.find((entry) => entry.kind === "dinosaur-escaped")?.id;
+    const failedSecondJob = runOperation({ id: commandIdFor(++commandSequence, "fail-second-feed"), kind: "fail-job", expectedTick: operations.project().tick, jobId: secondJob.id, ...(escapedEvent === undefined ? {} : { resultLink: escapedEvent }) });
+    if (!failedSecondJob.accepted) return rejected(commandId, operationResultMessage(failedSecondJob));
     const tick = operations.project().tick;
     const first = operations.ingestSignal({
-      id: id("signal:maintenance-gap"),
+      id: id("opening:near-miss"),
       tick,
       classification: "emergency",
       source: "world",
       causalKey: "maintenance-context-gap",
-      spatialKey: "gate-alpha",
-      locationId: id("location:enclosure"),
+      spatialKey: "gate-beta",
+      locationId: id("location:enclosure-beta"),
       risk: 88,
-      expected: "The feeding instruction closes Gate Alpha before Robot Alpha leaves.",
-      observed: "The automatic closer is disabled for maintenance and the gate stayed open after the Worker left.",
+      expected: "The reused feeding instruction restores Gate Beta before Robot Alpha leaves.",
+      observed: "The automatic closer is disabled for maintenance; Gate Beta stayed open and Vera crossed onto the keeper path after the Worker reused the first instruction.",
       consequence: "Containment risk was detected before visitors entered; production paused safely.",
       immediateGap: "The maintenance record was not routed into Worker Context.",
-      entityIds: [id("dinosaur:tria"), id("gate:alpha"), id("robot:alpha")],
+      entityIds: [id("dinosaur:vera"), id("gate:beta"), id("robot:alpha"), secondJob.id],
       traceIds: [id("trace:opening-feed-beta")],
     });
     if (!first.accepted) return rejected(commandId, first.diagnostics[0]?.message ?? "Near miss signal was rejected; world state remained unchanged.");
     const grouped = operations.ingestSignal({
-      id: id("signal:maintenance-gap-followup"),
+      id: id("opening:near-miss-followup"),
       tick,
       classification: "warning",
       source: "context",
       causalKey: "maintenance-context-gap",
-      spatialKey: "gate-alpha",
-      locationId: id("location:enclosure"),
+      spatialKey: "gate-beta",
+      locationId: id("location:enclosure-beta"),
       risk: 88,
       expected: "Maintenance state should be available to the Worker before the second feeding.",
       observed: "No maintenance Context route was available to the Worker.",
       consequence: "The same containment risk was grouped with the paused emergency.",
       immediateGap: "Route content:maintenance-policy before rerun.",
-      entityIds: [id("dinosaur:tria"), id("gate:alpha"), id("robot:alpha")],
+      entityIds: [id("dinosaur:vera"), id("gate:beta"), id("robot:alpha"), secondJob.id],
       traceIds: [id("trace:opening-feed-beta")],
     });
     if (!grouped.accepted) return rejected(commandId, grouped.diagnostics[0]?.message ?? "The follow-up near miss could not be grouped.");
@@ -387,7 +432,7 @@ export const createPlayerExperience = (
       if (incident !== undefined) camera = focusCamera(camera, projectPlayerScene(simulation.project(), operations.project(), { camera }).entities.find((entry) => entry.id === incident.id)?.position ?? camera.center);
     }
     status = "Recoverable near miss staged. Production auto-paused; inspect expected, observed, consequence, immediate gap, and Trace evidence.";
-    appendHistory("outcome", "emergency", "Near miss: Gate Alpha containment risk was grouped and production auto-paused before visitors entered. No casualty occurred.", [id("gate:alpha"), id("dinosaur:tria"), ...(incidentId === undefined ? [] : [incidentId])]);
+    appendHistory("outcome", "emergency", "Near miss: the reused feeding instruction opened Gate Beta, the disabled closer did not restore containment, and Vera reached the keeper path. Production auto-paused before any casualty.", [id("gate:beta"), id("dinosaur:vera"), secondJob.id, ...(incidentId === undefined ? [] : [incidentId])]);
     requestAudioSubstitute("near-miss", "Near miss staged. Production paused for investigation.");
     return accepted(commandId);
   };
@@ -413,10 +458,22 @@ export const createPlayerExperience = (
       current = operations.project().incidents.find((entry) => entry.id === target);
     }
     if (current?.status !== "active") return rejected(commandId, `Incident ${target} is already ${current?.status ?? "unavailable"}.`);
+    const dinosaur = simulation.snapshot().dinosaurs.find((entry) => entry.id === id("dinosaur:vera"));
+    if (dinosaur?.contained === false) {
+      const baitHome = simulation.execute(feedCommand(commandIdFor(++commandSequence, "recover-bait-home"), simulation.snapshot().tick, "bait", { dinosaurId: dinosaur.id, destinationId: id("location:enclosure-beta"), itemId: id("item:food"), tool: { id: "tool:bait", version: "1.0.0" } }));
+      if (!baitHome.accepted) return rejected(commandId, baitHome.diagnostics[0]?.message ?? "Tria could not be guided back to the enclosure.");
+      simulation.setPaused(false);
+      const recoveryTick = simulation.requestTicks(1);
+      simulation.setPaused(true);
+      const advanced = operations.advanceToTick(recoveryTick.resultingTick);
+      if (!advanced.accepted) return rejected(commandId, operationResultMessage(advanced));
+      const closed = simulation.execute(feedCommand(commandIdFor(++commandSequence, "recover-close-gate"), simulation.snapshot().tick, "operate-gate", { gateId: id("gate:beta"), operation: "close", tool: { id: "tool:gate-control", version: "1.0.0" } }));
+      if (!closed.accepted) return rejected(commandId, closed.diagnostics[0]?.message ?? "Gate Beta could not be closed during stabilization.");
+    }
     const result = runOperation({ id: commandId, kind: "stabilize-incident", expectedTick: operations.project().tick, incidentId: target });
     if (!result.accepted) return rejected(commandId, operationResultMessage(result));
     selectedEntityId = target;
-    status = "Near miss stabilized. Containment evidence is preserved; production remains paused until verification completes.";
+    status = "Near miss stabilized. Vera returned to Enclosure Beta and Gate Beta is physically closed; the engineering cause remains unresolved and production stays paused.";
     appendHistory("outcome", "success", status, [target]);
     return accepted(commandId, result);
   };

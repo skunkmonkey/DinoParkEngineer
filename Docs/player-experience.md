@@ -1,5 +1,11 @@
 # Player Experience first playable
 
+## Phase 6 near-miss diagnosis
+
+The opening includes Enclosure Beta, Vera, and a visibly disabled Gate Beta automatic closer before the second feeding. Reusing the first feeding instruction executes authoritative gate and bait commands, advances one logical tick, fails the exact second job, moves Vera onto the keeper path, groups the world and Context symptoms into one incident, focuses the enclosure, and pauses production. Stabilization returns Vera and physically closes Gate Beta while leaving the engineering cause unresolved.
+
+The incident Inspector exposes the preserved route from Park event through job, action, unavailable Context, Trace evidence, and responsible Prompt. Its Workbench link carries those stable IDs, and the Workbench return link retains the incident ID.
+
 The Park route now renders the first playable dawn loop through the
 `player-experience` public entry. It is a hybrid presentation:
 

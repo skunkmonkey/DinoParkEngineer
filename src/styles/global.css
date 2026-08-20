@@ -62,7 +62,7 @@ button,
 
 button {
   border: 1px solid var(--dpe-color-border);
-  border-radius: var(--dpe-radius-small);
+  border-radius: var(--dpe-radius-medium);
   background: var(--dpe-color-surface-raised);
   color: var(--dpe-color-text);
   cursor: pointer;
@@ -670,5 +670,78 @@ footer {
 
   .inspector-details div {
     grid-template-columns: 1fr;
+  }
+}
+
+.workbench-experience {
+  display: grid;
+  gap: var(--dpe-space-5);
+}
+
+.workbench-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 28rem), 1fr));
+  gap: var(--dpe-space-4);
+}
+
+.workbench-grid > .feature-card {
+  margin: 0;
+}
+
+.artifact-inspector,
+.handbook-card {
+  grid-column: span 2;
+}
+
+.prose-panel,
+.clause-panel {
+  margin-block: var(--dpe-space-4);
+  padding: var(--dpe-space-4);
+  border: 2px solid var(--dpe-color-border);
+  border-radius: var(--dpe-radius-small);
+}
+
+.clause-panel {
+  border-style: dashed;
+}
+
+.clause-panel pre {
+  overflow: auto;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.difference-list,
+.handbook-card article {
+  overflow-wrap: anywhere;
+}
+
+.route-choice {
+  display: block;
+  padding: var(--dpe-space-3);
+  border: 2px solid var(--dpe-color-border);
+  border-radius: var(--dpe-radius-small);
+}
+
+.candidate-success {
+  margin-top: var(--dpe-space-3);
+  padding: var(--dpe-space-3);
+  border-inline-start: 0.35rem solid var(--dpe-color-accent);
+}
+
+.button-link {
+  display: inline-block;
+  margin-block: var(--dpe-space-2);
+  padding: var(--dpe-space-2) var(--dpe-space-3);
+  border: 1px solid var(--dpe-color-border);
+  border-radius: var(--dpe-radius-small);
+  color: var(--dpe-color-accent-strong);
+  font-weight: 700;
+}
+
+@media (max-width: 70rem) {
+  .artifact-inspector,
+  .handbook-card {
+    grid-column: auto;
   }
 }

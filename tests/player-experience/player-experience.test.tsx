@@ -22,7 +22,7 @@ test("dawn projection has stable entities, exact asset IDs, and bounded camera c
   assert.equal(before.scene.orientation, "three-quarter");
   assert.equal(before.scene.lighting, "dawn");
   assert.equal(before.scene.semanticZoom, "mid");
-  assert.deepEqual(before.scene.entities.filter((entity) => entity.kind === "dinosaur").map((entity) => entity.id), ["dinosaur:tria"]);
+  assert.deepEqual(before.scene.entities.filter((entity) => entity.kind === "dinosaur").map((entity) => entity.id).sort(), ["dinosaur:tria", "dinosaur:vera"]);
   assert.ok(before.scene.entities.some((entity) => entity.id === "robot:alpha"));
   assert.ok(before.scene.entities.some((entity) => entity.id === "gate:alpha"));
   assert.ok(before.scene.entities.some((entity) => entity.id === "visitor:morning"));
@@ -88,6 +88,7 @@ test("feeding evidence reflects the exact world delta after logical time advance
 
 test("correlated near miss is grouped, auto-pauses, and recoverably closes", () => {
   const service = createPlayerExperience();
+  assert.equal(service.project().world.gates.find((entry) => entry.id === "gate:beta")?.closer, "disabled");
   const staged = service.dispatch({ kind: "trigger-near-miss" });
   assert.equal(staged.accepted, true);
   assert.equal(staged.snapshot.operations.paused, true);
@@ -95,8 +96,16 @@ test("correlated near miss is grouped, auto-pauses, and recoverably closes", () 
   assert.equal(staged.snapshot.operations.incidents.length, 1);
   assert.equal(staged.snapshot.operations.incidents[0]?.observed.length, 2);
   assert.equal(staged.snapshot.operations.alerts.length, 2);
+  assert.equal(staged.snapshot.world.gates.find((entry) => entry.id === "gate:beta")?.position, "open");
+  assert.equal(staged.snapshot.world.dinosaurs.find((entry) => entry.id === "dinosaur:vera")?.contained, false);
+  assert.equal(staged.snapshot.operations.jobs.find((entry) => entry.targetId === "dinosaur:vera")?.status, "failed");
   assert.ok(staged.snapshot.scene.entities.some((entity) => entity.kind === "alert"));
   assert.ok(staged.snapshot.scene.entities.some((entity) => entity.kind === "incident" && entity.evidence?.immediateGap.some((gap) => gap.includes("maintenance"))));
+  const stabilized = service.dispatch({ kind: "stabilize-incident" });
+  assert.equal(stabilized.accepted, true);
+  assert.equal(stabilized.snapshot.world.gates.find((entry) => entry.id === "gate:beta")?.position, "closed");
+  assert.equal(stabilized.snapshot.world.dinosaurs.find((entry) => entry.id === "dinosaur:vera")?.contained, true);
+  assert.equal(stabilized.snapshot.operations.incidents[0]?.status, "stabilized");
   const closed = service.dispatch({ kind: "resolve-incident" });
   assert.equal(closed.accepted, true);
   assert.equal(closed.snapshot.operations.incidents[0]?.status, "closed");
@@ -111,6 +120,18 @@ test("the authored near-miss control stays unavailable after its evidence is clo
   service.dispatch({ kind: "resolve-incident" });
   const html = renderToStaticMarkup(<PlayerExperience runtime={service} />);
   assert.match(html, /<button type="button" disabled="">Stage recoverable near miss<\/button>/u);
+});
+
+test("near-miss inspection exposes the complete causal route into Workbench", () => {
+  const service = createPlayerExperience();
+  service.dispatch({ kind: "trigger-near-miss" });
+  const html = renderToStaticMarkup(<PlayerExperience runtime={service} />);
+  assert.match(html, /Causal investigation path/u);
+  assert.match(html, /job:schedule-second-feed-day-1-tick-0/u);
+  assert.match(html, /command:opening-reuse-open-gate/u);
+  assert.match(html, /context:maintenance-policy/u);
+  assert.match(html, /prompt:self-contained-feeding@1.0.0/u);
+  assert.match(html, /Open responsible artifact in Workbench/u);
 });
 
 test("focused modes start with production and simulation paused", () => {

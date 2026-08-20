@@ -280,8 +280,8 @@ function createRegistrations(
       requirement: "optional",
       route: { id: "player-workbench", path: "/workbench", mode: "workbench", title: "Park Workbench" },
       load: async (): Promise<LoadedFeature> => {
-        const module = await import("./player-experience/public.js");
-        return { render: module.WorkbenchPlayerExperience };
+        const module = await import("./engineering-workbench/public.js");
+        return { render: module.EngineeringWorkbench };
       },
       failure: {
         diagnosticCode: "PLAYER_WORKBENCH_FAILED",
@@ -295,13 +295,28 @@ function createRegistrations(
       requirement: "optional",
       route: { id: "player-eval", path: "/eval", mode: "eval", title: "Eval and Incident Review" },
       load: async (): Promise<LoadedFeature> => {
-        const module = await import("./player-experience/public.js");
-        return { render: module.EvalPlayerExperience };
+        const module = await import("./eval-runner/public.js");
+        return { render: module.EvalRunnerView };
       },
       failure: {
         diagnosticCode: "PLAYER_EVAL_FAILED",
         title: "Eval mode unavailable",
         message: "Production state remains safe and paused in other focused modes.",
+      },
+    },
+    {
+      id: "player-persistence",
+      order: 7,
+      requirement: "optional",
+      route: { id: "player-persistence", path: "/persistence", mode: "persistence", title: "Save and Restore" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./persistence/public.js");
+        return { render: module.PersistenceFoundationView };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_PERSISTENCE_FAILED",
+        title: "Save and Restore unavailable",
+        message: "The current park remains unchanged while persistence recovers.",
       },
     },
     {
@@ -638,6 +653,7 @@ function RunningShell(): React.JSX.Element {
         <button type="button" onClick={() => navigate("/eval")}>Eval / Incident</button>
         <button type="button" onClick={() => navigate("/replay")}>Historical Replay</button>
         <button type="button" onClick={() => navigate("/review")}>Review / Deploy</button>
+        <button type="button" onClick={() => navigate("/persistence")}>Save / Restore</button>
         <button type="button" onClick={() => navigate("/shell-lab")}>Shell diagnostics</button>
         <button type="button" onClick={() => navigate("/foundation-lab")}>Foundation lab</button>
       </nav>

@@ -74,7 +74,14 @@ const selectedEntity = (snapshot: PlayerExperienceSnapshot) =>
   snapshot.scene.entities.find((entity) => entity.id === snapshot.selectedEntityId) ?? snapshot.scene.entities[0];
 
 export function PlayerExperience({ mode = "production", runtime }: PlayerExperienceProps): React.JSX.Element {
-  const service = useMemo(() => runtime ?? createPlayerExperience({ mode }), [mode, runtime]);
+  const service = useMemo(() => {
+    if (runtime !== undefined) return runtime;
+    const created = createPlayerExperience({ mode });
+    if (mode === "production" && typeof window !== "undefined" && new URLSearchParams(window.location.search).has("incident")) {
+      created.dispatch({ kind: "trigger-near-miss" });
+    }
+    return created;
+  }, [mode, runtime]);
   const [snapshot, setSnapshot] = useState<PlayerExperienceSnapshot>(() => service.project());
   const [preferences, setPreferences] = useState<PlayerPreferences>(DEFAULT_PLAYER_PREFERENCES);
   const [rendererStatus, setRendererStatus] = useState<SceneRendererStatus>();
@@ -196,6 +203,11 @@ export function PlayerExperience({ mode = "production", runtime }: PlayerExperie
       ? snapshot.operations.jobs.find((entry) => entry.id === selected.id)
       : snapshot.operations.jobs.find((entry) => entry.targetId === selected.id);
     if ((selected.kind !== "dinosaur" && selected.kind !== "job") || job === undefined) return null;
+    if (job.targetId === "dinosaur:vera") {
+      return snapshot.operations.incidents.length > 0
+        ? <p className="inspector-success">Second feeding near miss is retained as grouped evidence.</p>
+        : <button type="button" onClick={() => dispatch({ kind: "trigger-near-miss" })}>Reuse first instruction for Vera</button>;
+    }
     if (job.status === "queued") {
       return (
         <>
@@ -226,6 +238,8 @@ export function PlayerExperience({ mode = "production", runtime }: PlayerExperie
     : selected.kind === "job"
       ? snapshot.operations.jobs.find((entry) => entry.id === selected.id)
       : snapshot.operations.jobs.find((entry) => entry.targetId === selected.id);
+  const selectedIncident = selected?.kind === "incident" ? snapshot.operations.incidents.find((entry) => entry.id === selected.id) : undefined;
+  const causalJobId = selectedIncident?.entityIds.find((entry) => entry.startsWith("job:")) ?? "job:schedule-second-feed-day-1-tick-0";
 
   return (
     <section className={`player-experience player-mode-${mode}`} data-mode={mode} aria-labelledby="player-experience-heading">
@@ -334,7 +348,7 @@ export function PlayerExperience({ mode = "production", runtime }: PlayerExperie
                 {selectedJob === undefined ? null : (
                   <section className="inspector-section" aria-labelledby="job-heading">
                     <h4 id="job-heading">Jobs</h4>
-                    <p><strong>Feed Tria</strong> · {selectedJob.status} · Required before opening</p>
+                    <p><strong>{selectedJob.targetId === "dinosaur:vera" ? "Feed Vera" : "Feed Tria"}</strong> · {selectedJob.status} · Required before opening</p>
                     <p>Job <code>{selectedJob.id}</code> · target <code>{selectedJob.targetId}</code></p>
                     <details>
                       <summary>Inspect pinned production versions</summary>
@@ -370,6 +384,17 @@ export function PlayerExperience({ mode = "production", runtime }: PlayerExperie
                       <div><dt>Immediate gap</dt><dd>{selected.evidence.immediateGap.join("; ")}</dd></div>
                       <div><dt>Trace links</dt><dd>{selected.evidence.traceIds.map((traceId) => <code key={traceId}>{traceId} </code>)}</dd></div>
                     </dl>
+                    <nav aria-label="Causal investigation path">
+                      <ol>
+                        <li>Park event <code>{selected.id}</code></li>
+                        <li>Job <code>{causalJobId}</code></li>
+                        <li>Agent action <code>command:opening-reuse-open-gate</code></li>
+                        <li>Context boundary <code>context:maintenance-policy</code> unavailable</li>
+                        <li>Evidence <code>{selected.evidence.traceIds[0] ?? "trace:opening-feed-beta"}</code></li>
+                        <li>Responsible artifact <code>prompt:self-contained-feeding@1.0.0</code></li>
+                      </ol>
+                      <a className="button-link" href={`/workbench?incident=${encodeURIComponent(selected.id)}&job=${encodeURIComponent(causalJobId)}&action=command%3Aopening-reuse-open-gate&trace=${encodeURIComponent(selected.evidence.traceIds[0] ?? "trace:opening-feed-beta")}&artifact=prompt%3Aself-contained-feeding%401.0.0`}>Open responsible artifact in Workbench</a>
+                    </nav>
                     <div className="button-row">{actionForSelected()}</div>
                   </section>
                 ) : null}
