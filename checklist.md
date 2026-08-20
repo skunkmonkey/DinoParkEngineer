@@ -597,68 +597,78 @@ Owning documents: `Specs/trace-replay_PRD.md` and
 Owning documents: `Specs/park-operations_PRD.md` and
 `Specs/park-operations_PLAN.md`.
 
-- [ ] Implement pre-opening, open operation, closing, and engineering/expansion
+- [x] Implement pre-opening, open operation, closing, and engineering/expansion
   phase state machine.
-- [ ] Define stable jobs with Task, target, priority, schedule, exact deployed
+- [x] Define stable jobs with Task, target, priority, schedule, exact deployed
   versions, assignment, due ticks, status, and result links.
-- [ ] Implement job create, assign, start, pause, resume, cancel, complete, fail,
+- [x] Implement job create, assign, start, pause, resume, cancel, complete, fail,
   stop, and escalate commands.
-- [ ] Resolve and pin exact production versions before first Agent decision.
-- [ ] Implement deterministic schedules with idempotent occurrence IDs.
-- [ ] Implement stable job-queue priority.
-- [ ] Implement allowed time, opening, closing, assignment, and incident commands.
-- [ ] Implement readiness conditions and intentional park opening.
-- [ ] Implement visitor entry and departure phase permissions.
-- [ ] Classify ambient conditions, operational warnings, and emergencies.
-- [ ] Keep ambient state out of the notification queue.
-- [ ] Implement prioritized non-disruptive warning queue.
-- [ ] Implement emergency interrupt, location, immediate risk, and pause request.
-- [ ] Implement explicit causal/spatial/time incident grouping.
-- [ ] Implement incident detected, active, stabilized, engineering-unresolved,
+- [x] Resolve and pin exact production versions before first Agent decision.
+- [x] Implement deterministic schedules with idempotent occurrence IDs.
+- [x] Implement stable job-queue priority.
+  - Chrome computer-use verification on 2026-08-19 confirmed Enter-key rejected
+    assignment recovery, Shift+Tab focus movement to Robot Alpha, Enter-key
+    successful assignment, exact pinned Task/Skill/Policy versions, persistent
+    failure/success history, 150% text without horizontal overflow, high contrast,
+    reduced motion, and no browser warnings or errors. Eight focused tests and
+    all 103 repository tests passed.
+- [x] Implement allowed time, opening, closing, assignment, and incident commands.
+- [x] Implement readiness conditions and intentional park opening.
+- [x] Implement visitor entry and departure phase permissions.
+- [x] Classify ambient conditions, operational warnings, and emergencies.
+- [x] Keep ambient state out of the notification queue.
+- [x] Implement prioritized non-disruptive warning queue.
+- [x] Implement emergency interrupt, location, immediate risk, and pause request.
+- [x] Implement explicit causal/spatial/time incident grouping.
+- [x] Implement incident detected, active, stabilized, engineering-unresolved,
   resolved, and closed states.
-- [ ] Expose expected, observed, consequence, immediate gap, entities, and trace
+- [x] Expose expected, observed, consequence, immediate gap, entities, and trace
   links.
-- [ ] Implement park-level fault monitoring independent of Agent context.
-- [ ] Detect Strict context stops externally.
-- [ ] Implement closing and exact operational day summary.
-- [ ] Add job, schedule, phase, alert, grouping, monitor, and stable-repeat tests.
+- [x] Implement park-level fault monitoring independent of Agent context.
+- [x] Detect Strict context stops externally.
+- [x] Implement closing and exact operational day summary.
+- [x] Add job, schedule, phase, alert, grouping, monitor, and stable-repeat tests.
 
 #### D2 - Runtime rendering asset compilation
 
-- [ ] Import OpenAI-generated candidate assets with complete provenance.
-- [ ] Review robot, dinosaur, gate, environment, visitor, cue, effect, thumbnail,
+- [x] Import OpenAI-generated candidate assets with complete provenance.
+- [x] Review robot, dinosaur, gate, environment, visitor, cue, effect, thumbnail,
   and expressive-reward candidates against approved briefs.
-- [ ] Reject or revise inconsistent view, silhouette, lighting, transparent edge,
+- [x] Reject or revise inconsistent view, silhouette, lighting, transparent edge,
   pivot, scale, embedded text, or accessibility behavior.
-- [ ] Approve exact source hashes explicitly.
-- [ ] Implement deterministic crop, trim, padding, scale, format conversion, and
+- [x] Approve exact source hashes explicitly.
+- [x] Implement deterministic crop, trim, padding, scale, format conversion, and
   atlas packing.
-- [ ] Emit exact asset/version, atlas rectangle, source size, trim, pivot, hit
+- [x] Emit exact asset/version, atlas rectangle, source size, trim, pivot, hit
   region, depth/occlusion hint, animation frames/timing, and semantic tags.
-- [ ] Implement explicit development placeholders.
-- [ ] Reject placeholders for required production assets.
-- [ ] Validate atlas overlap, missing frames, stale output, duplicate IDs, case
+- [x] Implement explicit development placeholders.
+- [x] Reject placeholders for required production assets.
+- [x] Validate atlas overlap, missing frames, stale output, duplicate IDs, case
   collisions, unsupported formats, and orphaned assets.
-- [ ] Build a small deterministic PixiJS fixture bundle.
-- [ ] Compile the same fixture on Windows and macOS and compare canonical output.
-- [ ] Keep all generation tooling and secrets out of browser bundles.
+- [x] Build a small deterministic PixiJS fixture bundle.
+- [x] Compile the same fixture on Windows and macOS and compare canonical output.
+- [x] Keep all generation tooling and secrets out of browser bundles.
+  - Chrome verification on 2026-08-19 displayed the approved 1254×1254 RGBA
+    source and exact hash-bound review decisions with no warnings or errors.
+    Sixteen focused asset tests, canonical darwin/win32 logical comparison, and
+    production asset validation passed.
 
 #### D3 - Opening curriculum package foundation
 
 Owning documents: `Specs/curriculum-content_PRD.md` and
 `Specs/curriculum-content_PLAN.md`.
 
-- [ ] Define curriculum package, arc, scenario, unlock, guidance, transfer,
+- [x] Define curriculum package, arc, scenario, unlock, guidance, transfer,
   Handbook, copy-ID, asset-bundle, and playtest-tag schemas.
-- [ ] Author exact dawn park scenario and approved asset dependencies.
-- [ ] Author the partially configured first feeding job and successful behavior.
-- [ ] Author the second enclosure with visibly disabled automatic closer.
-- [ ] Omit maintenance state from the Worker's routed context.
-- [ ] Author the deterministic recoverable near miss without onboarding fatality.
-- [ ] Author concise incident explanation and causal links.
-- [ ] Author minimum Workbench choices, free eval, review/deploy path, opening
+- [x] Author exact dawn park scenario and approved asset dependencies.
+- [x] Author the partially configured first feeding job and successful behavior.
+- [x] Author the second enclosure with visibly disabled automatic closer.
+- [x] Omit maintenance state from the Worker's routed context.
+- [x] Author the deterministic recoverable near miss without onboarding fatality.
+- [x] Author concise incident explanation and causal links.
+- [x] Author minimum Workbench choices, free eval, review/deploy path, opening
   reward, and Handbook entry placeholders.
-- [ ] Validate cross-domain exact references, unlock reachability, asset readiness,
+- [x] Validate cross-domain exact references, unlock reachability, asset readiness,
   accessible cues, and deterministic golden outcomes.
 
 ### Player Experience: first playable
@@ -666,44 +676,64 @@ Owning documents: `Specs/curriculum-content_PRD.md` and
 Owning documents: `Specs/player-experience_PRD.md` and
 `Specs/player-experience_PLAN.md`.
 
-- [ ] Register Park View and focused-mode routes through the Shell.
-- [ ] Initialize PixiJS 8 with production WebGL preference.
-- [ ] Create a projection-only Park Scene adapter.
-- [ ] Create the stable three-quarter park projection.
-- [ ] Implement pan, zoom, focus-on-event, bounds, and intelligent occlusion.
-- [ ] Implement responsive React DOM application chrome.
-- [ ] Implement production/pause/eval/replay mode framing without color-only
+- [x] Register Park View and focused-mode routes through the Shell.
+- [x] Initialize PixiJS 8 with production WebGL preference.
+- [x] Create a projection-only Park Scene adapter.
+- [x] Create the stable three-quarter park projection.
+- [x] Implement pan, zoom, focus-on-event, bounds, and intelligent occlusion.
+- [x] Implement responsive React DOM application chrome.
+- [x] Implement production/pause/eval/replay mode framing without color-only
   distinction.
-- [ ] Implement synchronized semantic DOM entity navigator for canvas content.
-- [ ] Implement pointer and keyboard selection using the same stable entity ID.
-- [ ] Implement selection outline, local motion suppression, immediate state,
+- [x] Implement synchronized semantic DOM entity navigator for canvas content.
+- [x] Implement pointer and keyboard selection using the same stable entity ID.
+- [x] Implement selection outline, local motion suppression, immediate state,
   intent, and route.
-- [ ] Implement contextual inspectors for dinosaur, robot, gate, visitor group,
+- [x] Implement contextual inspectors for dinosaur, robot, gate, visitor group,
   job, alert, and incident.
-- [ ] Implement time controls and accessible current-time reference.
-- [ ] Implement needs, intent, risk, provenance, outcome, degraded, warning, and
+- [x] Implement time controls and accessible current-time reference.
+- [x] Implement needs, intent, risk, provenance, outcome, degraded, warning, and
   emergency visual grammar.
-- [ ] Implement persistent event/announcement history.
-- [ ] Implement reduced motion, screen shake, flashing, contrast, text scaling,
+- [x] Implement persistent event/announcement history.
+- [x] Implement reduced motion, screen shake, flashing, contrast, text scaling,
   and sound-substitution preferences.
-- [ ] Implement Web Audio adapter, mute/volume, autoplay-safe start, and semantic
+- [x] Implement Web Audio adapter, mute/volume, autoplay-safe start, and semantic
   substitutes.
-- [ ] Render dawn, approaching visitors, hungry dinosaur, available robot, gate,
+- [x] Render dawn, approaching visitors, hungry dinosaur, available robot, gate,
   and one immediate meaningful action.
-- [ ] Assign and watch the first successful feeding through the Inspector.
-- [ ] Verify canvas animations never advance authoritative state.
+- [x] Assign and watch the first successful feeding through the Inspector.
+- [x] Verify canvas animations never advance authoritative state.
 
 ### First Playable Integration Gate
 
-- [ ] Start the game locally with no account, backend, secret, model call, or
+- [x] Start the game locally with no account, backend, secret, model call, or
   network dependency after assets are cached.
-- [ ] Show a meaningful dawn park state before substantial mandatory text.
-- [ ] Assign and complete the first deterministic feeding job.
-- [ ] Inspect exact job versions, context, clause, tool evidence, and world delta.
-- [ ] Pause and change speed without changing the result.
-- [ ] Save a golden screenshot/contact sheet for visual regression.
-- [ ] Complete pointer, keyboard, enlarged-text, high-contrast, reduced-motion,
+- [x] Show a meaningful dawn park state before substantial mandatory text.
+- [x] Assign and complete the first deterministic feeding job.
+- [x] Inspect exact job versions, context, clause, tool evidence, and world delta.
+- [x] Pause and change speed without changing the result.
+- [x] Save a golden screenshot/contact sheet for visual regression.
+- [x] Complete pointer, keyboard, enlarged-text, high-contrast, reduced-motion,
   and sound-substitution paths through browser computer use.
+  - Connected Chrome verification on 2026-08-19 covered approved Pixi/WebGL art,
+    pointer and Arrow/Space keyboard selection using the same stable IDs, exact
+    feeding evidence, 4×/pause result equivalence, grouped near-miss pause and
+    recovery, every focused-mode deep link, 150% text, high contrast, reduced
+    motion, audio mute/volume/autoplay fallback, and persistent semantic history.
+    No runtime warnings or errors remained. The golden is
+    `tests/fixtures/player-experience/first-playable-golden.jpg`.
+  - A second connected-Chrome customer audit on 2026-08-19 retested dawn,
+    rejected and successful assignment, exact evidence at 1× and after a 4×
+    logical tick, alert priority and acknowledgement, near-miss recovery, every
+    focused route, pointer/keyboard parity, Web Audio fallback, 150% text, high
+    contrast, reduced motion, sound substitution, and 390-pixel reflow. It fixed
+    dynamic feeding-delta evidence, the completed one-shot near-miss affordance,
+    and narrow-grid overflow. Browser logs were clean and `npm run validate`
+    passed 128 tests plus the production build.
+  - Follow-up connected-Chrome verification fixed a Strict Mode audio lifecycle
+    bug that left optional audio permanently locked and ordered the first cue
+    after asynchronous browser unlock. Both the explicit enable action and the
+    first assignment action now report `Audio unlocked after user action` with
+    clean browser logs.
 
 ---
 

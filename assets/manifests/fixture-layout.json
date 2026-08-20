@@ -1,0 +1,235 @@
+{
+  "schemaVersion": "1",
+  "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+  "sourceHash": "fnv1a64:024ee040e7625fa7",
+  "bundleId": "assets:bundle-mvp-park",
+  "bundleVersion": "1.0.0",
+  "assets": [
+    {
+      "assetId": "assets:robot-park-worker",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-park-robot",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-robot-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 0,
+        "row": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "semanticTags": [
+        "available",
+        "idle"
+      ],
+      "accessibilityLabel": "Park Worker Robot",
+      "occlusionClass": "entity"
+    },
+    {
+      "assetId": "assets:dinosaur-herbivore",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-dinosaur",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-dinosaur-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 1,
+        "row": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "semanticTags": [
+        "dinosaur",
+        "herbivore"
+      ],
+      "accessibilityLabel": "Herbivore Dinosaur",
+      "occlusionClass": "entity"
+    },
+    {
+      "assetId": "assets:gate-enclosure",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-gate",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-gate-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 2,
+        "row": 0
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "semanticTags": [
+        "equipment",
+        "gate"
+      ],
+      "accessibilityLabel": "Automated Enclosure Gate",
+      "occlusionClass": "structure"
+    },
+    {
+      "assetId": "assets:environment-grass-path",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-environment",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-environment-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 0,
+        "row": 1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "semanticTags": [
+        "environment",
+        "ground"
+      ],
+      "accessibilityLabel": "Grass and Path Tile",
+      "occlusionClass": "ground"
+    },
+    {
+      "assetId": "assets:visitor-park",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-visitor",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-visitor-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 1,
+        "row": 1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.94
+      },
+      "semanticTags": [
+        "person",
+        "visitor"
+      ],
+      "accessibilityLabel": "Park Visitor",
+      "occlusionClass": "entity"
+    },
+    {
+      "assetId": "assets:cue-operational-warning",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-cue",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-cue-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 2,
+        "row": 1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "semanticTags": [
+        "cue",
+        "warning"
+      ],
+      "accessibilityLabel": "Operational Warning Cue",
+      "occlusionClass": "overlay"
+    },
+    {
+      "assetId": "assets:effect-dust-puff",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-effect",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-effect-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 0,
+        "row": 2
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.75
+      },
+      "semanticTags": [
+        "decorative",
+        "effect"
+      ],
+      "accessibilityLabel": "Dust Puff Effect",
+      "occlusionClass": "overlay",
+      "animationId": "puff"
+    },
+    {
+      "assetId": "assets:thumbnail-park-overview",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-thumbnail",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-thumbnail-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 1,
+        "row": 2
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "semanticTags": [
+        "overview",
+        "thumbnail"
+      ],
+      "accessibilityLabel": "Park Overview Thumbnail",
+      "occlusionClass": "ground"
+    },
+    {
+      "assetId": "assets:reward-dinosaur-plushie",
+      "assetVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "briefId": "assets:brief-mvp-reward",
+      "briefVersion": "1.0.0",
+      "approvalReviewId": "asset-review:mvp-reward-r3-approved",
+      "approvalReviewVersion": "1.0.0",
+      "cell": {
+        "column": 2,
+        "row": 2
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "semanticTags": [
+        "expressive-reward",
+        "plushie"
+      ],
+      "accessibilityLabel": "Dinosaur Plushie Reward",
+      "occlusionClass": "entity"
+    }
+  ]
+}

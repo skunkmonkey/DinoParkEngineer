@@ -1,0 +1,748 @@
+[
+  {
+    "id": "assets:brief-mvp-dinosaur",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Herbivore Dinosaur",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "dinosaur",
+      "mvp",
+      "rendering"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-dinosaur",
+      "runtimeAssetId": "assets:dinosaur-herbivore",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A small herbivore dinosaur whose visible pose never replaces its DOM need status.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 418,
+        "y": 0,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:dinosaur-herbivore-base",
+          "semanticTags": [
+            "dinosaur",
+            "herbivore"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Herbivore Dinosaur",
+        "textDescription": "A small herbivore dinosaur whose visible pose never replaces its DOM need status.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The herbivore dinosaur has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-gate",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Automated Enclosure Gate",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "gate",
+      "mvp",
+      "rendering"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-gate",
+      "runtimeAssetId": "assets:gate-enclosure",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A sturdy automated enclosure gate with state reported separately in text.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 836,
+        "y": 0,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:gate-enclosure-base",
+          "semanticTags": [
+            "equipment",
+            "gate"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Automated Enclosure Gate",
+        "textDescription": "A sturdy automated enclosure gate with state reported separately in text.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The automated enclosure gate has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-environment",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Grass and Path Tile",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "environment",
+      "mvp",
+      "rendering"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-environment",
+      "runtimeAssetId": "assets:environment-grass-path",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A natural park ground tile containing grass, a path, and a fern.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 0,
+        "y": 418,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:environment-grass-path-base",
+          "semanticTags": [
+            "environment",
+            "ground"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Grass and Path Tile",
+        "textDescription": "A natural park ground tile containing grass, a path, and a fern.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The grass and path tile has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-visitor",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Park Visitor",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "mvp",
+      "rendering",
+      "visitor"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-visitor",
+      "runtimeAssetId": "assets:visitor-park",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A park visitor whose safety and movement state is available in the semantic interface.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 418,
+        "y": 418,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.94,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:visitor-park-base",
+          "semanticTags": [
+            "person",
+            "visitor"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Park Visitor",
+        "textDescription": "A park visitor whose safety and movement state is available in the semantic interface.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The park visitor has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-cue",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Operational Warning Cue",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "cue",
+      "mvp",
+      "rendering"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-cue",
+      "runtimeAssetId": "assets:cue-operational-warning",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "An operational warning cue paired with a persistent text warning and shape cue.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 836,
+        "y": 418,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:cue-operational-warning-base",
+          "semanticTags": [
+            "cue",
+            "warning"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Operational Warning Cue",
+        "textDescription": "An operational warning cue paired with a persistent text warning and shape cue.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The operational warning cue has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-effect",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Dust Puff Effect",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "effect",
+      "mvp",
+      "rendering"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-effect",
+      "runtimeAssetId": "assets:effect-dust-puff",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A decorative dust puff with no authoritative or essential meaning.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 0,
+        "y": 836,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.75,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "frames",
+        "requiredSequences": [
+          "puff"
+        ],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:effect-dust-puff-base",
+          "semanticTags": [
+            "decorative",
+            "effect"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Dust Puff Effect",
+        "textDescription": "A decorative dust puff with no authoritative or essential meaning.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The dust puff effect has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-thumbnail",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Park Overview Thumbnail",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "mvp",
+      "rendering",
+      "thumbnail"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-thumbnail",
+      "runtimeAssetId": "assets:thumbnail-park-overview",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A miniature overview of the fenced park, supplemented by a text location description.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 128,
+        "heightPx": 128,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 418,
+        "y": 836,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:thumbnail-park-overview-base",
+          "semanticTags": [
+            "overview",
+            "thumbnail"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Park Overview Thumbnail",
+        "textDescription": "A miniature overview of the fenced park, supplemented by a text location description.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The park overview thumbnail has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  },
+  {
+    "id": "assets:brief-mvp-reward",
+    "version": "1.0.0",
+    "class": "AssetBrief",
+    "schemaVersion": "1",
+    "displayName": "MVP Dinosaur Plushie Reward",
+    "author": "Dino Park Engineer",
+    "provenance": {
+      "source": "built-in",
+      "path": "assets/briefs/mvp-families.json",
+      "author": "Dino Park Engineer"
+    },
+    "contextCost": 0,
+    "dependencies": [
+      {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0",
+        "expectedClass": "AssetArtDirection",
+        "expectedSchemaVersion": "1"
+      }
+    ],
+    "tags": [
+      "mvp",
+      "rendering",
+      "reward"
+    ],
+    "availability": "available",
+    "data": {
+      "assetFamilyId": "assets:family-reward",
+      "runtimeAssetId": "assets:reward-dinosaur-plushie",
+      "bundleId": "assets:bundle-mvp-park",
+      "owningFeature": "Player Experience",
+      "semanticRole": "A cheerful dinosaur plushie expressive reward with a persistent text description.",
+      "requiredViews": [
+        "south-east-three-quarter"
+      ],
+      "targetDisplayScale": {
+        "widthPx": 80,
+        "heightPx": 80,
+        "semanticZooms": [
+          "far",
+          "near"
+        ]
+      },
+      "sourceCanvas": {
+        "widthPx": 1254,
+        "heightPx": 1254,
+        "background": "transparent"
+      },
+      "safeBounds": {
+        "x": 836,
+        "y": 836,
+        "width": 418,
+        "height": 418
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92,
+        "rule": "Pivot is normalized to the stable ground-contact point and remains unchanged across semantic variants."
+      },
+      "animation": {
+        "mode": "none",
+        "requiredSequences": [],
+        "reducedMotionEquivalent": "A static base frame plus persistent DOM text preserves all semantic information."
+      },
+      "variants": [
+        {
+          "id": "assets:reward-dinosaur-plushie-base",
+          "semanticTags": [
+            "expressive-reward",
+            "plushie"
+          ]
+        }
+      ],
+      "accessibilityEquivalent": {
+        "domLabel": "Dinosaur Plushie Reward",
+        "textDescription": "A cheerful dinosaur plushie expressive reward with a persistent text description.",
+        "soundSubstitution": "Persistent DOM status and history carry all essential meaning.",
+        "shapeCue": "The dinosaur plushie reward has a stable silhouette distinct from color alone."
+      },
+      "artDirection": {
+        "id": "assets:three-quarter-art-direction",
+        "version": "1.0.0"
+      },
+      "acceptanceChecklist": [
+        "Matches the shared south-east three-quarter orientation and lighting.",
+        "Contains no embedded words, letters, numbers, labels, logos, or watermarks.",
+        "Keeps a complete readable silhouette inside its declared cell and stable pivot.",
+        "Uses transparent RGBA source pixels with clean edges.",
+        "Provides a persistent non-image semantic equivalent for every essential meaning."
+      ]
+    }
+  }
+]

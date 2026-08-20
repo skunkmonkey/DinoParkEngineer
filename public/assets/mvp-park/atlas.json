@@ -1,0 +1,870 @@
+{
+  "assets": [
+    {
+      "accessibilityLabel": "Operational Warning Cue",
+      "animations": [],
+      "assetId": "assets:cue-operational-warning",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 836,
+        "y": 418
+      },
+      "depthHint": {
+        "baselineY": 0.9,
+        "occlusionClass": "overlay"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "cue",
+        "warning"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-cue-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-cue",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 836,
+            "y": 418
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 836,
+            "y": 418
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 836,
+        "y": 418
+      }
+    },
+    {
+      "accessibilityLabel": "Herbivore Dinosaur",
+      "animations": [],
+      "assetId": "assets:dinosaur-herbivore",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 418,
+        "y": 0
+      },
+      "depthHint": {
+        "baselineY": 0.9,
+        "occlusionClass": "entity"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "dinosaur",
+        "herbivore"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-dinosaur-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-dinosaur",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 418,
+            "y": 0
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 418,
+            "y": 0
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 418,
+        "y": 0
+      }
+    },
+    {
+      "accessibilityLabel": "Dust Puff Effect",
+      "animations": [
+        {
+          "frameDurationMs": 160,
+          "frames": [
+            "assets:effect-dust-puff:base"
+          ],
+          "id": "puff",
+          "loop": true,
+          "reducedMotionFrame": "assets:effect-dust-puff:base"
+        }
+      ],
+      "assetId": "assets:effect-dust-puff",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 0,
+        "y": 836
+      },
+      "depthHint": {
+        "baselineY": 0.75,
+        "occlusionClass": "overlay"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.75
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "decorative",
+        "effect"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-effect-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-effect",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 0,
+            "y": 836
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 0,
+            "y": 836
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 0,
+        "y": 836
+      }
+    },
+    {
+      "accessibilityLabel": "Grass and Path Tile",
+      "animations": [],
+      "assetId": "assets:environment-grass-path",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 0,
+        "y": 418
+      },
+      "depthHint": {
+        "baselineY": 0.9,
+        "occlusionClass": "ground"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.9
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "environment",
+        "ground"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-environment-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-environment",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 0,
+            "y": 418
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 0,
+            "y": 418
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 0,
+        "y": 418
+      }
+    },
+    {
+      "accessibilityLabel": "Automated Enclosure Gate",
+      "animations": [],
+      "assetId": "assets:gate-enclosure",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 836,
+        "y": 0
+      },
+      "depthHint": {
+        "baselineY": 0.92,
+        "occlusionClass": "structure"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "equipment",
+        "gate"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-gate-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-gate",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 836,
+            "y": 0
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 836,
+            "y": 0
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 836,
+        "y": 0
+      }
+    },
+    {
+      "accessibilityLabel": "Dinosaur Plushie Reward",
+      "animations": [],
+      "assetId": "assets:reward-dinosaur-plushie",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 836,
+        "y": 836
+      },
+      "depthHint": {
+        "baselineY": 0.92,
+        "occlusionClass": "entity"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "expressive-reward",
+        "plushie"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-reward-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-reward",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 836,
+            "y": 836
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 836,
+            "y": 836
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 836,
+        "y": 836
+      }
+    },
+    {
+      "accessibilityLabel": "Park Worker Robot",
+      "animations": [],
+      "assetId": "assets:robot-park-worker",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 0,
+        "y": 0
+      },
+      "depthHint": {
+        "baselineY": 0.92,
+        "occlusionClass": "entity"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "available",
+        "idle"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-robot-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-park-robot",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 0,
+            "y": 0
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "accessibilityLabel": "Park Overview Thumbnail",
+      "animations": [],
+      "assetId": "assets:thumbnail-park-overview",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 418,
+        "y": 836
+      },
+      "depthHint": {
+        "baselineY": 0.92,
+        "occlusionClass": "ground"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.92
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "overview",
+        "thumbnail"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-thumbnail-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-thumbnail",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 418,
+            "y": 836
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 418,
+            "y": 836
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 418,
+        "y": 836
+      }
+    },
+    {
+      "accessibilityLabel": "Park Visitor",
+      "animations": [],
+      "assetId": "assets:visitor-park",
+      "assetVersion": "1.0.0",
+      "atlasRectangle": {
+        "height": 418,
+        "width": 418,
+        "x": 418,
+        "y": 418
+      },
+      "depthHint": {
+        "baselineY": 0.94,
+        "occlusionClass": "entity"
+      },
+      "hitRegion": {
+        "height": 0.85,
+        "type": "rectangle",
+        "width": 0.8,
+        "x": 0.1,
+        "y": 0.1
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.94
+      },
+      "placeholder": false,
+      "semanticTags": [
+        "person",
+        "visitor"
+      ],
+      "source": {
+        "approvalReviewId": "asset-review:mvp-visitor-r3-approved",
+        "approvalReviewVersion": "1.0.0",
+        "briefId": "assets:brief-mvp-visitor",
+        "briefVersion": "1.0.0",
+        "sourceHash": "fnv1a64:024ee040e7625fa7",
+        "sourceId": "assets-source:mvp-sheet-r3",
+        "sourceVersion": "3.0.0"
+      },
+      "sourceSize": {
+        "height": 1254,
+        "width": 1254
+      },
+      "transforms": [
+        {
+          "operation": "crop",
+          "parameters": {
+            "height": 418,
+            "width": 418,
+            "x": 418,
+            "y": 418
+          }
+        },
+        {
+          "operation": "trim",
+          "parameters": {
+            "alphaThreshold": 1,
+            "height": 418,
+            "width": 418,
+            "x": 418,
+            "y": 418
+          }
+        },
+        {
+          "operation": "padding",
+          "parameters": {
+            "pixels": 0
+          }
+        },
+        {
+          "operation": "scale",
+          "parameters": {
+            "denominator": 1,
+            "filter": "nearest",
+            "numerator": 1
+          }
+        },
+        {
+          "operation": "format",
+          "parameters": {
+            "colorProfile": "srgb",
+            "from": "png",
+            "to": "png"
+          }
+        }
+      ],
+      "trim": {
+        "height": 418,
+        "width": 418,
+        "x": 418,
+        "y": 418
+      }
+    }
+  ],
+  "atlas": {
+    "format": "png",
+    "height": 1254,
+    "image": "atlas.png",
+    "width": 1254
+  },
+  "bundleId": "assets:bundle-mvp-park",
+  "bundleVersion": "1.0.0",
+  "canonicalFingerprint": "fnv1a64:9e94cdcfaecfe717",
+  "schemaVersion": "1"
+}

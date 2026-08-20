@@ -1,0 +1,9 @@
+{
+  "schemaVersion": "1",
+  "logicalPlatforms": [
+    "darwin",
+    "win32"
+  ],
+  "byteEquivalentCanonicalManifest": true,
+  "canonicalFingerprint": "fnv1a64:9e94cdcfaecfe717"
+}

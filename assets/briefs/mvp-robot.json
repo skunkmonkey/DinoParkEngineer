@@ -34,15 +34,15 @@
       "semanticZooms": ["far", "near"]
     },
     "sourceCanvas": {
-      "widthPx": 512,
-      "heightPx": 512,
+      "widthPx": 1254,
+      "heightPx": 1254,
       "background": "transparent"
     },
     "safeBounds": {
-      "x": 48,
-      "y": 24,
-      "width": 416,
-      "height": 456
+      "x": 0,
+      "y": 0,
+      "width": 418,
+      "height": 418
     },
     "pivot": {
       "x": 0.5,

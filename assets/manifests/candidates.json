@@ -1,4 +1,420 @@
 {
   "manifestVersion": "1",
-  "candidates": []
+  "candidates": [
+    {
+      "candidateId": "assets-candidate:mvp-robot-sheet-r1",
+      "candidateVersion": "1.0.0",
+      "sourceId": "assets-source:mvp-sheet-r1",
+      "sourceVersion": "1.0.0",
+      "briefId": "assets:brief-mvp-park-robot",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:robot-park-worker",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r1.png",
+      "sourceHash": "fnv1a64:06bca008feddaa90",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "1.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: deterministic game sprite source sheet for a browser-based management simulation; create exactly nine separate, fully visible game sprites arranged in a precise 3 by 3 grid: calm compact park worker robot, friendly but credible small herbivore dinosaur, sturdy automated dinosaur enclosure gate, square grass-and-path environment tile with fern, park visitor, amber triangular operational warning cue, pale-blue dust-puff effect, miniature park overview thumbnail, cheerful green dinosaur plushie expressive reward. Genuinely transparent background; polished stylized 2.5D tactile retro-futuristic management-sim art; south-east three-quarter view; generous transparent padding; soft upper-left daylight; natural park palette; no embedded words, letters, numbers, labels, logos, trademarks, signatures, watermark, border, captions, grid, crops, or overlaps.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:00:00.000Z",
+      "lineage": {
+        "operation": "original"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-robot-sheet-r2",
+      "candidateVersion": "2.0.0",
+      "sourceId": "assets-source:mvp-sheet-r2",
+      "sourceVersion": "2.0.0",
+      "briefId": "assets:brief-mvp-park-robot",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:robot-park-worker",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r2.png",
+      "sourceHash": "fnv1a64:eceeb4f8d8080da2",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "1.1.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Edit the most recent generated nine-sprite 3-by-3 game source sheet. Change only these items: remove every leaf emblem or symbol from the robot cap, robot chest, and gate control panel; replace each with plain unmarked material matching its surrounding surface. Keep the exact nine sprites, positions, proportions, poses, silhouettes, transparent background, lighting, palette, shadows, and all other details unchanged. Keep the amber warning cue's geometric safety motif. No words, letters, numbers, labels, logos, trademarks, signatures, watermark, border, captions, grid lines, or cropped objects. Preserve actual alpha transparency and clean edges.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:10:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r1",
+        "parentCandidateVersion": "1.0.0",
+        "parentSourceHash": "fnv1a64:06bca008feddaa90"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-robot-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-park-robot",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:robot-park-worker",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-dinosaur-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-dinosaur",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:dinosaur-herbivore",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-gate-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-gate",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:gate-enclosure",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-environment-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-environment",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:environment-grass-path",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-visitor-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-visitor",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:visitor-park",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-cue-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-cue",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:cue-operational-warning",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-effect-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-effect",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:effect-dust-puff",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-thumbnail-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-thumbnail",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:thumbnail-park-overview",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    },
+    {
+      "candidateId": "assets-candidate:mvp-reward-sheet-r3",
+      "candidateVersion": "3.0.0",
+      "sourceId": "assets-source:mvp-sheet-r3",
+      "sourceVersion": "3.0.0",
+      "briefId": "assets:brief-mvp-reward",
+      "briefVersion": "1.0.0",
+      "runtimeAssetId": "assets:reward-dinosaur-plushie",
+      "runtimeAssetVersion": "1.0.0",
+      "bundleId": "assets:bundle-mvp-park",
+      "bundleVersion": "1.0.0",
+      "sourcePath": "assets/source/mvp-source-sheet-r3.png",
+      "sourceHash": "fnv1a64:024ee040e7625fa7",
+      "model": {
+        "alias": "openai-built-in-imagegen"
+      },
+      "promptRevision": "2.0.0",
+      "referenceInputs": [],
+      "generationParameters": {
+        "surface": "built-in-imagegen",
+        "prompt": "Use case: stylized-concept; asset type: game sprite source sheet; exactly nine isolated sprites in a strict 3-by-3 grid: unmarked wheeled park worker robot, small herbivore dinosaur, automated enclosure gate, grass-and-path environment tile, park visitor, amber geometric operational warning cue, pale-blue dust puff, fenced park overview thumbnail, green dinosaur plushie reward. True transparent alpha; stylized 2.5D management-sim; south-east three-quarter view; soft upper-left daylight; no words, letters, numbers, labels, logos, trademarks, signatures, watermark, borders, captions, or grid lines.",
+        "requestedBackground": "transparent",
+        "requestedLayout": "3x3"
+      },
+      "createdAt": "2026-08-19T16:20:00.000Z",
+      "lineage": {
+        "operation": "edit",
+        "parentCandidateId": "assets-candidate:mvp-robot-sheet-r2",
+        "parentCandidateVersion": "2.0.0",
+        "parentSourceHash": "fnv1a64:eceeb4f8d8080da2"
+      },
+      "rightsUsage": {
+        "owner": "Dino Park Engineer",
+        "license": "project-use",
+        "allowedUse": "Approved local game rendering source and derived runtime bundle."
+      },
+      "quarantine": "unapproved"
+    }
+  ]
 }

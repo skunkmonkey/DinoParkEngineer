@@ -79,7 +79,18 @@ export interface RenderingAssetDiagnostic {
     | "ASSET_CANDIDATE_DUPLICATE"
     | "ASSET_CANDIDATE_SECRET_REJECTED"
     | "ASSET_MANIFEST_SECRET_REJECTED"
-    | "ASSET_REVIEW_INVALID";
+    | "ASSET_REVIEW_INVALID"
+    | "ASSET_BRIEF_MISSING"
+    | "ASSET_SOURCE_UNSUPPORTED"
+    | "ASSET_SOURCE_INVALID"
+    | "ASSET_SOURCE_ALPHA_REQUIRED"
+    | "ASSET_PLACEHOLDER_REQUIRED"
+    | "ASSET_ATLAS_OVERLAP"
+    | "ASSET_FRAME_MISSING"
+    | "ASSET_OUTPUT_STALE"
+    | "ASSET_RUNTIME_DUPLICATE"
+    | "ASSET_RUNTIME_CASE_COLLISION"
+    | "ASSET_ORPHANED";
   readonly field: string;
   readonly message: string;
 }
@@ -98,4 +109,34 @@ export type CandidateCatalogResult =
 
 export type ReviewCatalogResult =
   | { readonly ok: true; readonly reviews: readonly CandidateReviewRecord[] }
+  | { readonly ok: false; readonly diagnostics: readonly RenderingAssetDiagnostic[] };
+
+export interface RuntimeAssetFrame {
+  readonly assetId: string;
+  readonly assetVersion: string;
+  readonly atlasRectangle: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
+  readonly sourceSize: { readonly width: number; readonly height: number };
+  readonly trim: { readonly x: number; readonly y: number; readonly width: number; readonly height: number };
+  readonly pivot: { readonly x: number; readonly y: number };
+  readonly hitRegion: { readonly type: "rectangle"; readonly x: number; readonly y: number; readonly width: number; readonly height: number };
+  readonly depthHint: { readonly baselineY: number; readonly occlusionClass: "ground" | "entity" | "structure" | "overlay" };
+  readonly animations: readonly { readonly id: string; readonly frames: readonly string[]; readonly frameDurationMs: number; readonly loop: boolean; readonly reducedMotionFrame: string }[];
+  readonly semanticTags: readonly string[];
+  readonly accessibilityLabel: string;
+  readonly placeholder: boolean;
+  readonly source: { readonly sourceId: string; readonly sourceVersion: string; readonly sourceHash: string; readonly briefId: string; readonly briefVersion: string; readonly approvalReviewId: string; readonly approvalReviewVersion: string };
+  readonly transforms: readonly { readonly operation: "crop" | "trim" | "padding" | "scale" | "format"; readonly parameters: Readonly<Record<string, string | number>> }[];
+}
+
+export interface RuntimeAssetBundle {
+  readonly schemaVersion: "1";
+  readonly bundleId: string;
+  readonly bundleVersion: string;
+  readonly atlas: { readonly image: string; readonly width: number; readonly height: number; readonly format: "png" };
+  readonly assets: readonly RuntimeAssetFrame[];
+  readonly canonicalFingerprint: string;
+}
+
+export type RuntimeBundleValidationResult =
+  | { readonly ok: true }
   | { readonly ok: false; readonly diagnostics: readonly RenderingAssetDiagnostic[] };

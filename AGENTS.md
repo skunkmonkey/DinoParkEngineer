@@ -168,6 +168,19 @@ and issue allowed commands, not mutate the simulation directly.
 The committed `package-lock.json` is the dependency source of truth. Use Node
 `>=22.13.0` and npm `>=10`.
 
+### Browser computer-use surface
+
+- Use the connected Chrome browser for all required browser computer-use
+  verification in this repository, including keyboard and focus testing.
+- Do not use the Codex in-app/internal browser for verification. Its keyboard
+  controls do not reliably deliver Tab, Shift+Tab, Enter, Space, or Return to
+  the running application and can produce false blockers.
+- If Chrome is not connected, diagnose its availability. When Chrome and the
+  extension are installed but Chrome is not running, ask permission to launch
+  it and retry. When the extension is unavailable, direct the user to
+  **Settings → Computer use**. Do not substitute the internal browser or mark a
+  browser-reachable slice complete.
+
 ```text
 npm install
 npm run dev

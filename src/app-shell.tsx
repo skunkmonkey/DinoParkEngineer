@@ -245,6 +245,96 @@ function createRegistrations(
       },
     },
     {
+      id: "park-view",
+      order: 1,
+      requirement: "optional",
+      route: { id: "park-view", path: "/park", mode: "production", title: "Park View" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./player-experience/public.js");
+        return { render: module.ParkPlayerExperience };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_PARK_VIEW_FAILED",
+        title: "Park View alias unavailable",
+        message: "The root Park View remains available.",
+      },
+    },
+    {
+      id: "player-paused-production",
+      order: 2,
+      requirement: "optional",
+      route: { id: "player-paused-production", path: "/pause", mode: "paused-production", title: "Paused Production" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./player-experience/public.js");
+        return { render: module.PausedProductionPlayerExperience };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_PAUSED_PRODUCTION_FAILED",
+        title: "Paused Production unavailable",
+        message: "Park View remains available while the paused frame recovers.",
+      },
+    },
+    {
+      id: "player-workbench",
+      order: 3,
+      requirement: "optional",
+      route: { id: "player-workbench", path: "/workbench", mode: "workbench", title: "Park Workbench" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./player-experience/public.js");
+        return { render: module.WorkbenchPlayerExperience };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_WORKBENCH_FAILED",
+        title: "Workbench unavailable",
+        message: "Park View remains available while this focused mode recovers.",
+      },
+    },
+    {
+      id: "player-eval",
+      order: 4,
+      requirement: "optional",
+      route: { id: "player-eval", path: "/eval", mode: "eval", title: "Eval and Incident Review" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./player-experience/public.js");
+        return { render: module.EvalPlayerExperience };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_EVAL_FAILED",
+        title: "Eval mode unavailable",
+        message: "Production state remains safe and paused in other focused modes.",
+      },
+    },
+    {
+      id: "player-replay",
+      order: 5,
+      requirement: "optional",
+      route: { id: "player-replay", path: "/replay", mode: "replay", title: "Historical Replay" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./player-experience/public.js");
+        return { render: module.ReplayPlayerExperience };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_REPLAY_FAILED",
+        title: "Replay mode unavailable",
+        message: "Park View remains available while historical evidence recovers.",
+      },
+    },
+    {
+      id: "player-review",
+      order: 6,
+      requirement: "optional",
+      route: { id: "player-review", path: "/review", mode: "review", title: "Review and Deployment" },
+      load: async (): Promise<LoadedFeature> => {
+        const module = await import("./player-experience/public.js");
+        return { render: module.ReviewPlayerExperience };
+      },
+      failure: {
+        diagnosticCode: "PLAYER_REVIEW_FAILED",
+        title: "Review mode unavailable",
+        message: "Park View remains available while deployment evidence recovers.",
+      },
+    },
+    {
       id: "shell-lab",
       order: 10,
       requirement: "optional",
@@ -543,6 +633,11 @@ function RunningShell(): React.JSX.Element {
       </header>
       <nav className="primary-nav" aria-label="Primary navigation">
         <button type="button" onClick={() => navigate("/")}>Park View</button>
+        <button type="button" onClick={() => navigate("/pause")}>Pause frame</button>
+        <button type="button" onClick={() => navigate("/workbench")}>Workbench</button>
+        <button type="button" onClick={() => navigate("/eval")}>Eval / Incident</button>
+        <button type="button" onClick={() => navigate("/replay")}>Historical Replay</button>
+        <button type="button" onClick={() => navigate("/review")}>Review / Deploy</button>
         <button type="button" onClick={() => navigate("/shell-lab")}>Shell diagnostics</button>
         <button type="button" onClick={() => navigate("/foundation-lab")}>Foundation lab</button>
       </nav>

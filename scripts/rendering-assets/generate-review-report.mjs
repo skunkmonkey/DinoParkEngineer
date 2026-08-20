@@ -12,10 +12,12 @@ import {
 
 const repositoryRoot = resolve(fileURLToPath(new URL("../..", import.meta.url)));
 const readJson = async (logicalPath) => JSON.parse(await readFile(resolve(repositoryRoot, logicalPath), "utf8"));
-const result = loadAssetBriefCatalog(await Promise.all([
+const familyBriefs = await readJson("assets/briefs/mvp-families.json");
+if (!Array.isArray(familyBriefs)) throw new Error("MVP family brief file must contain an array.");
+const result = loadAssetBriefCatalog([...(await Promise.all([
   readJson("assets/briefs/shared-three-quarter.json"),
   readJson("assets/briefs/mvp-robot.json"),
-]));
+])), ...familyBriefs]);
 if (result.status !== "ready" || result.diagnostics.length > 0) {
   throw new Error(`Asset brief validation failed: ${JSON.stringify(result.diagnostics)}`);
 }
